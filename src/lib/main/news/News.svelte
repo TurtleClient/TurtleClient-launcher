@@ -7,26 +7,7 @@
     export let bannerUrl;
     export let url;
     export let description;
-
-    async function handleShowNews(e) {
-        await openUrl(url);
-    }
 </script>
-
-<div class="news">
-    <div class="banner">
-        <div class="banner-text">{bannerText}</div>
-        <div class="background" style="background-image: linear-gradient(to bottom, transparent, #4677ffc5), url({bannerUrl});"></div>
-    </div>
-    <div class="content">
-        <div class="title-date">
-            <div class="title">{title}</div>
-            <div class="date">{new Date(date).toLocaleDateString()}</div>
-        </div>
-        <div class="description">{description}</div>
-        <button class="button-show-news" type="button" on:click={handleShowNews}>Read more</button>
-    </div>
-</div>
 
 <style>
     .news {

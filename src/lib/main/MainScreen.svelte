@@ -316,7 +316,7 @@
                 versionInfo={{
                     bannerUrl: "img/banner.png",
                     title: versionState.currentBuild ?
-                        `LiquidBounce ${versionState.currentBuild.lbVersion} for Minecraft ${versionState.currentBuild.mcVersion}` :
+                        `TurtleClient ${versionState.currentBuild.lbVersion} for Minecraft ${versionState.currentBuild.mcVersion}` :
                         "Loading...",
                     date: versionState.currentBuild?.dateDay || "Loading...",
                     description: versionState.currentBuild?.changelog || "Loading..."

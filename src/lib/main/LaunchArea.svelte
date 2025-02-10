@@ -33,8 +33,7 @@
     </pre>
 
     <div class="version-selector">
-        <ButtonVersion icon="lb" title={lbVersion} subtitle="LiquidBounce" on:click={() => dispatch("showVersionSelect")} />
-        <ButtonVersion icon="mc" title="1.7 - {mcVersion}" subtitle="Minecraft" on:click={() => dispatch("showVersionSelect")} />
+        <ButtonVersion icon="lb" title={lbVersion} subtitle="TurtleClient" on:click={() => dispatch("showVersionSelect")} />
     </div> 
 
     {#if running}
@@ -43,7 +42,7 @@
             <ButtonLaunchArea text="Log" active={false} on:click={() => dispatch("showClientLog")} />  
         </div>
     {:else}
-        <ButtonLaunchArea text="Launch LiquidBounce" active={false} on:click={() => dispatch("launch")} />
+        <ButtonLaunchArea text="Launch TurtleClient" active={false} on:click={() => dispatch("launch")} />
     {/if}
 </div>
 

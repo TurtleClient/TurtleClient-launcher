@@ -1,33 +1,3 @@
-<script>
-    import SocialBar from "../../common/social/SocialBar.svelte";
-    import News from "./News.svelte";
-    import {invoke} from "@tauri-apps/api/core";
-
-    let news = [];
-
-    invoke("fetch_news")
-        .then((onlineNews) => {
-            news = onlineNews;
-        })
-        .catch((e) => console.error(e));
-</script>
-
-<div class="news-area">
-    <div class="news-wrapper">
-        {#each news as n}
-            <News {...n} />
-        {/each}
-    </div>
-
-    <button class="button-scroll">
-        <img class="icon" src="img/icon/icon-news-scroll.svg" alt="scroll" />
-    </button>
-
-    <div class="social-bar-wrapper">
-        <SocialBar />
-    </div>
-</div>
-
 <style>
     .social-bar-wrapper {
         display: flex;
