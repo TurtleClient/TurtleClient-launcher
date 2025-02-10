@@ -30,11 +30,11 @@ use crate::utils::get_maven_artifact_path;
 use crate::HTTP_CLIENT;
 
 /// API endpoint url
-pub const LAUNCHER_API: &str = "https://api.liquidbounce.net";
+pub const LAUNCHER_API: &str = "https://turtleapi.strafbefehl.dev";
 pub const API_V1: &str = "api/v1";
 pub const API_V3: &str = "api/v3";
 
-pub const CONTENT_DELIVERY: &str = "https://cloud.liquidbounce.net";
+pub const CONTENT_DELIVERY: &str = "https://turtleapi.strafbefehl.dev";
 pub const CONTENT_FOLDER: &str = "LiquidLauncher";
 
 /// Placeholder struct for content delivery implementation

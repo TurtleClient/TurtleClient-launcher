@@ -278,21 +278,8 @@ pub async fn retrieve_and_copy_mods(
                         current_mod.name
                     )));
 
-                    let direct_url = match client_account {
-                        Some(account) => {
-                            // PID is taken from the URL which is the last part of the URL
-                            // https://dl.liquidbounce.net/skip/c7kMT2q00U -> c7kMT2q00U
-                            let pid = url.split('/').last().context("Failed to get PID")?;
-                            let skip_file_resolve =
-                                ApiEndpoints::resolve_skip_file(account, pid).await?;
+                    let direct_url = url.clone(); // Verwende die vollständige URL
 
-                            // If the skip file resolve has a direct URL, use it - if not it means that the account is not allowed for direct downloads
-                            skip_file_resolve.direct_url.ok_or_else(|| {
-                                anyhow!("Failed to get direct URL for mod {}", current_mod.name)
-                            })?
-                        }
-                        None => open_download_page(url, launcher_data).await?,
-                    };
 
                     launcher_data.log(&format!(
                         "Downloading mod {} from {}",

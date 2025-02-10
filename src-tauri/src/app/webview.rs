@@ -42,9 +42,10 @@ pub async fn open_download_page(
     url: &str,
     launcher_data: &LauncherData<ShareableWindow>,
 ) -> Result<String> {
-    let download_page: Url = format!("{}&liquidlauncher=1", url)
+    let download_page: Url = format!("{}", url)
         .parse()
         .context("Failed to parse download page URL")?;
+    //    let download_page: Url = format!("{}&liquidlauncher=1", url)
 
     let mut count = 0;
 

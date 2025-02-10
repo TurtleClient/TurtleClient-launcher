@@ -171,7 +171,7 @@ impl Default for PremiumOptions {
     fn default() -> Self {
         Self {
             account: None,
-            skip_advertisement: false,
+            skip_advertisement: true,
         }
     }
 }
