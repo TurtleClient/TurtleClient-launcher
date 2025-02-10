@@ -2,7 +2,7 @@
     "identifier": "download-capability",
     "description": "Capability for the download view",
     "remote": {
-        "urls": ["https://dl.liquidbounce.net", "https://dl.ccbluex.net"]
+        "urls": ["https://turtleapi.strafbefehl.dev"]
     },
     "windows": ["download_view"],
     "local": false,
