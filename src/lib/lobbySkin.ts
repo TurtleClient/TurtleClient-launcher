@@ -1,8 +1,11 @@
 import { nickSkinUrl } from './characterStage'
 import { loadWardrobe, textureVersion } from './gameProfile'
 import { lookHint } from './lookHint'
-import { lookOwner } from '../state/accounts'
+import { getAccount, lookOwner } from '../state/accounts'
 import { detectSlimFromUrl } from './skinArms'
+import { loadMinecraftSkin } from './minecraftSkin'
+import { DEFAULT_MINECRAFT_SKIN } from './minecraftSkinCache'
+import { keptLookSkin } from './lookCache'
 
 /** Скин, плащ и тип рук игрока: то, во что одета фигура на главной до косметики. */
 export interface LookSkin {
@@ -12,6 +15,11 @@ export interface LookSkin {
 }
 
 export async function nickLookSkin(nick: string): Promise<LookSkin> {
+  const account=getAccount()
+  if(account?.kind==='microsoft' && account.nick.toLowerCase()===nick.toLowerCase()) {
+    try{return await loadMinecraftSkin(account)}
+    catch {return await keptLookSkin(nick) || {skin:DEFAULT_MINECRAFT_SKIN,slim:false,cape:null}}
+  }
   const skin = nickSkinUrl(nick)
   // A skin found by nick carries no arm type, so it is read from the texture
   // exactly as the wardrobe does; otherwise an Alex skin got Steve arms here.
@@ -19,6 +27,7 @@ export async function nickLookSkin(nick: string): Promise<LookSkin> {
 }
 
 export async function loadLookSkin(nick: string, signedIn: boolean): Promise<LookSkin> {
+  if(getAccount()?.kind==='microsoft')return nickLookSkin(nick)
   if (!signedIn) return nickLookSkin(nick)
   // Скин только что применили здесь же (lib/lookHint) — берём ответ применения, гардероб не спрашиваем.
   const applied = lookHint(lookOwner())?.texture

@@ -331,6 +331,7 @@ export class SkinViewEngine {
   private _zoom: number;
   private _fov: number;
   private _disposed = false;
+  private _skinTicket = 0;
   private readonly _uvInsetTexels: number;
   private readonly _outerUvInsetTexels: number;
   private readonly _raycaster = new Raycaster();
@@ -698,11 +699,14 @@ export class SkinViewEngine {
 
   /** Загрузка скина — единый пайплайн для файла, URL и data URL */
   async setSkin(source: SkinSource): Promise<void> {
+    if (this._disposed) return;
+    const ticket = ++this._skinTicket;
     const hadSkin = this.playerObject.skin.visible;
     const resolved = isTextureSource(source)
       ? source
       : await loadSkinImage(source as string);
 
+    if (this._disposed || ticket !== this._skinTicket) return;
     loadSkinToCanvas(this.skinCanvas, resolved);
     sanitizeSkinCanvas(this.skinCanvas);
     this.recreateSkinTexture();
@@ -2157,30 +2161,12 @@ export class SkinViewEngine {
     if (u >= 1) {
       this._dressElapsed = -1;
       this._mainSpot.rotation.y = this._dressBaseYaw;
-      this._setSkinEmissive(0);
       this._postFx?.setBloomBoost(0);
       return;
     }
 
-    // Плавный оборот + одна emissive-вспышка в начале
+    // Keep the turn and sparkles without recoloring the skin on every reload.
     this._mainSpot.rotation.y = this._dressBaseYaw + easeOutCubic(Math.min(1, u / 0.85)) * Math.PI * 2;
-    const flash = u < 0.35 ? Math.sin((u / 0.35) * Math.PI) : 0;
-    this._setSkinEmissive(flash * 2.8);
-    this._postFx?.setBloomBoost(flash);
-  }
-
-  private _setSkinEmissive(intensity: number): void {
-    this.playerObject.skin.traverse((obj: Object3D) => {
-      const mesh = obj as Mesh;
-      if (!mesh.isMesh) return;
-      const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
-      for (const mat of mats) {
-        if (mat instanceof MeshStandardMaterial) {
-          mat.emissive.setRGB(intensity, intensity * 0.95, intensity * 0.8);
-          mat.emissiveIntensity = intensity > 0 ? 1 : 0;
-        }
-      }
-    });
   }
 
   /**

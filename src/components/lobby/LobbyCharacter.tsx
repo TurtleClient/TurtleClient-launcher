@@ -9,6 +9,7 @@ import type { SkinAnimation, SkinViewEngine } from '../../vendor/mine3d'
 import { textureSource } from '../../lib/textureSource'
 import { loadImg } from '../../lib/skinArms'
 import { loadLookSkin, nickLookSkin, type LookSkin } from '../../lib/lobbySkin'
+import { DEFAULT_MINECRAFT_SKIN } from '../../lib/minecraftSkinCache'
 import { keepLookOutfit, keepLookSkin, keptLookOutfit, keptLookSkin } from '../../lib/lookCache'
 import { lookHint } from '../../lib/lookHint'
 import { playerUuid } from '../../lib/playerUuid'
@@ -174,7 +175,10 @@ function loadLook(nick: string, signedIn: boolean): { first: Promise<Look>; full
   const staged = lookStages<LookSkin, Pick<Look, 'items' | 'show' | 'outfitFailed'>>(
     {
       skin,
-      nickSkin: () => nickLookSkin(nick),
+      // The stand-in must not wait on the same slow profile request as `skin`.
+      nickSkin: () => getAccount()?.kind === 'microsoft'
+        ? keptLookSkin(nick).then(kept => kept || {skin:DEFAULT_MINECRAFT_SKIN,slim:false,cape:null})
+        : nickLookSkin(nick),
       outfit: loadLookOutfit(signedIn),
       noOutfit: { items: [], show: [] },
     },
@@ -213,6 +217,7 @@ const AWAY_LOOK_MAX_MS = 8000
 
 async function loadLookOutfit(signedIn: boolean): Promise<Pick<Look, 'items' | 'show' | 'outfitFailed'>> {
   const look: Pick<Look, 'items' | 'show' | 'outfitFailed'> = { items: [], show: [] }
+  if (!BRAND.services) return look
   let failed = false
   const catalogAsked = loadCosmeticCatalog().catch(() => {
     failed = true
@@ -754,18 +759,18 @@ export function LobbyCharacter({
             remember()
             reveal()
           })
-          // Скин не прочитался — всё равно показываем персонажа (запасной
-          // скин по нику), а не оставляем его невидимым навсегда.
-          .catch(() =>
-            engine
-              .setSkin(nickSkinUrl(nick))
-              .catch(() => {})
-              .finally(() => {
-                if (!alive) return
-                fit()
-                setSkinFor(lookKey(look))
-              }),
-          )
+          // Retry through the account resolver without letting an old effect
+          // overwrite a newer account or a viewer that has already unmounted.
+          .catch(async () => {
+            if (!alive) return
+            const fallback=await nickLookSkin(nick)
+            const picture=await loadImg(fallback.skin).catch(()=>null)
+            if(!alive)return
+            if(picture)await engine.setSkin(picture).catch(()=>{})
+            if(!alive)return
+            fit()
+            setSkinFor(lookKey(look))
+          })
       })
     if (BRAND.services && look.cape && !hidesRegularCape(outfit)) {
       void textureSource(look.cape).then((src) => {

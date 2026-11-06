@@ -12,6 +12,12 @@ and cape, polls every 15 seconds, and refreshes immediately after a change.
 The lobby and wardrobe character show model transforms, animations, original
 textures/capes and the equipped name tag effect above the verified player name.
 
+For Microsoft accounts, both character views resolve the skin through Minecraft's
+session profile using the account UUID. They share successful profile answers for
+five minutes, coalesce simultaneous requests and keep the last successful answer
+if a refresh fails. An unavailable profile is never cached as a successful Steve
+lookup. Late image loads cannot overwrite a newer skin or a disposed viewer.
+
 ## Server configuration
 
 Edit `/var/lib/turtleclient/friends/wardrobe-categories.json` using

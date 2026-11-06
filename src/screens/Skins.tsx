@@ -30,6 +30,7 @@ import { headLook } from '../lib/headLook'
 import type { Mine3dModule } from '../lib/mine3d'
 import type { SkinAnimation, SkinViewEngine } from '../vendor/mine3d'
 import { textureSource } from '../lib/textureSource'
+import { loadMinecraftSkin, minecraftSkins } from '../lib/minecraftSkin'
 import { detectSlim, detectSlimFromUrl, loadImg } from '../lib/skinArms'
 import { warnHdSkinWithoutPlus } from '../lib/skinLock'
 import { capeById, contentFingerprint, dedupeCapes, textureHash } from '../lib/capes'
@@ -590,25 +591,15 @@ interface AccTexture {
   slim: boolean
 }
 
-const texCache = new Map<string, { at: number; tex: AccTexture }>()
-const TEX_TTL = 300000
-
 const DEFAULT_SKIN = OFFICIAL_SKINS[0].url as string
 
 /// Текстуры Mojang запрашиваем только для лицензии. Офлайн- и TurtleClient-аккаунт
 /// ищутся по нику, а ник в Mojang принадлежит другому человеку: раньше игрок
 /// видел и применял чужой скин, считая его своим.
 async function loadAccountTexture(a: Account, millida: AccTexture | null): Promise<AccTexture> {
-  if (a.kind === 'microsoft' && hasTauri()) {
-    const key = a.uuid || a.nick
-    const hit = texCache.get(key)
-    if (hit && Date.now() - hit.at < TEX_TTL) return hit.tex
-    try {
-      const t = await mcTextures(key)
-      const tex = { skin: t.skin || DEFAULT_SKIN, cape: t.cape, slim: !!t.slim }
-      texCache.set(key, { at: Date.now(), tex })
-      return tex
-    } catch {}
+  if (a.kind === 'microsoft') {
+    try {return await loadMinecraftSkin(a)}
+    catch {const kept=await keptLookSkin(a.nick);if(kept)return kept}
   }
   if (a.kind === 'millida' && millida) return millida
   return { skin: DEFAULT_SKIN, cape: null, slim: false }
@@ -1592,6 +1583,15 @@ export function Skins({ on }: { on: boolean }) {
     else autoVariant(skinUrl(a.nick), 'n:' + a.nick)
   }, [activeId, textures])
 
+  // Profile requests finish after the account reset; apply that answer unless
+  // the player has already picked a different preview in this screen.
+  useEffect(() => {
+    const account=getAccount(),texture=textures[activeId]
+    if(account?.kind!=='microsoft' || account.id!==activeId || !texture || userPicked.current || wardrobeIn.current)return
+    setSkinSrc(texture.skin)
+    setVariant(recallVariant('n:'+account.nick) || (texture.slim?'slim':'classic'))
+  }, [activeId, textures[activeId]])
+
   /**
    * Каталог скинов - витрина millida.net, а не свой список внутри лаунчера.
    * Поиск по нику остаётся отдельным ходом: витрина показывает опубликованные
@@ -1852,7 +1852,7 @@ export function Skins({ on }: { on: boolean }) {
     if (!ms) throw new Error(t('вход в аккаунт {nick} устарел', { nick: acc.nick }))
     await msSetCape(ms.id, msId)
     setMsCapes({ ...msCapes, [accId]: own.map((c) => ({ ...c, active: c.id === msId })) })
-    texCache.delete(acc.uuid || acc.nick)
+    minecraftSkins.invalidate(acc.uuid || acc.nick)
     return true
   }
 
@@ -2671,7 +2671,7 @@ export function Skins({ on }: { on: boolean }) {
     if (!ms) return false
     await msSetCape(ms.id, '')
     setMsCapes({ ...msCapes, [acc.id]: own.map((c) => ({ ...c, active: false })) })
-    texCache.delete(acc.uuid || acc.nick)
+    minecraftSkins.invalidate(acc.uuid || acc.nick)
     return true
   }
 
@@ -2751,7 +2751,7 @@ export function Skins({ on }: { on: boolean }) {
         if (ms) {
           try {
             await msUploadSkin(ms.id, skin, slimArms)
-            texCache.delete(acc.uuid || acc.nick)
+            minecraftSkins.invalidate(acc.uuid || acc.nick)
             licensed = true
           } catch (e) {
             trackFailure('skins', e, { step: 'license_skin' })
