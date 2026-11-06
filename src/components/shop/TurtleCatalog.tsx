@@ -1,16 +1,18 @@
 import { useEffect, useRef, useState } from 'react'
-import { useT } from '../../i18n'
+import { useT, getLocale } from '../../i18n'
 import { TURTLE_API, serviceError, turtle } from '../../lib/turtleclient'
 import type { Catalog, Cosmetic } from '../../lib/turtleclient'
 import { ItemGrid, ItemTile } from '../character/ItemTile'
 import { Icon } from '../Icon'
-import { showToast } from '../../state/ui'
 import '../../styles/pixel/shop2.css'
 import '../../styles/pixel/character.css'
+import { normalizeTurtleCatalog } from '../../state/turtleWardrobe'
+import { turtlePrice } from '../../lib/turtlePrice'
+import { setScreen } from '../../state/ui'
 
 type Cube = { origin: number[]; size: number[]; uv?: number[] }
 type Model = { texture: { png: string }; parts: { cubes?: Cube[] }[]; tag?: { line?: string; animation?: { colors?: string[] } } }
-function ModelArt({ item }: { item: Cosmetic }) {
+export function ModelArt({ item }: { item: Cosmetic }) {
   const canvas = useRef<HTMLCanvasElement>(null)
   const [failed, setFailed] = useState(false)
   useEffect(() => {
@@ -83,16 +85,17 @@ export function TurtleCatalog() {
   const [loading, setLoading] = useState(false)
   async function load() {
     setLoading(true); setError('')
-    try {setCatalog(await turtle<Catalog>('turtle_catalog'))}
+    try {setCatalog(normalizeTurtleCatalog(await turtle<Catalog>('turtle_catalog')))}
     catch (e) {setError(serviceError(e))}
     finally {setLoading(false)}
   }
   useEffect(() => {void load()}, [])
-  const details = () => showToast(t('Turtle: equip these free items in the client wardrobe with Right Shift.'))
+  const details = () => setScreen('skins')
+  const status = (item:Cosmetic) => item.access==='paid' ? turtlePrice(item,getLocale()) || t('Turtle: shop item') : t('Turtle: free')
   return <div className="sh-feed">
-    <div className="card sh-block"><div className="sh-head"><h2>{t('Turtle: community collection')}</h2><button className="btn sm secondary" disabled={loading} onClick={() => void load()}>{t('Turtle: refresh')}</button></div><p className="faint-note">{t('Turtle: all current server items are free. Equip them in the client wardrobe with Right Shift.')}</p>{error && <p role="alert" className="faint-note">{t(error)}</p>}</div>
+    <div className="card sh-block"><div className="sh-head"><h2>{t('Turtle: community collection')}</h2><button className="btn sm secondary" disabled={loading} onClick={() => void load()}>{t('Turtle: refresh')}</button></div><p className="faint-note">{t('Turtle: browse the server collection. Equip unlocked items in your wardrobe.')}</p>{error && <p role="alert" className="faint-note">{t(error)}</p>}</div>
     {loading && !catalog && <p className="faint-note" role="status">{t('Turtle: loading catalog…')}</p>}
-    <div className="card sh-block"><div className="sh-head"><h2>{t('Turtle: cosmetics')}</h2></div><ItemGrid>{catalog?.models.map(item => <ItemTile key={item.id} itemId={item.id} name={item.name} art={<ModelArt item={item} />} status={t('Turtle: free')} onClick={details} />)}</ItemGrid>{catalog && !catalog.models.length && <p className="faint-note">{t('Turtle: no items yet.')}</p>}</div>
-    <div className="card sh-block"><div className="sh-head"><h2>{t('Turtle: capes')}</h2></div><ItemGrid>{catalog?.capes.map(item => <ItemTile key={item.id} itemId={item.id} name={item.name} art={<img src={`${TURTLE_API}/api/cape/${encodeURIComponent(item.owner)}`} alt="" loading="lazy" width={128} height={128} style={{ objectFit: 'contain', imageRendering: 'pixelated' }} />} status={t('Turtle: free')} onClick={details} />)}</ItemGrid>{catalog && !catalog.capes.length && <p className="faint-note">{t('Turtle: no items yet.')}</p>}</div>
+    <div className="card sh-block"><div className="sh-head"><h2>{t('Turtle: cosmetics')}</h2></div><ItemGrid>{catalog?.models.map(item => <ItemTile key={item.id} itemId={item.id} name={item.name} art={<ModelArt item={item} />} status={status(item)} onClick={details} />)}</ItemGrid>{catalog && !catalog.models.length && <p className="faint-note">{t('Turtle: no items yet.')}</p>}</div>
+    <div className="card sh-block"><div className="sh-head"><h2>{t('Turtle: capes')}</h2></div><ItemGrid>{catalog?.capes.map(item => <ItemTile key={item.id} itemId={item.id} name={item.name} art={<img src={`${TURTLE_API}/api/cape/${encodeURIComponent(item.owner)}`} alt="" loading="lazy" width={128} height={128} style={{ objectFit: 'contain', imageRendering: 'pixelated' }} />} status={status(item)} onClick={details} />)}</ItemGrid>{catalog && !catalog.capes.length && <p className="faint-note">{t('Turtle: no items yet.')}</p>}</div>
   </div>
 }

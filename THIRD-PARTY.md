@@ -1,5 +1,10 @@
 # Third-party components
 
+`src/lib/turtleGeometry.ts` implements Turtle format 2 and adapts the box-face/UV
+conventions from Horizon's `crates/horizon-cosmetics/src/item.rs` (MIT), including
+the Turtle per-face UV extension. Copyright © 2026 Ludovic Marie and the Horizon
+contributors. The full notice is in `licenses/horizon-cosmetics-MIT.txt`.
+
 Fork build tooling: `sharp` (Apache-2.0) rasterizes the original TurtleClient SVG
 branding assets in `scripts/turtleclient-brand-assets.mjs`. It is a development
 dependency and is not shipped in the launcher runtime. Its prebuilt libvips

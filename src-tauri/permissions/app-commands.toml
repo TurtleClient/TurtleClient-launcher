@@ -10,6 +10,8 @@ permissions = [
   "allow-turtle-launch",
   "allow-turtle-catalog",
   "allow-turtle-model",
+  "allow-turtle-wardrobe",
+  "allow-turtle-cape",
   "allow-turtle-friends-connect",
   "allow-turtle-friends",
   "allow-core-version",

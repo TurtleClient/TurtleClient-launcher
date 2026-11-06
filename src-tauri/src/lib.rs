@@ -303,6 +303,8 @@ pub fn run() {
             turtleclient::turtle_launch,
             turtleclient::turtle_catalog,
             turtleclient::turtle_model,
+            turtleclient::turtle_wardrobe,
+            turtleclient::turtle_cape,
             turtleclient::turtle_friends_connect,
             turtleclient::turtle_friends,
             commands::content::core_version,

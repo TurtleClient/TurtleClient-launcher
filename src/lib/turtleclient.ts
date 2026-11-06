@@ -3,8 +3,11 @@ export interface TurtleSettings { executable: string; resources: string; game_di
 export interface TurtleStatus { settings: TurtleSettings; running: boolean }
 export interface Friend { uuid: string; name: string; online: boolean }
 export interface FriendList { friends: Friend[]; incoming: Friend[]; outgoing: Friend[] }
-export interface Cosmetic { id: string; name: string; slot: string; owner: string; hash: string }
-export interface Catalog { models: Cosmetic[]; capes: Cosmetic[]; free: boolean }
+export interface Cosmetic { id: string; name: string; slot: string; owner: string; hash: string; type?:string; access?:'free'|'paid'; price_minor?:number; currency?:string }
+export interface WardrobeCategory { id: string; label: Record<string, string>; slots: string[] }
+export interface Categories { categories: WardrobeCategory[]; assignments: Record<string, string>; items?:Record<string,{type?:string;access?:'free'|'paid';price_minor?:number;currency?:string}> }
+export interface Catalog { models: Cosmetic[]; capes: Cosmetic[]; free: boolean; categories?: Categories }
+export interface WardrobeSnapshot { player: { uuid: string; name: string }; equipped: Record<string, string>; cape: boolean; cape_revision?: string | null; categories: Categories; owned?:string[] }
 export const TURTLE_API = 'https://45.133.9.162/turtleclient'
 export function turtle<T>(command: string, args?: Record<string, unknown>): Promise<T> {
   const bridge = tauri()

@@ -39,7 +39,7 @@ const NewBuildModal = lazy(() => import('./modals/NewBuild').then((m) => ({ defa
 const OnboardingModal = lazy(() => import('./modals/Onboarding').then((m) => ({ default: m.OnboardingModal })))
 import { gameStepPending, hasGameAccount, useFirstRun } from './state/firstRun'
 import { ImageLightbox } from './components/ImageLightbox'
-import { UpdateBanner } from './components/UpdateBanner'
+const UpdateBanner = lazy(() => import('./components/UpdateBanner').then(m => ({ default: m.UpdateBanner })))
 import { PartyHost } from './components/party/PartyHost'
 import { ChatNotify } from './components/ChatNotify'
 import {
@@ -1034,7 +1034,7 @@ export function App() {
       <Welcome />
       <div className="window" id="win">
         <Titlebar />
-        <UpdateBanner />
+        <Suspense fallback={null}><UpdateBanner /></Suspense>
 
         <Login on={!logged} />
 

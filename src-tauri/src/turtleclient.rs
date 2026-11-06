@@ -291,7 +291,52 @@ pub async fn turtle_catalog() -> Result<Value, String> {
         request(reqwest::Method::GET, "/api/cosmetics/catalog", None, None),
         request(reqwest::Method::GET, "/api/cosmetics/capes", None, None)
     )?;
-    Ok(json!({"models":models["items"],"capes":capes["items"],"free":true}))
+    let categories = request(
+        reqwest::Method::GET,
+        "/social/wardrobe/categories",
+        None,
+        None,
+    )
+    .await?;
+    Ok(json!({"models":models["items"],"capes":capes["items"],"free":true,"categories":categories}))
+}
+#[tauri::command]
+pub async fn turtle_wardrobe(
+    account_id: String,
+    slot: Option<String>,
+    item: Option<String>,
+) -> Result<Value, String> {
+    turtle_friends_connect(account_id.clone()).await?;
+    let token = {
+        sessions()
+            .lock()
+            .unwrap_or_else(|e| e.into_inner())
+            .get(&account_id)
+            .map(|s| s.token.clone())
+            .ok_or("turtle_friends_connect_required")?
+    };
+    let result = if let Some(slot) = slot {
+        request(
+            reqwest::Method::POST,
+            "/social/wardrobe",
+            Some(json!({"slot":slot,"item":item})),
+            Some(&token),
+        )
+        .await
+    } else {
+        request(reqwest::Method::GET, "/social/wardrobe", None, Some(&token)).await
+    };
+    if result
+        .as_ref()
+        .err()
+        .is_some_and(|e| e == "turtle_http_401")
+    {
+        sessions()
+            .lock()
+            .unwrap_or_else(|e| e.into_inner())
+            .remove(&account_id);
+    }
+    result
 }
 #[tauri::command]
 pub async fn turtle_model(id: String, hash: String) -> Result<Value, String> {
@@ -312,6 +357,56 @@ pub async fn turtle_model(id: String, hash: String) -> Result<Value, String> {
         None,
     )
     .await
+}
+#[tauri::command]
+pub async fn turtle_cape(uuid: String) -> Result<Option<String>, String> {
+    use base64::Engine as _;
+    let hex = uuid.replace('-', "");
+    if hex.len() != 32 || !hex.bytes().all(|b| b.is_ascii_hexdigit()) {
+        return Err("turtle_response_invalid".into());
+    }
+    let canonical = format!(
+        "{}-{}-{}-{}-{}",
+        &hex[..8],
+        &hex[8..12],
+        &hex[12..16],
+        &hex[16..20],
+        &hex[20..]
+    );
+    let mut response = engine::client()
+        .get(format!("{BASE}/api/cape/{canonical}"))
+        .timeout(Duration::from_secs(20))
+        .send()
+        .await
+        .map_err(|_| "turtle_service_unavailable")?;
+    if response.status() == reqwest::StatusCode::NOT_FOUND {
+        return Ok(None);
+    }
+    if !response.status().is_success() {
+        return Err("turtle_service_unavailable".into());
+    }
+    let mut bytes = Vec::new();
+    while let Some(chunk) = response
+        .chunk()
+        .await
+        .map_err(|_| "turtle_service_unavailable")?
+    {
+        if bytes.len() + chunk.len() > 8 * 1024 * 1024 {
+            return Err("turtle_response_invalid".into());
+        }
+        bytes.extend_from_slice(&chunk);
+    }
+    let mime = if bytes.starts_with(b"\x89PNG\r\n\x1a\n") {
+        "image/png"
+    } else if bytes.starts_with(b"GIF87a") || bytes.starts_with(b"GIF89a") {
+        "image/gif"
+    } else {
+        return Err("turtle_response_invalid".into());
+    };
+    Ok(Some(format!(
+        "data:{mime};base64,{}",
+        base64::engine::general_purpose::STANDARD.encode(&bytes)
+    )))
 }
 struct FriendSession {
     token: String,

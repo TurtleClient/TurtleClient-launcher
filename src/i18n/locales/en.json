@@ -6533,5 +6533,10 @@
   "Turtle: too many requests. Please wait.": "Too many requests. Please wait.",
   "Turtle: play TurtleClient": "Play TurtleClient",
   "Turtle: select in lobby": "Select in lobby",
-  "Turtle: Friends connects automatically and stays online while the launcher is running.": "Friends connects automatically and stays online while the launcher is running."
+  "Turtle: Friends connects automatically and stays online while the launcher is running.": "Friends connects automatically and stays online while the launcher is running.",
+  "Turtle: equipped — click to unequip": "Equipped — click to unequip",
+  "Turtle: click to equip": "Click to equip",
+  "Turtle: all cosmetics": "All cosmetics",
+  "Turtle: shop item": "Available in the shop",
+  "Turtle: browse the server collection. Equip unlocked items in your wardrobe.": "Browse the collection. Equip unlocked items in your wardrobe."
 }

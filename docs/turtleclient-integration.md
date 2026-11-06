@@ -74,15 +74,13 @@ requests returned 401. No real account sign-in or friendship was used for these 
 
 ## Cosmetics and shop
 
-The shop uses the existing shop blocks, item grid and item tiles with the live
-`/api/cosmetics/catalog` and `/api/cosmetics/capes` endpoints. The wardrobe's shop
-section shows the same collection. Original PNG/GIF capes are displayed without
-converting them. Format-2 model cards show a static cube preview from the original
-texture, and name tags show their original colors/gradients. Animation and
-model-part transforms are not simulated by this preview.
-All current items are free. They are equipped in the native client's Right Shift
-wardrobe; the launcher does not invent payment or ownership APIs.
+The launcher reads Ocean's live catalog and authenticated wardrobe state. Equipped
+models, original capes and animated name tags appear on the lobby and wardrobe
+character. Existing wardrobe tabs and type chips remain; only its duplicate Shop
+tab is removed. The separate shop remains available.
 
-The existing Ocean service is unchanged. Its beta cosmetic write routes remain
-public as previously configured; the new friends authentication does not secure
-or change those legacy routes.
+See [wardrobe.md](wardrobe.md) for server categories, item types, prices and
+entitlements. Prices describe catalog entries; no payment checkout is implemented.
+The existing Ocean beta write routes remain public. Those legacy routes must be
+secured before selling paid cosmetics; the new launcher API alone does not protect
+them.

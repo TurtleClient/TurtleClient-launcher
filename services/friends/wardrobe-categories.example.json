@@ -1,0 +1,15 @@
+{
+  "categories": [
+    { "id": "head", "label": { "de": "Kopf", "en": "Head" }, "slots": ["head"] },
+    { "id": "body", "label": { "de": "Körper", "en": "Body" }, "slots": ["torso", "shoulder"] },
+    { "id": "back", "label": { "de": "Rücken", "en": "Back" }, "slots": ["back"] },
+    { "id": "pet", "label": { "de": "Pets", "en": "Pets" }, "slots": [] },
+    { "id": "emote", "label": { "de": "Emotes", "en": "Emotes" }, "slots": [] },
+    { "id": "name_tags", "label": { "de": "Nametag-Effekte", "en": "Name tag effects" }, "slots": ["name_tag"] },
+    { "id": "cape", "label": { "de": "Capes", "en": "Capes" }, "slots": ["cape"] }
+  ],
+  "assignments": {},
+  "items": {
+    "turtle_headset": { "type": "HAT", "access": "free" }
+  }
+}

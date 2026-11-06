@@ -14,6 +14,9 @@ use std::{
     time::{Duration, Instant},
 };
 use uuid::Uuid;
+mod wardrobe;
+#[cfg(test)]
+mod wardrobe_tests;
 
 type Failure = StatusCode;
 #[derive(Clone, Default, Serialize, Deserialize)]
@@ -284,7 +287,8 @@ fn router(state: Shared) -> Router {
         .route("/friends/decision", post(decision))
         .route("/friends/:uuid", axum::routing::delete(remove))
         .layer(DefaultBodyLimit::max(1024))
-        .with_state(state)
+        .with_state(state.clone())
+        .merge(wardrobe::router(state))
 }
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {

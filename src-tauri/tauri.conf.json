@@ -225,7 +225,11 @@
         ]
       }
     },
-    "createUpdaterArtifacts": true
+    "createUpdaterArtifacts": true,
+    "resources": {
+      "../licenses/horizon-cosmetics-MIT.txt": "licenses/horizon-cosmetics-MIT.txt",
+      "../THIRD-PARTY.md": "THIRD-PARTY.md"
+    }
   },
   "plugins": {
     "deep-link": {

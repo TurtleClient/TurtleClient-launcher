@@ -58,6 +58,8 @@ import {
 import { releaseSnapshotGl } from '../../lib/glPool'
 import { PartyOverlay, usePartyStage } from './PartyStage'
 import { useT } from '../../i18n'
+import { BRAND } from '../../lib/branding'
+import { useTurtleCharacter } from '../../lib/useTurtleCharacter'
 
 /** Во что одет игрок: то же, что видят другие на сервере. */
 interface Look {
@@ -765,7 +767,7 @@ export function LobbyCharacter({
               }),
           )
       })
-    if (look.cape && !hidesRegularCape(outfit)) {
+    if (BRAND.services && look.cape && !hidesRegularCape(outfit)) {
       void textureSource(look.cape).then((src) => {
         if (alive)
           engine
@@ -775,7 +777,7 @@ export function LobbyCharacter({
             })
             .catch(() => {})
       })
-    } else engine.clearCape()
+    } else if (BRAND.services) engine.clearCape()
     return () => {
       alive = false
     }
@@ -784,6 +786,7 @@ export function LobbyCharacter({
   useEffect(() => {
     const engine = viewerRef.current
     if (!engine || !ready || !look || typeof engine.clearCosmetics !== 'function') return
+    if (!BRAND.services) {fit(); setDressedFor(outfitKey(look)); return}
     let alive = true
     let emoteDone: ReturnType<typeof setTimeout> | undefined
     engine.clearCosmetics()
@@ -1053,6 +1056,7 @@ export function LobbyCharacter({
     return () => window.clearTimeout(t)
   }, [glFail, lite])
 
+  useTurtleCharacter(viewerRef, BRAND.services ? 0 : ready, fit)
   const drag = useRef<{ x: number; yaw: number } | null>(null)
   const stageParty = usePartyStage(ready ? viewerRef.current : null, m3d, ready, !shop && on)
 
@@ -1071,7 +1075,7 @@ export function LobbyCharacter({
       <div className={'lobby-char lobby-char-flat' + (shop ? ' shop-stage' : '') + (flatShown ? ' shown' : '')} onClick={() => (shop ? undefined : setScreen('skins'))}>
         {shop ? null : (
           <span className="lobby-flat-tag">
-            <Nametag nick={nick} at={{ x: 0, y: 0 }} />
+            <Nametag nick={nick} at={{ x: 0, y: 0 }} own />
           </span>
         )}
         {!look ? null : shop ? (
@@ -1141,7 +1145,7 @@ export function LobbyCharacter({
     >
       <canvas key={glEpoch} ref={canvasRef} aria-label={t('Персонаж {nick}', { nick })} />
       <span ref={tagWrap} className="lobby-tag-follow">
-        {shop ? null : <Nametag nick={nick} at={visible ? tag : null} />}
+        {shop ? null : <Nametag nick={nick} at={visible ? tag : null} own />}
       </span>
       {shop ? null : (
         <PartyOverlay

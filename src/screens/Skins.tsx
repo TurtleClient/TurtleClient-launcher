@@ -103,7 +103,10 @@ import { ItemGrid, ItemTile } from '../components/character/ItemTile'
 import { TurtleCatalog } from '../components/shop/TurtleCatalog'
 import { BRAND } from '../lib/branding'
 import { FittingBar } from '../components/character/FittingBar'
-import { nametagSpot } from '../components/character/Nametag'
+import { Nametag, nametagSpot } from '../components/character/Nametag'
+import { TurtleWardrobe, useTurtleSections } from '../components/character/TurtleWardrobe'
+import { useTurtleCharacter } from '../lib/useTurtleCharacter'
+import { useTurtleWardrobe, categoryOf } from '../state/turtleWardrobe'
 import { Outfits } from '../components/character/Outfits'
 import { SetLooks } from '../components/character/SetLooks'
 import {
@@ -882,7 +885,7 @@ export function Skins({ on }: { on: boolean }) {
   // Чей это вариант рук: переключатель на сцене запоминает выбор за тем же
   // скином, за которым его помнит автоопределение.
   const variantKeyRef = useRef('')
-  const [, setTagAt] = useState<{ x: number; y: number } | null>(null)
+  const [tagAt, setTagAt] = useState<{ x: number; y: number } | null>(null)
 
   useEffect(() => {
     if (!hasTauri()) return
@@ -2046,6 +2049,7 @@ export function Skins({ on }: { on: boolean }) {
     // Движок мог остаться от прошлой версии кода при горячей перезагрузке: у
     // такого объекта новых методов нет, и вызов молча снёс бы весь экран.
     if (!engine || !engineReady || typeof engine.clearCosmetics !== 'function') return
+    if (!BRAND.services) {setDressReady(true); return}
     let alive = true
     let emoteDone: ReturnType<typeof setTimeout> | undefined
     engine.clearCosmetics()
@@ -2163,7 +2167,7 @@ export function Skins({ on }: { on: boolean }) {
 
   useEffect(() => {
     const engine = viewerRef.current
-    if (!engine) return
+    if (!engine || !BRAND.services) return
     const c = capeById(capes, cape)
     if (!c || capeCovered) {
       engine.clearCape()
@@ -2575,7 +2579,7 @@ export function Skins({ on }: { on: boolean }) {
   // чипу. Поиск — по всему каталогу сразу, как в Roblox: ищут вещь, а не место.
   const cosmeticQueryNorm = cosmeticQuery.trim().toLowerCase()
 
-  const sections = useMemo(() => cosmeticSections(cosmetics.map((c) => c.slot)), [cosmetics, t])
+  const sections = useMemo(() => BRAND.services ? cosmeticSections(cosmetics.map((c) => c.slot)) : COSMETIC_SECTIONS(), [cosmetics, t])
 
   const sectionDef = sections.find((s) => s.key === section)
   const chipKey = chipBy[section] ?? (sectionDef ? sectionDef.chips[0].key : section === 'skin' ? 'mine' : 'all')
@@ -3122,13 +3126,17 @@ export function Skins({ on }: { on: boolean }) {
   /* Разделы — одноцветными значками, как в Essential Mod (владелец 23.09.2026,
      «возьми с Essential для кнопок разделов косметики»). Картинки вещей в
      кнопках раздела сливались в пёструю полосу. */
+  const turtleSections = useTurtleSections()
+  const turtleWardrobe = useTurtleWardrobe()
+  useTurtleCharacter(viewerRef, BRAND.services ? 0 : engineReady, fitViewer)
   const sectionList: Section[] = [
     { key: 'looks', name: t('Образы'), icon: 'ws-looks' },
     // Магазин рядом с вещами (06.10.2026, «один в один»): те же блоки, что в магазине.
-    ...(!BRAND.services || hasMillidaAccount() ? [{ key: 'shop', name: t('Магазин'), icon: 'ws-shop' }] : []),
+
     { key: 'skin', name: t('Скины'), icon: 'ws-skin' },
     { key: 'cape', name: t('Плащи'), icon: 'ws-cape', alert: readyRewards > 0 },
     ...sections.map((sec) => ({ key: sec.key, name: sec.name, icon: 'ws-' + sec.key })),
+    ...turtleSections.filter(category => !['head','body','back','cape','capes','pet','emote'].includes(category.key.slice(3))),
   ]
 
   const pickSection = (key: string) => {
@@ -3160,7 +3168,7 @@ export function Skins({ on }: { on: boolean }) {
           ? sectionDef.chips.map((c) => ({
               key: c.key,
               name: c.name,
-              count: cosmetics.filter((x) => c.slots.includes(x.slot)).length,
+              count: BRAND.services ? cosmetics.filter((x) => c.slots.includes(x.slot)).length : (turtleWardrobe.catalog?.models || []).filter(item => c.slots.includes(item.type || '') && categoryOf(item, turtleWardrobe.snapshot?.categories || turtleWardrobe.catalog?.categories) === section).length,
             }))
           : []
 
@@ -3564,6 +3572,7 @@ export function Skins({ on }: { on: boolean }) {
             }}
           >
             <div className="skin-aura" aria-hidden="true"></div>
+            <Nametag nick={nick} at={tagAt || (!use3d ? {x:150,y:45} : null)} own />
             <canvas
               key={glEpoch}
               id="skinCanvas"
@@ -3678,6 +3687,7 @@ export function Skins({ on }: { on: boolean }) {
                 worn,
                 !!currentCape,
               )
+              if (!BRAND.services && section !== 'skin' && section !== 'looks') return <div className="ch-tools">{ownFilter}</div>
               const cosmetic = section !== 'skin' && section !== 'looks'
               if (!off && !cosmetic) return null
               return (
@@ -3713,7 +3723,7 @@ export function Skins({ on }: { on: boolean }) {
 
           {plusJoy ? <PlusCelebration items={plus?.items ?? 100} onDone={endPlusJoy} /> : null}
 
-          {section === 'skin' ? (
+          {!BRAND.services && section !== 'skin' && section !== 'looks' ? <TurtleWardrobe category={section.startsWith('tc:') ? section.slice(3) : section} slots={sectionDef?.chips.find(chip => chip.key === chipKey)?.slots} ownedOnly={own === 'mine'} /> : section === 'skin' ? (
             skinPanel
           ) : section === 'looks' ? (
             <>

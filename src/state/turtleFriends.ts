@@ -9,7 +9,13 @@ export const useTurtleFriends = create<ConnectionState>(() => ({ accountId: null
 export const turtleFriendsConnection = new FriendsConnection({
   connect: accountId => turtle('turtle_friends_connect', { accountId }),
   list: accountId => turtle<FriendList>('turtle_friends', { accountId, action: 'list' }),
-}, state => useTurtleFriends.setState(state))
+}, state => {
+  useTurtleFriends.setState(state)
+  void import('./turtleWardrobe').then(module => {
+    const current = useTurtleFriends.getState()
+    module.syncWardrobeAccount(current.accountId, current.connected)
+  })
+})
 
 export function watchTurtleFriends() {
   const select = () => {
