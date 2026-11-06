@@ -6532,5 +6532,6 @@
   "Turtle: the operation failed. Check your connection and configuration.": "Aktion fehlgeschlagen. Bitte Verbindung und Konfiguration prüfen.",
   "Turtle: too many requests. Please wait.": "Zu viele Anfragen. Bitte kurz warten.",
   "Turtle: play TurtleClient": "TurtleClient spielen",
-  "Turtle: select in lobby": "Im Hauptmenü auswählen"
+  "Turtle: select in lobby": "Im Hauptmenü auswählen",
+  "Turtle: Friends connects automatically and stays online while the launcher is running.": "Der Freundesdienst verbindet sich automatisch und bleibt online, solange der Launcher läuft."
 }

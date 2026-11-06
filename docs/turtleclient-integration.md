@@ -23,8 +23,9 @@ An already running native client cannot be launched twice.
 
 ## Friends
 
-The existing Friends navigation opens TurtleClient's friends service. Press
-Connect Friends with a Microsoft Minecraft account. This explicitly sends its
+The launcher automatically connects its active Microsoft Minecraft account to
+TurtleClient's friends service on startup and keeps it alive across screen changes.
+Connecting sends its
 Minecraft access token over HTTPS to the TurtleClient service once, where
 `GET https://api.minecraftservices.com/minecraft/profile` verifies ownership.
 The service neither logs nor persists that token. It returns an opaque one-hour
@@ -32,10 +33,13 @@ session, kept only in the launcher's Rust process. UUIDs or nicknames supplied b
 the webview cannot authenticate an account. Session identifiers are also absent
 from frontend storage and responses.
 
-Both players must connect once before a request can be addressed by Minecraft
+Both players must start the launcher once before a request can be addressed by Minecraft
 name. Requests, acceptance, rejection, cancellation and removal persist across
 service restarts. Acceptance must come from the recipient. Online means the
-Friends page has polled within the last 75 seconds. This release does not promise
+launcher has polled within the last 75 seconds. A central heartbeat runs every
+20 seconds, renews expired sessions and reconnects after network failures/server
+restarts. Switching accounts clears the previous view and stops its heartbeat;
+logging out or selecting an offline account stops polling. This release does not promise
 in-game presence, direct messages, calls or server invitations.
 
 The independent Rust service lives in `services/friends`, listens only on

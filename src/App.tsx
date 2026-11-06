@@ -417,6 +417,13 @@ export function App() {
   // Subscribe field by field: subscribing to the whole store re-rendered the active
   // screen on every toast, animation frame and install progress event.
   const logged = useUi((s) => s.logged)
+  useEffect(() => {
+    if (!logged || !hasTauri()) return
+    let live = true
+    let stop: (() => void) | undefined
+    void import('./state/turtleFriends').then(module => { if (live) stop = module.watchTurtleFriends() })
+    return () => { live = false; stop?.() }
+  }, [logged])
   const screen = useUi((s) => s.screen)
   const navPending = useUi((s) => s.navPending)
   const setScreen = useUi((s) => s.setScreen)
