@@ -7,8 +7,10 @@ This is an independent fork and is not affiliated with or endorsed by Millida, M
 
 Initial TurtleClient branding: app identity, window title, installer metadata, logos, icons and UI text.
 The launcher opens the existing Microsoft/offline game-account flow without requiring a Millida account.
-Millida online services and automatic updates are disabled. Microsoft sign-in requires a TurtleClient-owned
-Entra application ID at build time (`TURTLECLIENT_MS_CLIENT_ID`); no upstream ID is used.
+Millida online services and automatic updates are disabled. Microsoft sign-in uses TurtleClient's own
+public Entra application ID `effe2670-984b-4dc6-89d9-73e11c733c40`. Fork builds can override it at
+build time with `TURTLECLIENT_MS_CLIENT_ID`; no upstream ID is used. The app registration must
+allow personal Microsoft accounts and public client/device-code flows.
 The native TurtleClient (Rust) launch integration is a separate next step; this baseline still launches Java Minecraft.
 This source baseline is not a published binary release.
 

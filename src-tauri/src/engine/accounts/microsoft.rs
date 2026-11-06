@@ -5,8 +5,8 @@ use serde_json::Value;
 
 /// Azure application client_id, baked in at compile time. Own builds should set
 /// TURTLECLIENT_MS_CLIENT_ID to their own registration.
-// Public Azure application id, not a secret. No upstream application id is used as a fallback.
-const MS_CLIENT_ID_FALLBACK: &str = "";
+// Public application ID of TurtleClient's own Microsoft registration; not a secret.
+const MS_CLIENT_ID_FALLBACK: &str = "effe2670-984b-4dc6-89d9-73e11c733c40";
 
 pub(crate) fn ms_client_id() -> &'static str {
     match option_env!("TURTLECLIENT_MS_CLIENT_ID") {
