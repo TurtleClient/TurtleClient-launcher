@@ -11,6 +11,7 @@ use std::{
 };
 
 const BASE: &str = "https://45.133.9.162/turtleclient";
+pub(crate) mod update;
 #[derive(Clone, Default, Serialize, Deserialize)]
 pub struct Settings {
     executable: String,
@@ -107,7 +108,7 @@ fn running() -> bool {
 }
 #[tauri::command]
 pub async fn turtle_status() -> Result<Value, String> {
-    crate::commands::blocking(|| json!({"settings":settings(),"running":running()})).await
+    crate::commands::blocking(|| json!({"settings":settings(),"running":running(),"update":update::status()})).await
 }
 #[tauri::command]
 pub async fn turtle_configure(settings: Settings) -> Result<(), String> {
@@ -129,7 +130,7 @@ fn validate(settings: &Settings) -> Result<(), String> {
     }
     if !matches!(
         exe.file_name().and_then(|s| s.to_str()),
-        Some("TurtleClient.exe" | "horizon-client.exe" | "TurtleClient" | "horizon-client")
+        Some("TurtleClient.exe" | "turtle-client.exe" | "horizon-client.exe" | "TurtleClient" | "horizon-client")
     ) {
         return Err("turtle_executable_invalid".into());
     }
@@ -173,6 +174,7 @@ async fn profile(account: &str) -> Result<(Value, String), String> {
 }
 #[tauri::command]
 pub async fn turtle_launch(account_id: Option<String>, nick: String) -> Result<(), String> {
+    update::before_launch().await?;
     let config = settings();
     validate(&config)?;
     let identity = if let Some(id) = account_id {

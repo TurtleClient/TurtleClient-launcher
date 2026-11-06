@@ -258,6 +258,9 @@ pub fn run() {
             }
             // An update that was downloaded and checked earlier goes in now, before the window is shown (update_start.rs).
             update_start::run(app.handle(), shown_after_update);
+            tauri::async_runtime::spawn(async {
+                let _ = turtleclient::update::check(true).await;
+            });
             engine::arm_selfheal(app.handle());
             engine::arm_dialogs(app.handle());
             background::mark_started();
@@ -301,6 +304,7 @@ pub fn run() {
             turtleclient::turtle_configure,
             turtleclient::turtle_pick_path,
             turtleclient::turtle_launch,
+            turtleclient::update::turtle_client_update,
             turtleclient::turtle_catalog,
             turtleclient::turtle_model,
             turtleclient::turtle_wardrobe,
