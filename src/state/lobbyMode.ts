@@ -104,6 +104,7 @@ interface LobbyState {
   /** `stay` — переход со страницы на страницу (Ещё от…): хаб не уходит из каталога. */
   hubTarget: { pack?: string; mode?: string; pvp?: boolean; stay?: boolean } | null
   pick: (m: LobbyMode) => void
+  pickNative: () => void
   /**
    * Слот OneBlock в лобби: второй вариант рядом с выбранным режимом, а не
    * замена ему (правка владельца 23:00: «чтобы точно понимал, во что играет»).
@@ -132,6 +133,10 @@ export const useLobby = create<LobbyState>((set, get) => ({
       localStorage.removeItem(OB_KEY)
     } catch {}
     set({ picked: m, oneBlock: false })
+  },
+  pickNative: () => {
+    try {localStorage.removeItem(KEY); localStorage.removeItem(OB_KEY)} catch {}
+    set({ picked: null, oneBlock: false })
   },
   oneBlock: readOb(),
   setOneBlock: (on) => {

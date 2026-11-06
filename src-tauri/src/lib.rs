@@ -4,6 +4,7 @@ use tauri::Manager;
 
 pub mod engine;
 mod fork;
+mod turtleclient;
 mod app_icon;
 #[cfg(target_os = "macos")]
 mod autostart_mac;
@@ -296,6 +297,14 @@ pub fn run() {
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
+            turtleclient::turtle_status,
+            turtleclient::turtle_configure,
+            turtleclient::turtle_pick_path,
+            turtleclient::turtle_launch,
+            turtleclient::turtle_catalog,
+            turtleclient::turtle_model,
+            turtleclient::turtle_friends_connect,
+            turtleclient::turtle_friends,
             commands::content::core_version,
             commands::system::app_version,
             commands::system::remember_install_id,

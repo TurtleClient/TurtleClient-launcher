@@ -1,4 +1,6 @@
 import { Icon } from '../components/Icon'
+import { TurtleCatalog } from '../components/shop/TurtleCatalog'
+import { BRAND } from '../lib/branding'
 import { intlTag, useT } from '../i18n'
 import { Ruby } from '../components/Ruby'
 import { TopbarPortal } from '../components/TopbarPortal'
@@ -18,6 +20,10 @@ import '../styles/pixel/shop2.css'
  * (components/shop/ShopKit). Любая покупка идёт через одно окно подтверждения.
  */
 export function Rubies({ on }: { on: boolean }) {
+  return BRAND.services ? <LegacyRubies on={on} /> : <section className={'screen' + (on ? ' on' : '')} id="s-rubies"><TurtleCatalog /></section>
+}
+
+function LegacyRubies({ on }: { on: boolean }) {
   const t = useT()
   const s = useShop(on)
   const { signedIn, day, rules, busy, tier, balance, error, bump } = s

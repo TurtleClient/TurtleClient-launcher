@@ -100,6 +100,8 @@ import { useWearIntent, type SetOffer } from '../state/wearIntent'
 import { ChipRow, SectionBar } from '../components/character/Sections'
 import type { Section } from '../components/character/Sections'
 import { ItemGrid, ItemTile } from '../components/character/ItemTile'
+import { TurtleCatalog } from '../components/shop/TurtleCatalog'
+import { BRAND } from '../lib/branding'
 import { FittingBar } from '../components/character/FittingBar'
 import { nametagSpot } from '../components/character/Nametag'
 import { Outfits } from '../components/character/Outfits'
@@ -3123,7 +3125,7 @@ export function Skins({ on }: { on: boolean }) {
   const sectionList: Section[] = [
     { key: 'looks', name: t('Образы'), icon: 'ws-looks' },
     // Магазин рядом с вещами (06.10.2026, «один в один»): те же блоки, что в магазине.
-    ...(hasMillidaAccount() ? [{ key: 'shop', name: t('Магазин'), icon: 'ws-shop' }] : []),
+    ...(!BRAND.services || hasMillidaAccount() ? [{ key: 'shop', name: t('Магазин'), icon: 'ws-shop' }] : []),
     { key: 'skin', name: t('Скины'), icon: 'ws-skin' },
     { key: 'cape', name: t('Плащи'), icon: 'ws-cape', alert: readyRewards > 0 },
     ...sections.map((sec) => ({ key: sec.key, name: sec.name, icon: 'ws-' + sec.key })),
@@ -3731,7 +3733,7 @@ export function Skins({ on }: { on: boolean }) {
             </>
           ) : section === 'shop' ? (
             <div className="ch-shop">
-              <ShopFeed s={shop} chip />
+              {BRAND.services ? <ShopFeed s={shop} chip /> : <TurtleCatalog />}
             </div>
           ) : section === 'cape' ? (
             capePanel

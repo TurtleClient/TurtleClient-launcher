@@ -2,6 +2,8 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { Icon } from '../components/Icon'
 import { InvisibleToggle } from '../components/friends/InvisibleToggle'
 import { useT } from '../i18n'
+import { TurtleFriends } from '../components/friends/TurtleFriends'
+import { BRAND } from '../lib/branding'
 import { Head } from '../components/Head'
 import { PROFILE_URL, api, openExt } from '../lib/api'
 import { copyText } from '../lib/clipboard'
@@ -66,6 +68,10 @@ function Skeleton() {
 }
 
 export function Friends({ on }: { on: boolean }) {
+  return BRAND.services ? <LegacyFriends on={on} /> : <TurtleFriends on={on} />
+}
+
+function LegacyFriends({ on }: { on: boolean }) {
   const t = useT()
   const friends = useFriends((s) => s.friends)
   const reqIn = useFriends((s) => s.reqIn)

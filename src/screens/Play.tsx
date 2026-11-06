@@ -54,6 +54,8 @@ import '../styles/pixel/retention.css'
 import '../styles/pixel/party.css'
 import { TIERS_SECTION_PUBLIC } from '../lib/tiersSection'
 import { liveInterval } from '../lib/liveInterval'
+import { useTurtleRuntime } from '../lib/useTurtleRuntime'
+import { openSettings } from '../state/ui'
 
 /* Разделы на лобби, как в Brawl Stars: у каждого ровно один вход (владелец
    23.09.2026: «всё дублируется»). Режимы и каталог открывает плашка «Что
@@ -160,6 +162,8 @@ export function Play({ on }: { on: boolean }) {
   const dayZero = isDayZero({ ...playStats, loaded: statsLoaded }, running.length > 0 || prelaunch.open)
   const chosen: LobbyMode | null =
     picked && (picked.kind !== 'build' || profiles.some((p) => p.name === picked.name)) ? picked : null
+  const nativeSelected = !chosen
+  const native = useTurtleRuntime(on && nativeSelected)
   const mode: LobbyMode | null =
     chosen ?? (dayZero ? (anarchyPromo ? anarchyMode() : { kind: 'version', version: '1.21.11' }) : null)
   useFirstHourChest(on, playStats.total_seconds)
@@ -187,7 +191,7 @@ export function Play({ on }: { on: boolean }) {
             ? mode.slug
             : undefined
 
-  const modeArt =
+  const modeArt = nativeSelected ? <img src="/turtleclient-icon.svg" alt="TurtleClient" /> :
     mode?.kind === 'build' && premiumBuild ? (
       premiumBuild.cover ? <img src={premiumBuild.cover} alt="" /> : null
     ) : mode?.kind === 'build' ? (
@@ -207,10 +211,10 @@ export function Play({ on }: { on: boolean }) {
     ) : (
       <ModeReel />
     )
-  const modeTitle =
+  const modeTitle = nativeSelected ? 'TurtleClient' :
     mode?.kind === 'build' ? mode.name : mode?.kind === 'version' ? 'Minecraft ' + mode.version : mode?.kind === 'premium' ? mode.title : mode?.kind === 'server' ? mode.name : t('Ещё не выбрано')
   const partyOther = !!partyGoes && partyGoes !== modeTitle
-  const modeMeta =
+  const modeMeta = nativeSelected ? 'Minecraft 26.3 · Rust' :
     mode?.kind === 'build' && sel ? (
       <>
         {LOADER_NAME(sel) + ' · ' + sel.version}
@@ -305,7 +309,7 @@ export function Play({ on }: { on: boolean }) {
             data-kind={mode?.kind}
             data-id={modeId}
             data-private={mode?.kind === 'build' ? '' : undefined}
-            onClick={() => setScreen('playhub')}
+            onClick={() => nativeSelected ? openSettings('game') : setScreen('playhub')}
           >
             {/* Панель на всю ширину (правка владельца 22:44): крупная обложка
                 меняется раз в пару секунд — «загляни, может найдёшь интереснее». */}
@@ -322,7 +326,7 @@ export function Play({ on }: { on: boolean }) {
                 <b>{partyGoes || modeTitle}</b>
                 {modeMeta && !partyOther ? <span className="meta">{modeMeta}</span> : null}
                 <span className="lobby-mode-change">
-                  {t('Сменить сборку')}
+                  {nativeSelected ? t('Turtle: client configuration') : t('Сменить сборку')}
                   <Icon id="i-chev-r" />
                 </span>
                 {packUpdate ? (
@@ -365,7 +369,9 @@ export function Play({ on }: { on: boolean }) {
               data-id={modeId}
               data-private={mode?.kind === 'build' ? '' : undefined}
               data-sound={mode ? undefined : 'open'}
+              disabled={nativeSelected && (native.busy || native.running)}
               onClick={() => {
+                if (nativeSelected) {void native.launch(); return}
                 // Второе нажатие во время подготовки — отмена запуска
                 // (владелец 24.09.2026, 17:26).
                 if (btn.kind === 'installing') {
@@ -388,7 +394,7 @@ export function Play({ on }: { on: boolean }) {
               <span className="lbl">
                 {btn.kind === 'installing' ? null : <Icon id="i-play" />}
                 <span id="playLbl">
-                  {btn.kind === 'installing' ? (
+                  {nativeSelected && (native.busy || native.running) ? t(native.busy ? 'Turtle: starting…' : 'Turtle: client running') : btn.kind === 'installing' ? (
                     <>
                       <span className="play-stage">{tx(btn.stage)}</span>
                       <span className="play-pct">

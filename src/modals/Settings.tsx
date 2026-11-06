@@ -43,6 +43,7 @@ import { A11yRows } from '../components/A11yRows'
 import { uiChoice, uiConfirm } from '../state/confirm'
 import { ColorPicker } from '../components/ColorPicker'
 import { AppIconPicker } from '../components/AppIconPicker'
+import { TurtleRuntimeSettings } from '../components/TurtleRuntimeSettings'
 import { AudioSettings } from '../components/AudioSettings'
 import { RewindClips } from '../components/RewindClips'
 import { GlobalPresetPicker } from '../components/GfxPresets'
@@ -781,6 +782,7 @@ export function Settings({ on }: { on: boolean }) {
 
   const game = (
     <>
+      <TurtleRuntimeSettings />
       <Group title={t('Скин')}>
         <Row title={t('Откуда брать скин')} keys="скины плащи лицензия millida mojang">
           <Segs<SkinSource>

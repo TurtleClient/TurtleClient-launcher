@@ -4,6 +4,14 @@
 identifier = "main-commands"
 description = "Все команды ядра — только для главного окна"
 permissions = [
+  "allow-turtle-status",
+  "allow-turtle-configure",
+  "allow-turtle-pick-path",
+  "allow-turtle-launch",
+  "allow-turtle-catalog",
+  "allow-turtle-model",
+  "allow-turtle-friends-connect",
+  "allow-turtle-friends",
   "allow-core-version",
   "allow-app-version",
   "allow-remember-install-id",

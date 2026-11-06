@@ -18,7 +18,12 @@ override that ID at build time with `TURTLECLIENT_MS_CLIENT_ID`. Direct sign-in 
 configured registration and Minecraft API approval.
 See [Microsoft/Minecraft sign-in](docs/microsoft-login.md) for the separate Minecraft API approval step
 and the meaning of HTTP 403 after Microsoft sign-in.
-The native TurtleClient (Rust) launch integration is a separate next step; this baseline still launches Java Minecraft.
+The existing lobby Play button starts the native TurtleClient when no Java build is selected.
+Configure its executable, prepared Minecraft 26.3 resources and game directory under Settings → Game.
+That section also lets you select TurtleClient again after playing a Java build.
+Friends now use the separate TurtleClient friends service; the shop and wardrobe catalog show
+the existing free cosmetics/capes from the TurtleClient VPS. The original launcher layout is retained.
+See [native client and services](docs/turtleclient-integration.md) for setup, authentication and scope.
 This source baseline is not a published binary release.
 
 ## Development
