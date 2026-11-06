@@ -143,8 +143,9 @@ export async function startMsLogin(afterSpentCode = false) {
         void startMsLogin(true)
         return
       }
-      reset(String(e))
-      showToast('Microsoft: ' + e, 'error')
+      const message = apiErrorText(e, t('Microsoft не ответила — повтори попытку'))
+      reset(message)
+      showToast('Microsoft: ' + message, 'error')
       return
     }
     if (flow !== flowSeq) return

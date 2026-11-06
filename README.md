@@ -11,6 +11,8 @@ Millida online services and automatic updates are disabled. Microsoft sign-in us
 public Entra application ID `effe2670-984b-4dc6-89d9-73e11c733c40`. Fork builds can override it at
 build time with `TURTLECLIENT_MS_CLIENT_ID`; no upstream ID is used. The app registration must
 allow personal Microsoft accounts and public client/device-code flows.
+See [Microsoft/Minecraft sign-in](docs/microsoft-login.md) for the separate Minecraft API approval step
+and the meaning of HTTP 403 after Microsoft sign-in.
 The native TurtleClient (Rust) launch integration is a separate next step; this baseline still launches Java Minecraft.
 This source baseline is not a published binary release.
 

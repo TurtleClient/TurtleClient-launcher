@@ -149,6 +149,7 @@ pub(crate) async fn xbox_chain(ms_token: &str) -> Result<Value, String> {
     }
     let mc_token = match mc["access_token"].as_str() {
         Some(t) => t.to_string(),
+        None if mc_status == 403 => return Err(minecraft_forbidden(&mc).into()),
         None if mc_status == 429 => return Err("Minecraft временно ограничил запросы (HTTP 429) — подожди минуту и повтори".into()),
         None if mc_status >= 500 => return Err(format!("Серверы Minecraft сейчас недоступны (HTTP {}) — повтори позже", mc_status)),
         None => return Err(format!("Minecraft отказал во входе (HTTP {})", mc_status)),
@@ -182,6 +183,19 @@ pub(crate) async fn xbox_chain(ms_token: &str) -> Result<Value, String> {
         "expires_in": expires_in,
         "token": mc_token
     }))
+}
+
+/// Keep service response bodies (which may contain credentials) out of UI errors.
+fn minecraft_forbidden(body: &Value) -> &'static str {
+    if ["error", "errorMessage", "message"]
+        .iter()
+        .filter_map(|key| body[*key].as_str())
+        .any(|value| value.to_ascii_lowercase().contains("invalid app registration"))
+    {
+        "minecraft_app_registration_required"
+    } else {
+        "minecraft_login_forbidden"
+    }
 }
 
 /// The profile endpoint answers 200 only for a valid token, which is the only
@@ -266,6 +280,19 @@ fn xsts_error_text(code: Option<u64>) -> String {
 mod tests {
     use super::*;
     use std::sync::atomic::{AtomicUsize, Ordering};
+
+    #[test]
+    fn forbidden_responses_distinguish_app_registration_without_exposing_the_body() {
+        let unapproved = serde_json::json!({
+            "error": "ForbiddenOperationException",
+            "errorMessage": "Invalid app registration, see https://aka.ms/AppRegInfo",
+            "access_token": "private-test-token",
+        });
+        assert_eq!(minecraft_forbidden(&unapproved), "minecraft_app_registration_required");
+        assert_eq!(minecraft_forbidden(&serde_json::json!({"message":"INVALID APP REGISTRATION"})), "minecraft_app_registration_required");
+        assert_eq!(minecraft_forbidden(&serde_json::json!({"error":"Forbidden","access_token":"private-test-token"})), "minecraft_login_forbidden");
+        assert_eq!(minecraft_forbidden(&Value::Null), "minecraft_login_forbidden");
+    }
 
     #[tokio::test]
     async fn device_code_is_redeemed_once_across_retries() {

@@ -6476,5 +6476,7 @@
   "Лог пустой": "Log ist leer",
   "Достижение «{title}»": "Erfolg „{title}“",
   "{n} очков достижений": "{n} Erfolgspunkte",
-  "хранилище входа сейчас занято другой программой (антивирус?) — повтори через несколько секунд": "der Anmeldespeicher wird gerade von einem anderen Programm benutzt (Antivirus?) — versuche es in ein paar Sekunden erneut"
+  "хранилище входа сейчас занято другой программой (антивирус?) — повтори через несколько секунд": "der Anmeldespeicher wird gerade von einem anderen Programm benutzt (Antivirus?) — versuche es in ein paar Sekunden erneut",
+  "Minecraft rejected this launcher’s app registration (HTTP 403). The launcher developer must request Minecraft API access: https://aka.ms/mce-reviewappid": "Minecraft hat die App-Registrierung dieses Launchers abgelehnt (HTTP 403). Der Launcher-Entwickler muss den Minecraft-API-Zugriff beantragen: https://aka.ms/mce-reviewappid",
+  "Minecraft Services refused the login (HTTP 403). Microsoft sign-in succeeded, but Minecraft access was denied.": "Minecraft Services hat die Anmeldung abgelehnt (HTTP 403). Die Microsoft-Anmeldung war erfolgreich, der Minecraft-Zugriff wurde jedoch verweigert."
 }

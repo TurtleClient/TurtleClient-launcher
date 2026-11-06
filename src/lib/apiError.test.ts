@@ -1,6 +1,15 @@
 import { expect, test } from 'bun:test'
 import { apiErrorText, isTransientApiError } from './apiError'
 
+test('Minecraft app approval and other refusals retain their distinct next steps', () => {
+  const approval = apiErrorText('minecraft_app_registration_required', 'Sign-in failed')
+  const forbidden = apiErrorText('minecraft_login_forbidden', 'Sign-in failed')
+  expect(approval).toContain('https://aka.ms/mce-reviewappid')
+  expect(approval).toContain('403')
+  expect(forbidden).toContain('Minecraft Services')
+  expect(forbidden).not.toContain('mce-reviewappid')
+})
+
 // Вход → вердикт. Закреплено потому, что «Друзья» показывали «войди в аккаунт»
 // на любую неудачу: игрок с живой сессией шёл чинить вход вместо ника.
 const cases: Array<[string, unknown, string]> = [
