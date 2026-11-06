@@ -1,5 +1,5 @@
 import { useSyncExternalStore } from 'react'
-import { liteVerdict, perfOverride, weakVerdict, webviewGpu, type LiteInput } from './deviceTier'
+import { character3dAllowed, liteVerdict, perfOverride, webviewGpu, type LiteInput } from './deviceTier'
 import { gpuLite, onGpuLite } from './gpuLite'
 import { slowLite } from './slowLite'
 import { cachedHardware, learnHardware } from './hardwareHint'
@@ -36,11 +36,12 @@ export function liteOn(): boolean {
 
 /** Слабый ПК в узком смысле (≤6 ГБ, ≤2 физических ядра, программная графика, упавший WebGL): три-D не грузим вообще. */
 export function weakOn(): boolean {
-  return weakVerdict(input())
+  return !character3dAllowed(input())
 }
 
 const subs = new Set<() => void>()
 let on = false
+let weak = false
 let started = false
 
 /** Подписка на смену режима (настройка «Графика», упавший WebGL). */
@@ -53,8 +54,10 @@ export function onLiteChange(cb: () => void): () => void {
 
 function apply() {
   const next = liteOn()
-  if (next === on) return
+  const nextWeak = weakOn()
+  if (next === on && nextWeak === weak) return
   on = next
+  weak = nextWeak
   document.documentElement.classList.toggle(LITE_CLASS, on)
   subs.forEach((f) => f())
 }
@@ -75,4 +78,8 @@ export function initLiteMode(): void {
 /** Хук: перерисоваться, когда лёгкий режим включился или выключился. */
 export function useLiteMode(): boolean {
   return useSyncExternalStore(onLiteChange, () => on, () => on)
+}
+
+export function useCharacter3d(): boolean {
+  return useSyncExternalStore(onLiteChange, () => !weakOn(), () => false)
 }

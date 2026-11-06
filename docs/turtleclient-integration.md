@@ -4,12 +4,12 @@ The original launcher layout is retained. With no Java build explicitly selected
 the existing lobby Play button starts the native TurtleClient. Picking a Java build
 in the catalog continues to use the original Java launch path.
 
-In Settings → Game, choose the native `TurtleClient.exe` (or the development
-`horizon-client.exe`), the prepared Minecraft 26.3 resources and a game directory.
+The native client is now installed and updated automatically on launcher start;
+see [native-client-updates.md](native-client-updates.md). In Settings → Game,
+select the prepared Minecraft 26.3 resources and a game directory.
 Use **Select in lobby** there to return to TurtleClient after selecting a Java build.
-The launcher detects the sibling `TurtleClient-Mod/target/fast/horizon-client.exe`
-in a development checkout, and already prepared resources from installed Horizon
-versions. It never downloads or redistributes Mojang assets. Paths are stored in
+The launcher detects already prepared resources from installed Horizon
+versions. It never redistributes Mojang assets. Paths are stored in
 `turtleclient.json` under the launcher data directory. `TURTLE_CLIENT` and
 `TURTLE_RESOURCES` provide initial path overrides.
 

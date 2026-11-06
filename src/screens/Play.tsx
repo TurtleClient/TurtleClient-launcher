@@ -53,7 +53,7 @@ import '../styles/pixel/retention.css'
 import '../styles/pixel/party.css'
 import { TIERS_SECTION_PUBLIC } from '../lib/tiersSection'
 import { liveInterval } from '../lib/liveInterval'
-import { useTurtleRuntime } from '../lib/useTurtleRuntime'
+import { clientUpdateLabel, useTurtleRuntime } from '../lib/useTurtleRuntime'
 import { openSettings } from '../state/ui'
 
 /* Разделы на лобби, как в Brawl Stars: у каждого ровно один вход (владелец
@@ -387,7 +387,7 @@ export function Play({ on }: { on: boolean }) {
               <span className="lbl">
                 {btn.kind === 'installing' ? null : <Icon id="i-play" />}
                 <span id="playLbl">
-                  {nativeSelected && (native.busy || native.running) ? t(native.busy ? 'Turtle: starting…' : 'Turtle: client running') : btn.kind === 'installing' ? (
+                  {nativeSelected && (native.busy || native.running) ? (native.busy ? clientUpdateLabel(native.clientUpdate) : t('Turtle: client running')) : btn.kind === 'installing' ? (
                     <>
                       <span className="play-stage">{tx(btn.stage)}</span>
                       <span className="play-pct">

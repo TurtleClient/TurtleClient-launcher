@@ -6538,5 +6538,14 @@
   "Turtle: click to equip": "Click to equip",
   "Turtle: all cosmetics": "All cosmetics",
   "Turtle: shop item": "Available in the shop",
-  "Turtle: browse the server collection. Equip unlocked items in your wardrobe.": "Browse the collection. Equip unlocked items in your wardrobe."
+  "Turtle: browse the server collection. Equip unlocked items in your wardrobe.": "Browse the collection. Equip unlocked items in your wardrobe.",
+  "Turtle: checking client updates…": "Checking client updates…",
+  "Turtle: downloading client… {percent}%": "Downloading client… {percent}%",
+  "Turtle: installing client…": "Installing client…",
+  "Turtle: client update failed. Check your connection and try again.": "Client update failed. Check your connection and try again.",
+  "Turtle: automatic client updates": "Automatic client updates",
+  "Turtle: client version {version}": "Client version {version}",
+  "Turtle: checked whenever the launcher starts.": "Checked whenever the launcher starts.",
+  "Turtle: check for client updates": "Check for client updates",
+  "Turtle: the client updates automatically. Select your prepared Minecraft resources and game folder.": "The client updates automatically. Select your prepared Minecraft resources and game folder."
 }

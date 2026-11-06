@@ -8,6 +8,7 @@ permissions = [
   "allow-turtle-configure",
   "allow-turtle-pick-path",
   "allow-turtle-launch",
+  "allow-turtle-client-update",
   "allow-turtle-catalog",
   "allow-turtle-model",
   "allow-turtle-wardrobe",

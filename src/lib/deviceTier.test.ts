@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it } from 'bun:test'
-import { currentDeviceTier, deviceTier, liteVerdict, weakVerdict, type HardwareHint, maxCanvasPixelRatio, perfOverride, sceneFpsCap, tierWithGpu } from './deviceTier'
+import { character3dAllowed, currentDeviceTier, deviceTier, liteVerdict, weakVerdict, type HardwareHint, maxCanvasPixelRatio, perfOverride, sceneFpsCap, tierWithGpu } from './deviceTier'
 
 // Вход → вердикт. Тир решает, резать ли плотность рендера: ошибка в одну
 // сторону мылит картинку на мощной машине, в другую — не спасает слабую.
@@ -188,5 +188,19 @@ describe('weakVerdict', () => {
     expect(weakVerdict({ ...base, hw: xeon })).toBe(false)
     expect(weakVerdict({ ...base, hw: xeon, slowLite: true })).toBe(true)
     expect(weakVerdict({ ...base, forced: 'high', hw: xeon, slowLite: true })).toBe(false)
+  })
+})
+
+describe('character3dAllowed', () => {
+  const capable = { forced:null, gpuLite:false, slowLite:true, deviceMemory:8, hardwareConcurrency:12, gpu:'NVIDIA GeForce RTX 3050' } as const
+  it('keeps the 3D character and cosmetics available after an automatic UI stutter downgrade', () => {
+    expect(liteVerdict(capable)).toBe(true)
+    expect(character3dAllowed(capable)).toBe(true)
+  })
+  it('still respects manual low quality, weak hardware and GPU failures', () => {
+    expect(character3dAllowed({...capable,forced:'low'})).toBe(false)
+    expect(character3dAllowed({...capable,deviceMemory:2})).toBe(false)
+    expect(character3dAllowed({...capable,gpuLite:true})).toBe(false)
+    expect(character3dAllowed({...capable,gpu:'Microsoft Basic Render Driver'})).toBe(false)
   })
 })

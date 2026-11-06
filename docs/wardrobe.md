@@ -18,6 +18,13 @@ five minutes, coalesce simultaneous requests and keep the last successful answer
 if a refresh fails. An unavailable profile is never cached as a successful Steve
 lookup. Late image loads cannot overwrite a newer skin or a disposed viewer.
 
+The lobby shows the same name tag and equipped animated effect as the wardrobe,
+including during its initial skin stand-in. An automatic stutter downgrade only
+simplifies UI decoration; it no longer disables the 3D character and cosmetics on
+capable hardware. Explicit low-quality mode and genuine GPU failures still use the
+fallback. Changing quality mode updates the character even when the simplified UI
+decoration remains active.
+
 ## Server configuration
 
 Edit `/var/lib/turtleclient/friends/wardrobe-categories.json` using

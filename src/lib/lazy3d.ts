@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { currentDeviceTier } from './deviceTier'
 import { whenIdle } from './idle'
-import { weakOn } from './liteMode'
+import { useCharacter3d, weakOn } from './liteMode'
 
 /*
  * Когда можно грузить three.js (≈735 КБ) и собирать WebGL-сцену. Правило (26.10.2026):
@@ -65,7 +65,7 @@ function afterFirstFrame(cb: () => void): () => void {
 
 /** Хук: `true`, когда пора монтировать 3D-сцену (после простоя); на слабом ПК не наступает никогда. */
 export function useIdle3d(active: boolean): boolean {
-  const allowed = lobby3dAllowed()
+  const allowed = useCharacter3d()
   const [want, setWant] = useState(false)
   useEffect(() => {
     if (!allowed || want || !active) return

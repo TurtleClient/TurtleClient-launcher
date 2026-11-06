@@ -608,7 +608,7 @@
 
 /* Ник над персонажем убран (владелец 24.09.2026, 13:23: с украшениями
    смотрится плохо). Узел остаётся невидимым — по нему встаёт облачко эмоции. */
-.lobby .mc-nametag { visibility: hidden; }
+.lobby .mc-nametag { visibility: visible; }
 
 /* «Рекомендуем»: справа по центру, между верхними кнопками и «Играть». */
 .lobby-rec {
@@ -849,7 +849,7 @@ body:has(#s-play.on) #toast { bottom: auto; top: 72px; }
    (место и размер считает lib/lobbyStill) и лежит ровно там, где встанет 3D, — 3D проявляется
    поверх без скачка. Не перехватывает мышь у настоящей сцены. */
 .lobby-char-still { cursor: pointer; touch-action: auto; overflow: hidden; }
-.lobby-char-still img { position: absolute; display: block; max-width: none; pointer-events: none; user-select: none; }
+.lobby-char-still > img { position: absolute; display: block; max-width: none; pointer-events: none; user-select: none; }
 /* Плоская фигурка не похожа на 3D: она тает навстречу проявляющейся сцене, а не лежит под ней. */
 .lobby-char-still.standin-flat.leaving { opacity: 0; transition-timing-function: ease-out; }
 /* Плоская фигурка на месте 3D-фигуры (components/lobby/FlatStand): top и height — из lobbyFrame. */

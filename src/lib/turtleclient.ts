@@ -1,6 +1,7 @@
 import { tauri } from '../ipc/tauri'
 export interface TurtleSettings { executable: string; resources: string; game_dir: string }
-export interface TurtleStatus { settings: TurtleSettings; running: boolean }
+export interface TurtleUpdateStatus {phase:string;version:string;downloaded:number;total:number;error:string}
+export interface TurtleStatus { settings: TurtleSettings; running: boolean;update?:TurtleUpdateStatus }
 export interface Friend { uuid: string; name: string; online: boolean }
 export interface FriendList { friends: Friend[]; incoming: Friend[]; outgoing: Friend[] }
 export interface Cosmetic { id: string; name: string; slot: string; owner: string; hash: string; type?:string; access?:'free'|'paid'; price_minor?:number; currency?:string }
@@ -16,6 +17,7 @@ export function turtle<T>(command: string, args?: Record<string, unknown>): Prom
 export const emptyFriends = (): FriendList => ({ friends: [], incoming: [], outgoing: [] })
 export function serviceError(error: unknown): string {
   const code = String(error)
+  if (code.includes('turtle_update_')) return 'Turtle: client update failed. Check your connection and try again.'
   if (code.includes('404')) return 'Turtle: player not found. They must connect to Friends first.'
   if (code.includes('401') || code.includes('connect_required')) return 'Turtle: connect to Friends again.'
   if (code.includes('429')) return 'Turtle: too many requests. Please wait.'

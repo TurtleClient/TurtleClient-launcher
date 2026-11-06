@@ -12,6 +12,36 @@ use std::{
 use tokio::io::AsyncWriteExt;
 
 const MAX_ARCHIVE: u64 = 256 * 1024 * 1024;
+struct StagingCleanup {
+    path: PathBuf,
+    parent: PathBuf,
+}
+impl Drop for StagingCleanup {
+    fn drop(&mut self) {
+        if let (Ok(path), Ok(parent)) = (self.path.canonicalize(), self.parent.canonicalize()) {
+            // Only this freshly created child of our staging directory may be removed.
+            if path.parent() == Some(parent.as_path())
+                && path.file_name().and_then(|s| s.to_str()).is_some_and(|s| {
+                    !s.is_empty() && s.bytes().all(|b| b.is_ascii_hexdigit() || b == b'-')
+                })
+            {
+                let _ = std::fs::remove_dir_all(path);
+            }
+        }
+    }
+}
+fn nonce() -> String {
+    static NEXT: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
+    format!(
+        "{:x}-{:x}-{:x}",
+        std::process::id(),
+        std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap_or_default()
+            .as_nanos(),
+        NEXT.fetch_add(1, std::sync::atomic::Ordering::Relaxed)
+    )
+}
 #[derive(Clone, Default, Serialize)]
 pub struct Status {
     pub phase: String,
@@ -161,7 +191,7 @@ fn write_json(path: &Path, value: &impl Serialize) -> Result<(), String> {
             path.parent()
                 .ok_or_else(|| std::io::Error::other("parent"))?,
         )?;
-        let temp = path.with_extension(format!("{}.tmp", uuid::Uuid::new_v4()));
+        let temp = path.with_extension(format!("{}.tmp", nonce()));
         let bytes = serde_json::to_vec(value)?;
         {
             use std::io::Write;
@@ -198,6 +228,7 @@ fn unpack(archive: &Path, stage: &Path, release: &Release) -> Result<(), String>
             let name = relative.to_str().ok_or("path")?.replace('\\', "/");
             if !allowed_file(&name)
                 || entry.name().contains('\\')
+                || entry.name().contains(':')
                 || entry.unix_mode().is_some_and(|m| m & 0o170000 == 0o120000)
             {
                 return Err("file".into());
@@ -286,7 +317,7 @@ async fn install(force: bool) -> Result<(), String> {
         .await
         .map_err(|_| "turtle_update_unavailable")?;
     let release = decode_manifest(&bounded(response, 128 * 1024).await?)?;
-    if let Some(current) = installed_at(&root) {
+    if let Some(mut current) = installed_at(&root) {
         if release.sequence < current.release.sequence
             || (release.sequence == current.release.sequence
                 && release.sha256 != current.release.sha256)
@@ -294,17 +325,23 @@ async fn install(force: bool) -> Result<(), String> {
             return Err("turtle_update_rollback_rejected".into());
         }
         if release.sha256 == current.release.sha256 && intact(&root, &current) {
+            current.release = release.clone();
+            write_json(&root.join("current.json"), &current)?;
             activate(&root, &current)?;
             *checked = Some(Instant::now());
             set_status("ready", Some(&release), release.size, "");
             return Ok(());
         }
     }
-    let nonce = uuid::Uuid::new_v4().to_string();
+    let nonce = nonce();
     let stage = root.join("staging").join(&nonce);
     tokio::fs::create_dir_all(&stage)
         .await
         .map_err(|_| "turtle_update_install_failed")?;
+    let _cleanup = StagingCleanup {
+        path: stage.clone(),
+        parent: root.join("staging"),
+    };
     let archive = stage.join("client.zip.part");
     let mut response = client
         .get(&release.url)
@@ -381,7 +418,7 @@ pub async fn check(force: bool) -> Result<(), String> {
     }
 }
 pub async fn before_launch() -> Result<(), String> {
-    if let Err(error) = check(false).await {
+    if let Err(error) = check(true).await {
         let root = root();
         if let Some(installed) = installed_at(&root).filter(|i| intact(&root, i)) {
             return activate(&root, &installed);
@@ -433,5 +470,155 @@ mod tests {
         assert!(!allowed_file("assets/minecraft/stone.png"));
         assert!(!allowed_file("game.jar"));
         assert!(!allowed_file("other.exe"));
+    }
+
+    #[test]
+    fn signed_release_is_accepted_and_changed_payload_is_rejected() {
+        let fixture = include_bytes!("fixtures/signed-release.json");
+        assert!(decode_manifest(fixture).is_ok());
+        let mut envelope: serde_json::Value = serde_json::from_slice(fixture).unwrap();
+        let mut payload = base64::engine::general_purpose::STANDARD
+            .decode(envelope["payload"].as_str().unwrap())
+            .unwrap();
+        payload.push(b' ');
+        envelope["payload"] = base64::engine::general_purpose::STANDARD
+            .encode(payload)
+            .into();
+        assert!(decode_manifest(&serde_json::to_vec(&envelope).unwrap()).is_err());
+    }
+    fn temp() -> PathBuf {
+        let path = std::env::temp_dir().join(format!("turtle-native-update-test-{}", nonce()));
+        std::fs::create_dir(&path).unwrap();
+        path
+    }
+    fn clean(path: &Path) {
+        let resolved = path.canonicalize().unwrap();
+        assert!(resolved.starts_with(std::env::temp_dir().canonicalize().unwrap()));
+        assert!(resolved
+            .file_name()
+            .unwrap()
+            .to_str()
+            .unwrap()
+            .starts_with("turtle-native-update-test-"));
+        std::fs::remove_dir_all(resolved).unwrap();
+    }
+    fn fixture_zip(root: &Path, extra: Option<&str>) -> (PathBuf, Release) {
+        use std::io::Write;
+        let path = root.join("client.zip");
+        let mut zip = zip::ZipWriter::new(std::fs::File::create(&path).unwrap());
+        for name in [
+            "TurtleClient.exe",
+            "LICENSE",
+            "THIRD_PARTY_NOTICES.md",
+            "turtleclient-base.json",
+        ]
+        .into_iter()
+        .chain(extra)
+        {
+            zip.start_file(name, zip::write::SimpleFileOptions::default())
+                .unwrap();
+            zip.write_all(if name == "TurtleClient.exe" {
+                b"MZtest"
+            } else {
+                b"fixture"
+            })
+            .unwrap();
+        }
+        zip.finish().unwrap();
+        let mut r = release();
+        r.exe_sha256 = hash(b"MZtest");
+        r.sha256 = hash(&std::fs::read(&path).unwrap());
+        r.size = std::fs::metadata(&path).unwrap().len();
+        r.url = format!("{BASE}/client/releases/{}/client.zip", r.sha256);
+        (path, r)
+    }
+    #[test]
+    fn extracted_release_detects_a_damaged_executable() {
+        let root = temp();
+        let (archive, r) = fixture_zip(&root, None);
+        let i = Installed {
+            release: r,
+            directory: "abcdef".into(),
+        };
+        let stage = root.join("versions/abcdef");
+        unpack(&archive, &stage, &i.release).unwrap();
+        write_json(&root.join("current.json"), &i).unwrap();
+        assert!(intact(&root, &installed_at(&root).unwrap()));
+        std::fs::write(stage.join("TurtleClient.exe"), b"MZchanged").unwrap();
+        assert!(!intact(&root, &i));
+        clean(&root);
+    }
+    #[test]
+    fn unsafe_archive_leaves_active_install_untouched() {
+        for extra in [
+            "../escape.txt",
+            "assets/minecraft/stone.png",
+            "game.jar",
+            "licenses/notice:ads.txt",
+        ] {
+            let root = temp();
+            let (archive, r) = fixture_zip(&root, Some(extra));
+            let marker = root.join("current.json");
+            std::fs::write(&marker, b"previous-install").unwrap();
+            assert!(unpack(&archive, &root.join("stage"), &r).is_err());
+            assert_eq!(std::fs::read(&marker).unwrap(), b"previous-install");
+            assert!(!root.join("escape.txt").exists());
+            clean(&root);
+        }
+    }
+    #[test]
+    fn interrupted_staging_is_removed_without_touching_other_directories() {
+        let root = temp();
+        let parent = root.join("staging");
+        let path = parent.join("abcdef");
+        std::fs::create_dir_all(&path).unwrap();
+        std::fs::write(path.join("client.zip.part"), b"partial").unwrap();
+        std::fs::write(root.join("saved-world"), b"keep").unwrap();
+        drop(StagingCleanup {
+            path: path.clone(),
+            parent,
+        });
+        assert!(!path.exists());
+        assert_eq!(std::fs::read(root.join("saved-world")).unwrap(), b"keep");
+        clean(&root);
+    }
+    #[tokio::test]
+    #[ignore = "downloads the public native release; never starts it or touches real game data"]
+    async fn public_release_installs_in_an_isolated_directory() {
+        let client = reqwest::Client::builder()
+            .redirect(reqwest::redirect::Policy::none())
+            .timeout(Duration::from_secs(180))
+            .build()
+            .unwrap();
+        let bytes = bounded(
+            client
+                .get(format!("{BASE}/client/latest.json"))
+                .send()
+                .await
+                .unwrap(),
+            128 * 1024,
+        )
+        .await
+        .unwrap();
+        let r = decode_manifest(&bytes).unwrap();
+        let archive = bounded(
+            client.get(&r.url).send().await.unwrap(),
+            MAX_ARCHIVE as usize,
+        )
+        .await
+        .unwrap();
+        assert_eq!(archive.len() as u64, r.size);
+        assert_eq!(hash(&archive), r.sha256);
+        let root = temp();
+        let path = root.join("client.zip");
+        std::fs::write(&path, archive).unwrap();
+        let i = Installed {
+            release: r,
+            directory: "abcdef".into(),
+        };
+        unpack(&path, &root.join("versions/abcdef"), &i.release).unwrap();
+        write_json(&root.join("current.json"), &i).unwrap();
+        assert!(intact(&root, &installed_at(&root).unwrap()));
+        clean(&root);
     }
 }

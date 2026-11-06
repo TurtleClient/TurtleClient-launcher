@@ -2,7 +2,8 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useHasMillida } from '../../state/auth'
 import { getAccount, useAccounts } from '../../state/accounts'
 import { setScreen } from '../../state/ui'
-import { MAX_WAIT_MS, lobby3dAllowed, mark3dLoaded, preloadQuietMs } from '../../lib/lazy3d'
+import { MAX_WAIT_MS, mark3dLoaded, preloadQuietMs } from '../../lib/lazy3d'
+import { useCharacter3d } from '../../lib/liteMode'
 import { whenIdle } from '../../lib/idle'
 import { loadLookSkin } from '../../lib/lobbySkin'
 import { keptLookSkin } from '../../lib/lookCache'
@@ -38,7 +39,7 @@ export function LobbyFigure() {
   // Сессия поднимается после первого кадра: без подписки снимок искался бы у гостя.
   const activeId = useAccounts((s) => s.active)
   const nick = (getAccount() || { nick: '' }).nick || 'MHF_Steve'
-  const allowed = lobby3dAllowed()
+  const allowed = useCharacter3d()
   // Сцена уже показана в прошлый заход и ждала на паузе — заглушка не нужна.
   const [live, setLive] = useState(() => keep.shown)
   const [still, setStill] = useState<(LobbyStill & { url: string }) | null>(null)
@@ -170,7 +171,8 @@ export function LobbyFigure() {
           {stillOn ? (
             <img src={still!.url} alt="" draggable={false} style={{ left: place!.left, top: place!.top, width: place!.width, height: place!.height }} />
           ) : null}
-          {flatOn && flat ? <FlatStand url={flat.skin} slim={flat.slim} /> : null}
+          {flatOn && flat ? <FlatStand url={flat.skin} slim={flat.slim} nick={nick} /> : null}
+          {stillOn ? <FlatStand nick={nick} /> : null}
         </div>
       ) : null}
       {/* Место 3D-сцены (LobbyKeeper): после заглушки, чтобы проявляться поверх неё. */}

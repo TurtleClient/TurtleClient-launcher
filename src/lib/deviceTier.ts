@@ -162,6 +162,11 @@ export function weakVerdict(p: LiteInput): boolean {
   return weakHardware(p)
 }
 
+/** Slow UI frames may simplify decoration without hiding the equipped character. */
+export function character3dAllowed(p: LiteInput): boolean {
+  return !p.gpuLite && !weakVerdict({ ...p, slowLite: false })
+}
+
 /**
  * Память и ядра слабые. Решает ядро, если оно ответило: точная память, физические ядра (нет
  * числа ядер — потоки). Подсказки вебвью берутся только без ответа ядра, по каждой величине отдельно.

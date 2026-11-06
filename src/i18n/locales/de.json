@@ -6538,5 +6538,14 @@
   "Turtle: click to equip": "Zum Ausrüsten anklicken",
   "Turtle: all cosmetics": "Alle Cosmetics",
   "Turtle: shop item": "Im Shop erhältlich",
-  "Turtle: browse the server collection. Equip unlocked items in your wardrobe.": "Durchstöbere die Kollektion. Freigeschaltete Artikel kannst du in der Garderobe ausrüsten."
+  "Turtle: browse the server collection. Equip unlocked items in your wardrobe.": "Durchstöbere die Kollektion. Freigeschaltete Artikel kannst du in der Garderobe ausrüsten.",
+  "Turtle: checking client updates…": "Client-Updates prüfen…",
+  "Turtle: downloading client… {percent}%": "Client laden… {percent}%",
+  "Turtle: installing client…": "Client installieren…",
+  "Turtle: client update failed. Check your connection and try again.": "Client-Update fehlgeschlagen. Prüfe deine Verbindung und versuche es erneut.",
+  "Turtle: automatic client updates": "Automatische Client-Updates",
+  "Turtle: client version {version}": "Client-Version {version}",
+  "Turtle: checked whenever the launcher starts.": "Wird bei jedem Launcher-Start geprüft.",
+  "Turtle: check for client updates": "Client-Updates prüfen",
+  "Turtle: the client updates automatically. Select your prepared Minecraft resources and game folder.": "Der Client wird automatisch aktualisiert. Wähle deine vorbereiteten Minecraft-Ressourcen und den Spielordner."
 }

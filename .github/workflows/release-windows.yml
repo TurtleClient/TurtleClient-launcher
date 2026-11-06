@@ -32,7 +32,7 @@ jobs:
           restore-keys: windows-release-${{ hashFiles('src-tauri/Cargo.lock') }}-
       - run: bun install --frozen-lockfile
       - name: Verify updater and connection behavior
-        run: bun scripts/test.mjs updater.test updatePolicy.test remoteUi.test friendsConnection.test turtle-release.test turtleGeometry.test turtleTag.test turtleWardrobeRules.test minecraftSkinCache.test textureSource.test lobbyLook.test
+        run: bun scripts/test.mjs updater.test updatePolicy.test remoteUi.test friendsConnection.test turtle-release.test turtleGeometry.test turtleTag.test turtleWardrobeRules.test minecraftSkinCache.test textureSource.test lobbyLook.test deviceTier.test gpuLite.test slowLite.test
       - name: Set monotonically increasing release version
         id: version
         run: bun scripts/turtle-release.mjs prepare
@@ -55,6 +55,8 @@ jobs:
           updaterJsonPreferNsis: true
           tauriScript: bun run tauri
           args: --ci --bundles nsis --config src-tauri/tauri.release.conf.json -- --locked
+      - name: Verify native client update installation
+        run: cargo test --manifest-path src-tauri/Cargo.toml --release --features tauri/custom-protocol --locked --lib turtleclient::update::tests
       - name: Validate and publish the complete update atomically
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
