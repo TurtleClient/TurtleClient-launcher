@@ -66,7 +66,7 @@ export function VoiceMessage({ att, me }: { att: ChatAttachment; me?: boolean })
   const toggle = () => {
     let a = audioRef.current
     if (!a && !isOwnMediaUrl(att.url)) {
-      setFailed(t('Файл не из хранилища Millida'))
+      setFailed(t('Файл не из хранилища TurtleClient'))
       return
     }
     if (!a) {

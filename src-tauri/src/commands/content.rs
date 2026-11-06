@@ -1,5 +1,5 @@
 // UI commands about mods, modpacks, worlds and catalogs: install, update, delete.
-// Network goes through engine (Modrinth, CurseForge, the Millida catalog). Disk: only the profile folder and the launcher data folder.
+// Network goes through engine (Modrinth, CurseForge, the TurtleClient catalog). Disk: only the profile folder and the launcher data folder.
 use crate::engine;
 
 #[tauri::command]
@@ -139,7 +139,7 @@ pub async fn cf_install_world(app: tauri::AppHandle, mod_id: u32, profile: Strin
     engine::cf_install_world(app, mod_id, profile, force.unwrap_or(false)).await
 }
 
-/// A Millida catalogue file (free or paid) into a build. The core asks for the
+/// A TurtleClient catalogue file (free or paid) into a build. The core asks for the
 /// signed address itself; the webview names only the build, item and file id.
 #[tauri::command]
 #[allow(clippy::too_many_arguments)]
@@ -267,7 +267,7 @@ fn hosting_pack_name(profile: &str, stamp: u64) -> String {
 /// на диске, ни адреса API он не знает. Возвращает имя залитого архива —
 /// установку по нему запускает уже обычный запрос API.
 #[tauri::command]
-// Sends a modpack to Millida hosting when the user clicks: packs it as .mrpack, sends it in chunks through the Millida API with the account token.
+// Sends a modpack to TurtleClient hosting when the user clicks: packs it as .mrpack, sends it in chunks through the TurtleClient API with the account token.
 pub async fn hosting_send_build(profile: String, server_id: String) -> Result<String, String> {
     if server_id.is_empty() || server_id.len() > 64 || !server_id.chars().all(|c| c.is_ascii_alphanumeric() || c == '-' || c == '_') {
         return Err("bad server".into());
@@ -350,7 +350,7 @@ pub async fn quarantine_mods(profile: String, files: Vec<String>) -> Result<u32,
     super::blocking(move || engine::quarantine(&profile, files)).await?
 }
 
-/// Материал каталога Millida в сборку (или модпак новой сборкой). Адрес файла
+/// Материал каталога TurtleClient в сборку (или модпак новой сборкой). Адрес файла
 /// ядро берёт у нашего API само — из вебвью приходят только slug и id файла.
 #[tauri::command]
 pub async fn catalog_install(app: tauri::AppHandle, req: engine::CatalogInstallReq) -> Result<engine::CatalogInstall, String> {
@@ -367,7 +367,7 @@ pub async fn catalog_install_plan(app: tauri::AppHandle, req: engine::CatalogPla
     engine::refuse_author_locked(&req.profile, &req.kind)?;
     engine::catalog_install_plan(app, req).await
 }
-/// Косметика Millida: подбор варианта под сборку и установка одной кнопкой.
+/// Косметика TurtleClient: подбор варианта под сборку и установка одной кнопкой.
 #[tauri::command]
 pub async fn millida_mod_state(profile: String) -> Result<engine::MillidaModState, String> {
     engine::millida_mod_state(profile).await

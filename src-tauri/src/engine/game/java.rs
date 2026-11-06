@@ -982,8 +982,8 @@ fn download_pct(got: u64, total: Option<u64>) -> Option<u32> {
 const GAME_EXE_STEM: &str = "MillidaMinecraft";
 
 /// Named after the launcher the game was mistaken for it: Task Manager showed
-/// "MillidaLauncher.exe" eating the CPU and memory of Minecraft.
-const LEGACY_GAME_EXE_STEM: &str = "MillidaLauncher";
+/// "TurtleClientLauncher.exe" eating the CPU and memory of Minecraft.
+const LEGACY_GAME_EXE_STEM: &str = "TurtleClientLauncher";
 
 /// Linux reports a process name cut to 15 bytes (TASK_COMM_LEN).
 const COMM_LEN: usize = 15;
@@ -1447,7 +1447,7 @@ mod tests {
     #[test]
     fn system_java8_without_lets_encrypt_root_is_never_picked_on_its_own() {
         let cases = [
-            ("java version \"1.8.0_51\"", false, "Mojang's legacy runtime has no ISRG root: authlib-injector cannot fetch the Millida metadata and exits the game on start"),
+            ("java version \"1.8.0_51\"", false, "Mojang's legacy runtime has no ISRG root: authlib-injector cannot fetch the TurtleClient metadata and exits the game on start"),
             ("java version \"1.8.0_131\"", false, "the last Java 8 update shipped before ISRG Root X1 entered cacerts"),
             ("java version \"1.8.0_141\"", true, "the first Java 8 update that trusts Let's Encrypt"),
             ("openjdk version \"1.8.0_462\"", true, "a current Java 8 build must keep saving the download"),
@@ -1520,7 +1520,7 @@ mod tests {
         let name = exe.file_name().unwrap().to_string_lossy().to_ascii_lowercase();
         assert!(
             !name.starts_with("java"),
-            "the game started as {name:?}: Discord matches process names and would show Minecraft              instead of Millida Launcher",
+            "the game started as {name:?}: Discord matches process names and would show Minecraft              instead of TurtleClient Launcher",
         );
         assert_eq!(
             exe.parent(),
@@ -1531,7 +1531,7 @@ mod tests {
         std::fs::remove_file(&java).ok();
     }
 
-    /// Antivirus reports and players saw "MillidaLauncher.exe" using 100% CPU
+    /// Antivirus reports and players saw "TurtleClientLauncher.exe" using 100% CPU
     /// and 4 GB: the game copy has to read as Minecraft, never as the launcher.
     #[test]
     fn game_process_reads_as_minecraft_not_as_the_launcher() {
@@ -1554,8 +1554,8 @@ mod tests {
             ("MillidaMinecraft.exe", true, "the current copy on Windows"),
             ("MillidaMinecraft", true, "the current copy on macOS"),
             ("MillidaMinecraf", true, "Linux cuts process names to 15 bytes"),
-            ("MillidaLauncher.exe", true, "a game started by the previous version is still running after the update"),
-            ("Millida Launcher.exe", false, "the launcher itself is not a game"),
+            ("TurtleClientLauncher.exe", true, "a game started by the previous version is still running after the update"),
+            ("TurtleClient Launcher.exe", false, "the launcher itself is not a game"),
             ("chrome.exe", false, "unrelated processes"),
         ];
         for (name, want, why) in cases {
@@ -1580,7 +1580,7 @@ mod tests {
         let exe = branded_java(&java);
         assert_eq!(Some(exe.clone()), branded_alias(&java), "the game must start from the new copy");
         assert!(exe.is_file(), "the new copy must exist before anything is removed");
-        assert!(!legacy.exists(), "the old MillidaLauncher copy stays and keeps confusing antivirus software");
+        assert!(!legacy.exists(), "the old TurtleClientLauncher copy stays and keeps confusing antivirus software");
         let _ = std::fs::remove_dir_all(dir);
     }
 

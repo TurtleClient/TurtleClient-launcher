@@ -1,4 +1,4 @@
-// Desktop shortcuts to a build, a world or a server: a millida://launch link with a key only this computer knows.
+// Desktop shortcuts to a build, a world or a server: a turtleclient://launch link with a key only this computer knows.
 // The list of shortcuts lives in shortcuts.json in the launcher data folder; deleting a build deletes its shortcuts. No network.
 use crate::engine::*;
 use std::hash::{BuildHasher, Hasher};
@@ -29,7 +29,7 @@ fn save_records(all: &[ShortcutRecord]) {
 
 static LOCK: std::sync::Mutex<()> = std::sync::Mutex::new(());
 
-/// Any web page can open a millida:// link, so a link starts the game without
+/// Any web page can open a turtleclient:// link, so a link starts the game without
 /// asking only when it carries a key that a shortcut made here holds. The key
 /// mixes the process's random hash seeds with the clock: it has to be
 /// unguessable from outside, not cryptographic.
@@ -59,11 +59,11 @@ fn file_label(text: &str) -> String {
         .collect::<Vec<_>>()
         .join(" ");
     let clean: String = clean.trim_matches('.').chars().take(80).collect();
-    if clean.is_empty() { "Millida".into() } else { clean }
+    if clean.is_empty() { "TurtleClient".into() } else { clean }
 }
 
 fn launch_url(profile: &str, quickplay: Option<&str>, key: &str) -> String {
-    let mut url = url::Url::parse("millida://launch").expect("static url");
+    let mut url = url::Url::parse("turtleclient://launch").expect("static url");
     {
         let mut q = url.query_pairs_mut();
         q.append_pair("profile", profile);
@@ -103,7 +103,7 @@ fn shortcut_body(url: &str) -> (String, String) {
 
 #[cfg(all(unix, not(target_os = "macos")))]
 fn shortcut_body(url: &str) -> (String, String) {
-    ("desktop".into(), format!("[Desktop Entry]\nType=Application\nName=Millida\nIcon=millida-launcher\nExec=xdg-open \"{}\"\nTerminal=false\n", url))
+    ("desktop".into(), format!("[Desktop Entry]\nType=Application\nName=TurtleClient\nIcon=millida-launcher\nExec=xdg-open \"{}\"\nTerminal=false\n", url))
 }
 
 fn free_path(dir: &std::path::Path, label: &str, ext: &str) -> PathBuf {
@@ -194,7 +194,7 @@ mod tests {
         let table: [(&str, &str, &str); 4] = [
             ("Выживание", "Выживание", "plain names stay as they are"),
             ("a/b\\c:d*e?", "a b c d e", "path and reserved characters are dropped"),
-            ("...", "Millida", "nothing left gives the default"),
+            ("...", "TurtleClient", "nothing left gives the default"),
             ("  two   spaces ", "two spaces", "runs of blanks collapse"),
         ];
         for (raw, want, why) in table {

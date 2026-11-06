@@ -886,7 +886,7 @@ async fn install_dep_items_job(
     Ok(report)
 }
 
-/// Version ids only of the mods that came from Modrinth. A Millida catalogue
+/// Version ids only of the mods that came from Modrinth. A TurtleClient catalogue
 /// file id in the batch makes Modrinth refuse all fifty with 400, and the audit
 /// then saw no Modrinth dependency of the whole build.
 fn modrinth_version_ids(manifest: &[ContentEntry]) -> Vec<String> {

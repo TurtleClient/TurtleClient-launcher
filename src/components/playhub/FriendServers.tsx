@@ -9,7 +9,7 @@ import { blockArt } from './data'
 import { trackFailure } from '../../lib/telemetry'
 import { useT } from '../../i18n'
 
-/** One server the player was invited to by Millida nickname (GET /hosting/played-servers). */
+/** One server the player was invited to by TurtleClient nickname (GET /hosting/played-servers). */
 export interface PlayedServer {
   id: string
   name: string
@@ -69,7 +69,7 @@ function FriendCard({ s, onJoin, onLeave }: { s: PlayedServer; onJoin: () => voi
 }
 
 /**
- * Servers a friend invited the player to by Millida nickname. The shelf hides
+ * Servers a friend invited the player to by TurtleClient nickname. The shelf hides
  * itself while empty: an invite is the friend's move, not something to ask for.
  */
 export function FriendServers({ on, onPlay }: { on: boolean; onPlay: (m: LobbyMode) => void }) {

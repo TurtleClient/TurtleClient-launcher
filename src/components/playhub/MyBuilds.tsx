@@ -456,7 +456,7 @@ export function TakeAllCard({ have, bar }: { have: string[]; bar?: boolean }) {
     if (movable.length)
       return (
         <button className="btn md secondary" data-sound="open" data-track="move_found" title={foundText(movable)} onClick={() => openModal('mvModal')}>
-          <Icon id="i-download" /> {t('Перенести в Millida · {n}', { n: movable.length })}
+          <Icon id="i-download" /> {t('Перенести в TurtleClient · {n}', { n: movable.length })}
         </button>
       )
     if (rest.length)
@@ -486,7 +486,7 @@ export function TakeAllCard({ have, bar }: { have: string[]; bar?: boolean }) {
   if (busy)
     return <ActCard icon="i-download" title={t('Забираем')} meta={rest.length ? t('{n} из {max}', { n: done, max: rest.length }) : t('Файл сборки')} busy onClick={() => {}} />
   if (movable.length)
-    return <ActCard icon="i-download" title={t('Перенести в Millida')} meta={foundText(movable)} track="move_found" onClick={() => openModal('mvModal')} />
+    return <ActCard icon="i-download" title={t('Перенести в TurtleClient')} meta={foundText(movable)} track="move_found" onClick={() => openModal('mvModal')} />
   if (rest.length)
     return <ActCard icon="i-download" title={t('Забрать всё')} meta={foundText(rest)} track="import_take_all" onClick={() => void takeAll(rest)} />
   return <ActCard icon="i-upload" title={t('Импорт')} meta={t('Файл сборки')} track="import" onClick={importFile} />

@@ -1,4 +1,4 @@
-// Mod check before launch: the sha1 of each jar is compared with Modrinth and CurseForge, then with the Millida blocked-file list, then we look inside the jar for suspicious calls.
+// Mod check before launch: the sha1 of each jar is compared with Modrinth and CurseForge, then with the TurtleClient blocked-file list, then we look inside the jar for suspicious calls.
 // Only file hashes go to the network. The mods themselves and their names do not.
 //! Checking the jars in a build before they run.
 //!

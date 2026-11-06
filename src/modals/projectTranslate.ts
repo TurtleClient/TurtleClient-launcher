@@ -356,7 +356,7 @@ export function trErrorText(e: unknown): string {
     if (e.status === 503) return t('Перевод временно недоступен')
     if (e.status === 404) return t('Для этого мода перевода нет')
     if (e.status === 429) return t('Лимит переводов на сегодня исчерпан')
-    if (e.status === 401) return t('Войди в аккаунт Millida, чтобы переводить')
+    if (e.status === 401) return t('Войди в аккаунт TurtleClient, чтобы переводить')
     return e.message
   }
   return t('Перевод не загрузился')

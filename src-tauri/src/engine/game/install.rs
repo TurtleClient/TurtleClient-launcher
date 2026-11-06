@@ -1,6 +1,6 @@
 // Game install: Minecraft client, libraries, assets, and also Fabric, Quilt, Forge and NeoForge.
 // Connects to Mojang (piston-meta and assets), meta.fabricmc.net, meta.quiltmc.org and the maven servers of the loaders
-// (fallback through the Millida mirror, see core/mirror.rs). Every file is checked against the hash from their own lists.
+// (fallback through the TurtleClient mirror, see core/mirror.rs). Every file is checked against the hash from their own lists.
 // The Forge and NeoForge installers run under Java, so their hash is checked before they start. Writes to the game folder and to data/tmp of the launcher.
 use super::pipeline::graph::{work_begins, Graph, Node};
 use super::pipeline::plan::{fabric_plan, forge_plan, merge, version_plan, LibJob, LoaderPart, Merged, VersionPlan};

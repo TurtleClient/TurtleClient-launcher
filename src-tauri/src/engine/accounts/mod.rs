@@ -1,4 +1,4 @@
-// List of account login modules: Microsoft, Millida and session storage.
+// List of account login modules: Microsoft, TurtleClient and session storage.
 mod millida;
 mod microsoft;
 mod session;

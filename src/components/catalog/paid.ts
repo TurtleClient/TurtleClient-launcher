@@ -1,5 +1,5 @@
 /*
- * Платные материалы каталога Millida — чистая логика, без React и сети.
+ * Платные материалы каталога TurtleClient — чистая логика, без React и сети.
  *
  * Формы ответов взяты с сайта (`components/catalog/item/paid-flow.ts`,
  * `item-api.ts`, `lib/catalog-api.ts`) и бэкенда (`catalog-purchase.*`).
@@ -99,7 +99,7 @@ export function paidVerdict(e: unknown): PaidVerdict {
 export function verdictText(v: PaidVerdict): string | null {
   switch (v.kind) {
     case 'login':
-      return t('Войди в аккаунт Millida')
+      return t('Войди в аккаунт TurtleClient')
     case 'funds':
       return t('Не хватает денег на балансе')
     case 'price-changed':

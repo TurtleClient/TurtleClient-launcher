@@ -8,7 +8,7 @@ import { Icon } from './Icon'
 import { tx, useT } from '../i18n'
 
 /**
- * Карточка мода Millida в выбранной сборке: лаунчер сам подбирает вариант под
+ * Карточка мода TurtleClient в выбранной сборке: лаунчер сам подбирает вариант под
  * версию и загрузчик, игроку остаётся одна кнопка.
  */
 export function MillidaModCard({ profile }: { profile: string }) {
@@ -67,7 +67,7 @@ export function MillidaModCard({ profile }: { profile: string }) {
         <Icon id="i-brush" />
       </span>
       <div className="icon-nudge-text">
-        <b>{t('Косметика Millida')}</b>
+        <b>{t('Косметика TurtleClient')}</b>
         <span className="faint-note">{note}</span>
       </div>
       <div className="icon-nudge-acts">

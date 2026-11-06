@@ -70,7 +70,7 @@ interface Place {
   mode: LobbyMode
 }
 const CATS: { id: Place['cat']; label: string; icon: string }[] = [
-  { id: 'ours', get label() { return t('Режимы Millida') }, icon: 'i-zap' },
+  { id: 'ours', get label() { return t('Режимы TurtleClient') }, icon: 'i-zap' },
   { id: 'servers', get label() { return t('Серверы') }, icon: 'i-server' },
   { id: 'builds', get label() { return t('Мои сборки') }, icon: 'i-blocks' },
   { id: 'versions', label: 'Minecraft', icon: 'i-play' },
@@ -110,7 +110,7 @@ function usePlaces(): Place[] {
  * «Найти пати» — полноценное окно комнат (владелец 12.10.2026: «как комнаты: видно, что
  * человек идёт делать, входишь одной кнопкой; открытая или закрытая»; «не вкладка-огрызок,
  * а нормальный попап, и режимов должно быть много, по разделам»).
- * Слева — войти в чужую или открыть свою. В своей: разделы (режимы Millida, серверы
+ * Слева — войти в чужую или открыть свою. В своей: разделы (режимы TurtleClient, серверы
  * рейтинга, мои сборки, версии) с поиском и плитками, внизу — кто может войти и «Открыть».
  */
 export function PartyRoomsMenu({ start, close }: { start: 'join' | 'friends'; close: () => void }) {
@@ -197,7 +197,7 @@ export function PartyRoomsMenu({ start, close }: { start: 'join' | 'friends'; cl
   const whereName = srv === 'addr' ? typed : (() => { const m = mine.find((x) => x.id === srv); return m ? serverTitle(m) : '' })()
   /**
    * Сервер под комнату одной кнопкой (владелец 12.10.2026: «всё в один клик»): бесплатный
-   * сервер Millida нужной версии создаётся, запускается и сразу становится местом игры.
+   * сервер TurtleClient нужной версии создаётся, запускается и сразу становится местом игры.
    * Возвращает его адрес или null.
    */
   const hostNow = async (version: string, name: string, build?: string): Promise<{ addr: string; name: string } | null> => {
@@ -375,7 +375,7 @@ export function PartyRoomsMenu({ start, close }: { start: 'join' | 'friends'; cl
                       }}
                     >
                       <Icon id="i-zap" />
-                      {busy === 'send' ? t('Отправляем сборку…') : busy === 'host' ? t('Создаём сервер…') : t('Сервер Millida бесплатно')}
+                      {busy === 'send' ? t('Отправляем сборку…') : busy === 'host' ? t('Создаём сервер…') : t('Сервер TurtleClient бесплатно')}
                     </button>
                   ) : (
                     <button

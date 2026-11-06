@@ -1,6 +1,6 @@
 // Search and import of modpacks from other launchers (Prism, MultiMC, Modrinth App, TLauncher, plain .minecraft). Looks in their folders and on other disks
 // three levels deep, and only reads folder names and version.json. Accounts and tokens of other launchers are not read.
-// Only a path the launcher found itself or the player picked in a dialog is copied into the Millida folder.
+// Only a path the launcher found itself or the player picked in a dialog is copied into the TurtleClient folder.
 use crate::engine::*;
 use serde_json::Value;
 use std::path::{Path, PathBuf};
@@ -14,7 +14,7 @@ pub struct FoundInstance {
     pub loader: String,
     pub path: String,
     pub source: String,
-    /// The instance lives in its own folder of a launcher Millida can take it
+    /// The instance lives in its own folder of a launcher TurtleClient can take it
     /// from whole (see `move_source_kind`), not in a shared .minecraft.
     pub movable: bool,
 }
@@ -822,7 +822,7 @@ pub(crate) fn copy_game_files(game: &Path, dst: &Path, except: &[&str]) -> Resul
     Ok(copied)
 }
 
-/// Per-instance settings of Prism and MultiMC that Millida has a place for:
+/// Per-instance settings of Prism and MultiMC that TurtleClient has a place for:
 /// memory, Java arguments and window size. Each counts only when the instance
 /// overrides the launcher-wide value, as it does in Prism itself.
 #[derive(Default, Debug, PartialEq)]
@@ -920,7 +920,7 @@ pub fn import_instance(path: String, name: String, version: String, loader: Stri
     let game = match instance_game_dir(&src) {
         Some(g) => g,
         None if has_game_dir_entry(&src) => {
-            return Err("Папка игры этой сборки — ссылка на другое место на диске. Millida по ссылкам не копирует: открой сборку в её лаунчере и укажи обычную папку".into());
+            return Err("Папка игры этой сборки — ссылка на другое место на диске. TurtleClient по ссылкам не копирует: открой сборку в её лаунчере и укажи обычную папку".into());
         }
         None => src.clone(),
     };
@@ -1226,8 +1226,8 @@ mod tests {
             ("crash-reports/crash.txt", false, "старые вылеты чужого лаунчера"),
             (".cache/x.bin", false, "кэш"),
             (".fabric/remappedJars/a.jar", false, "кэш Fabric пересобирается загрузчиком"),
-            ("millida-settings.json", false, "служебный файл Millida с JVM-флагами"),
-            ("config/millida-pack-launch.json", false, "служебный файл Millida на любой глубине"),
+            ("millida-settings.json", false, "служебный файл TurtleClient с JVM-флагами"),
+            ("config/millida-pack-launch.json", false, "служебный файл TurtleClient на любой глубине"),
         ];
         for (rel, _, _) in cases {
             put(&game, rel);

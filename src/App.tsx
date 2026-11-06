@@ -1,3 +1,4 @@
+import { BRAND } from './lib/branding'
 import { Suspense, lazy, useEffect } from 'react'
 import { SvgSprite } from './components/SvgSprite'
 import { Titlebar } from './components/Titlebar'
@@ -506,7 +507,7 @@ export function App() {
     const safety = setTimeout(hideBoot, 4000)
     // The "logged in at least once" flag lives in the durable prefs file, so the
     // disk copy has to land before boot decides whether this account may skip login.
-    // No way in without a Millida account (owner 27.10.2026: no guest mode, sign-in only).
+    // No way in without a TurtleClient account (owner 27.10.2026: no guest mode, sign-in only).
     // The browser preview (dev only) has neither the core nor a sign-in.
     const preview = import.meta.env.DEV && !hasTauri()
     // Решение о входе ничего не стирает: showLogin только открывает экран входа (lib/session).
@@ -515,6 +516,11 @@ export function App() {
     // Оболочка уже открыта, пока ядро молчало: при подтверждении сессии только догружаем данные.
     let entered = false
     const decide = (check: SessionCheck, rechecks: number) => {
+      if (!BRAND.services) {
+        if (hasGameAccount()) enterApp()
+        else { useUi.getState().setLogged(false); useFirstRun.setState({ open: true }) }
+        return
+      }
       const acc = getAccount()
       const millida = getMillidaAccount()
       if (millida) markMillidaEver()
@@ -536,7 +542,7 @@ export function App() {
         showToast(t('Сессия истекла — войди заново'), 'error')
       } else if (!millida && !preview) {
         showLogin('start-no-account')
-        if (acc) showToast(t('Войди в аккаунт Millida — это нужно один раз'), 'error')
+        if (acc) showToast(t('Войди в аккаунт TurtleClient — это нужно один раз'), 'error')
       } else if (acc && gameStepPending() && !hasGameAccount()) {
         useUi.getState().setLogged(false)
         useFirstRun.setState({ open: true })

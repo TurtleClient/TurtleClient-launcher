@@ -5,7 +5,7 @@
  * загрузчика, заглушка обложки, справка по читам. Без React и сети — под тесты.
  */
 
-/** Файл материала в том виде, в каком его рисует страница (Millida, Modrinth, CurseForge, читы). */
+/** Файл материала в том виде, в каком его рисует страница (TurtleClient, Modrinth, CurseForge, читы). */
 import { formatFixed, t } from '../../i18n'
 
 export interface VerFile {
@@ -101,7 +101,7 @@ export function hashOf(s: string): number {
 }
 
 /**
- * Рендеры блоков Millida (`public/block-icons`), которые читаются на тёмном
+ * Рендеры блоков TurtleClient (`public/block-icons`), которые читаются на тёмном
  * фоне: без стекла-контура (11) и почти чёрных (4, 24).
  */
 export const FALLBACK_BLOCKS = [1, 3, 5, 6, 7, 8, 9, 12, 13, 15, 16, 17, 18, 19, 20, 21, 22, 26, 27, 28, 32, 33, 34, 36, 37, 38, 40, 42, 43, 44, 47, 48, 51, 52, 53, 54]

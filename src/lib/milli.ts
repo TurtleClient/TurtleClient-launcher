@@ -1,4 +1,4 @@
-// Client of the Milli helper (AI modpack builder): requests to api.millida.net /catalog/milli/*. They work only after Millida account login.
+// Client of the Milli helper (AI modpack builder): requests to api.millida.net /catalog/milli/*. They work only after TurtleClient account login.
 // The player decides what is sent: a chat message. For crashes and modpacks, facts go out (versions, mod ids), no personal files.
 import { api, LAUNCHER_API, apiHeaders } from './api'
 import { hasTauri } from '../ipc/tauri'
@@ -10,7 +10,7 @@ import { formatFixed, formatNumber, formatRelative, getLocale, pluralForm, t } f
 /*
  * Милли — ИИ-сборщик чатом. Клиент адресов `/catalog/milli/*` (контракт —
  * milli/CONTRACT.md бэкенда feat/milli-ai). Все адреса требуют вход в аккаунт
- * Millida: без него запросы не шлём, показываем «Войди в аккаунт».
+ * TurtleClient: без него запросы не шлём, показываем «Войди в аккаунт».
  */
 
 export type MilliLoader = 'fabric' | 'forge' | 'neoforge' | 'quilt'
@@ -440,13 +440,13 @@ export interface MilliError {
 }
 
 const ERROR_TEXT: Record<MilliErrorKind, string> = {
-  get auth() { return t('Войди в аккаунт Millida') },
+  get auth() { return t('Войди в аккаунт TurtleClient') },
   get limit() { return t('Лимит на сегодня') },
   get busy() { return t('Милли ещё думает над прошлым') },
   get blocked() { return t('Милли тебе недоступна') },
   get off() { return t('Милли отдыхает — скоро вернётся') },
   get plus() { return t('Это в PLUS') },
-  get offline() { return t('Нет связи с Millida') },
+  get offline() { return t('Нет связи с TurtleClient') },
   get failed() { return t('Милли не ответила') },
 }
 

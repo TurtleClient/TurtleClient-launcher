@@ -1,4 +1,4 @@
-// Project card (mod, pack, modpack): data comes from the Millida catalog and from Modrinth through our API (/launcher/mr).
+// Project card (mod, pack, modpack): data comes from the TurtleClient catalog and from Modrinth through our API (/launcher/mr).
 import { create } from 'zustand'
 import { cfFiles, cfProject } from '../ipc/commands'
 import { hasTauri } from '../ipc/tauri'
@@ -92,7 +92,7 @@ interface ProjectState {
   gallery: ProjectGallery[]
   versions: ProjectVersion[]
   source: string
-  /// Раздел каталога Millida, когда source === 'millida'.
+  /// Раздел каталога TurtleClient, когда source === 'millida'.
   section: string
   /// Готовая сборка лаунчера: ставится install_catalog_pack, ключ задачи свой.
   launcherOnly: boolean
@@ -413,7 +413,7 @@ export async function openProject(slug: string, kind?: string, game?: string | n
   }
 }
 
-/// Карточка каталога Millida в том же окне материала. Готовой сборки каталога в
+/// Карточка каталога TurtleClient в том же окне материала. Готовой сборки каталога в
 /// общей карточке может не быть (её текст ещё не вышел) — тогда берём витрину сборки.
 export async function openMillidaProject(slug: string, section: string, kind?: string, fallbackTitle?: string) {
   useProject.getState().set({

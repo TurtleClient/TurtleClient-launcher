@@ -2,14 +2,14 @@
 // finding С1). Installing it now takes seconds, with no network, before the window has been shown; living on the old
 // version until the player happens to press «Выход» took weeks for anyone who keeps the launcher in the tray.
 //
-// Not when the player came to play (a millida:// link, `--launch`, `--repair`): that start waits for nobody. Not for the
+// Not when the player came to play (a turtleclient:// link, `--launch`, `--repair`): that start waits for nobody. Not for the
 // copy an update has just started, not in a debug build, and not after two tries at the same version (silentupdate.rs).
 // A start at login comes back to the tray; any other start comes back with its window.
 use tauri::{AppHandle, Manager};
 
 /// The start was for a game: a deep link, or a flag that launches or repairs a build.
 fn for_game(args: &[String]) -> bool {
-    args.iter().any(|a| a.starts_with("millida:")) || crate::cli::parse(args).is_some()
+    args.iter().any(|a| a.starts_with("turtleclient:")) || crate::cli::parse(args).is_some()
 }
 
 /// Called once from `setup`. Hides the window at once when an install is going to be tried, so nothing flashes before
@@ -63,8 +63,8 @@ mod tests {
     /// args -> did the player come to play.
     #[test]
     fn a_link_or_a_launch_flag_is_a_start_for_a_game() {
-        assert!(for_game(&args(&["millida://join/abc"])));
-        assert!(for_game(&args(&["--autostart", "millida://pack/x"])));
+        assert!(for_game(&args(&["turtleclient://join/abc"])));
+        assert!(for_game(&args(&["--autostart", "turtleclient://pack/x"])));
         assert!(for_game(&args(&["--launch", "My pack"])));
         assert!(for_game(&args(&["--repair=Survival"])));
         assert!(!for_game(&args(&[])));

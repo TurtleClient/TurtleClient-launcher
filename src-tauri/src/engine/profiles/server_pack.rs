@@ -1,4 +1,4 @@
-// The .mrpack a Millida hosting server's owner uploaded for players: downloaded from api.millida.net by the server id,
+// The .mrpack a TurtleClient hosting server's owner uploaded for players: downloaded from api.millida.net by the server id,
 // kept only when its sha512 and size match what the server's manifest published, then installed like any .mrpack file.
 use crate::engine::*;
 use tauri::AppHandle;
@@ -15,7 +15,7 @@ pub(crate) fn sha512_hex_ok(v: &str) -> bool {
 }
 
 /// The webview names the server and the digest it read from the manifest; the
-/// address is built here, so it can only ever point at the Millida API.
+/// address is built here, so it can only ever point at the TurtleClient API.
 pub async fn install_server_pack_file(app: AppHandle, server_id: String, sha512: String, size: u64, name: String) -> Result<Profile, String> {
     if !server_id_ok(&server_id) {
         return Err("Некорректный сервер".into());

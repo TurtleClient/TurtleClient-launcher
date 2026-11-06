@@ -1,4 +1,4 @@
-// Fallback launcher update: takes the version list from launcher-storage.millida.net (addresses from tauri.conf.json), downloads the new build from GitHub or from our mirror and checks the Millida signature (minisign).
+// Fallback launcher update: takes the version list from launcher-storage.millida.net (addresses from tauri.conf.json), downloads the new build from GitHub or from our mirror and checks the TurtleClient signature (minisign).
 // If the signature does not match, the file is deleted and not run. Running the installer, replacing the .app on macOS and the AppImage on Linux are described at each function.
 use minisign_verify::{PublicKey, Signature};
 use serde::Serialize;
@@ -168,7 +168,7 @@ fn endpoints(app: &AppHandle) -> Vec<String> {
     channel_order(&configured, beta_channel())
 }
 
-// The public signing key comes from tauri.conf.json. The private part belongs to Millida and is not in this repository.
+// The public signing key comes from tauri.conf.json. The private part belongs to TurtleClient and is not in this repository.
 fn pubkey(app: &AppHandle) -> Result<String, String> {
     app.config()
         .plugins
@@ -487,7 +487,7 @@ fn refuse_inside_flatpak() -> Result<(), String> {
 }
 
 const FLATPAK_UPDATE_HINT: &str =
-    "лаунчер из Flatpak обновляется через магазин приложений или командой flatpak update net.millida.launcher";
+    "лаунчер из Flatpak обновляется через магазин приложений или командой flatpak update dev.turtleclient.launcher";
 
 /// One preparation of an update at a time. The core's tray loop and the window can both ask for the same file: two
 /// downloads into one path made the loser delete the winner's good file (on Windows its rename fails while the
@@ -818,7 +818,7 @@ fn install_app_bundle(archive: &Path, restart: Restart) -> Result<(), String> {
 
     // Permissions and the quarantine attribute are fixed before the swap: an
     // archived bundle can arrive without the write bit.
-    // chmod u+w and xattr -cr on the freshly unpacked copy: removes the macOS quarantine flag. The archive passed the Millida signature check before, but Gatekeeper is not run on it.
+    // chmod u+w and xattr -cr on the freshly unpacked copy: removes the macOS quarantine flag. The archive passed the TurtleClient signature check before, but Gatekeeper is not run on it.
     let _ = std::process::Command::new("/bin/chmod").arg("-R").arg("u+w").arg(&fresh).status();
     let _ = std::process::Command::new("/usr/bin/xattr").arg("-cr").arg(&fresh).status();
 
@@ -1090,7 +1090,7 @@ mod tests {
         let _ = std::fs::remove_dir_all(&dir);
         std::fs::create_dir_all(&dir).unwrap();
         let patch = dir.join(selfdelta::staged_name("2.0.9"));
-        let installer = dir.join("Millida-Launcher_2.0.8_x64-setup.exe");
+        let installer = dir.join("TurtleClient-Launcher_2.0.8_x64-setup.exe");
         std::fs::write(&patch, b"patched exe").unwrap();
         std::fs::write(&installer, b"installer").unwrap();
         record_staged(&patch, "patch-signature", "2.0.9").unwrap();
@@ -1169,11 +1169,11 @@ mod tests {
     #[test]
     fn system_packages_go_to_the_package_installer() {
         let cases: [(&str, bool, &str); 5] = [
-            ("Millida-Launcher_2.0.150_amd64.deb", true, "deb needs root, only the package manager may ask for it"),
-            ("Millida-Launcher-2.0.150-1.x86_64.RPM", true, "extension case must not decide the install path"),
-            ("Millida-Launcher_2.0.150_amd64.AppImage", false, "an AppImage is replaced in place"),
-            ("Millida-Launcher.deb.AppImage", false, "only the final extension names the format"),
-            ("Millida-Launcher", false, "no extension is not a package"),
+            ("TurtleClient-Launcher_2.0.150_amd64.deb", true, "deb needs root, only the package manager may ask for it"),
+            ("TurtleClient-Launcher-2.0.150-1.x86_64.RPM", true, "extension case must not decide the install path"),
+            ("TurtleClient-Launcher_2.0.150_amd64.AppImage", false, "an AppImage is replaced in place"),
+            ("TurtleClient-Launcher.deb.AppImage", false, "only the final extension names the format"),
+            ("TurtleClient-Launcher", false, "no extension is not a package"),
         ];
         for (name, want, why) in cases {
             assert_eq!(is_system_package(Path::new(name)), want, "{}: {}", name, why);
@@ -1183,10 +1183,10 @@ mod tests {
     #[test]
     fn takes_file_name_from_url() {
         assert_eq!(
-            file_from_url("https://cdn/1.0.49/x86_64-pc-windows-msvc/Millida-Launcher_1.0.49_x64-setup.exe").unwrap(),
-            "Millida-Launcher_1.0.49_x64-setup.exe"
+            file_from_url("https://cdn/1.0.49/x86_64-pc-windows-msvc/TurtleClient-Launcher_1.0.49_x64-setup.exe").unwrap(),
+            "TurtleClient-Launcher_1.0.49_x64-setup.exe"
         );
-        assert_eq!(file_from_url("https://cdn/1.0.49/win/Millida%20Launcher.exe").unwrap(), "Millida Launcher.exe");
+        assert_eq!(file_from_url("https://cdn/1.0.49/win/TurtleClient%20Launcher.exe").unwrap(), "TurtleClient Launcher.exe");
     }
 
     #[test]

@@ -22,3 +22,10 @@ the SIL Open Font License 1.1 — see public/fonts/OFL.txt.
 
 Minecraft is a trademark of Mojang Synergies AB / Microsoft. This project is
 not affiliated with, endorsed by or sponsored by Mojang or Microsoft.
+
+TurtleClient Launcher fork
+Copyright (C) 2026 TurtleClient contributors
+Modified on 2026-11-06: TurtleClient identity, application assets and standalone account entry.
+This fork is not affiliated with or endorsed by Millida.
+Source: https://github.com/TurtleClient/turtleclient-launcher
+Upstream: https://github.com/millida/launcher

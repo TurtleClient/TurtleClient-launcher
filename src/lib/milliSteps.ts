@@ -287,7 +287,7 @@ registerStep('world_restore', {
 
 // ─── Импорт чужой сборки ───────────────────────────────────────────────────
 
-/** Ссылка → источник: modrinth.com/modpack/<slug>, curseforge …/modpacks/<slug> (нужен id), код Millida. */
+/** Ссылка → источник: modrinth.com/modpack/<slug>, curseforge …/modpacks/<slug> (нужен id), код TurtleClient. */
 export function parsePackRef(text: string): { source: Step<'import'>['source']; ref: string } | null {
   const t = text.trim()
   const mr = /modrinth\.com\/(?:modpack|project)\/([A-Za-z0-9_.-]+)/i.exec(t)

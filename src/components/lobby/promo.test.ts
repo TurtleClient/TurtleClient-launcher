@@ -19,7 +19,7 @@ test('outside the Russian market partner servers and the Russian Telegram channe
   expect(intl, 'MCRU anarchy and MetaLabs prison are Russian partner servers, an English player has nowhere to talk to them').not.toContain('anarchy')
   expect(intl, 'the prison slide is a partner server even when its pack is in the catalogue').not.toContain('prisonrpg')
   expect(intl, 'the Telegram channel posts in Russian only').not.toContain('telegram')
-  expect(intl, 'Millida own slides stay on every market').toEqual(['discord', 'arcania', 'smp', 'invite'])
+  expect(intl, 'TurtleClient own slides stay on every market').toEqual(['discord', 'arcania', 'smp', 'invite'])
 })
 
 test('rotation walks every slide and wraps', () => {

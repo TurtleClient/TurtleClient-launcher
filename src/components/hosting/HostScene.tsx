@@ -22,7 +22,7 @@ export const HOST_ST: Record<string, [string, string]> = {
   get INSTALLING(): [string, string] { return [t('Устанавливается'), 'warn'] },
 }
 
-export const blockSrc = (n: number) => '/block-icons/Block' + n + 'Millida.png'
+export const blockSrc = (n: number) => '/block-icons/Block' + n + 'TurtleClient.png'
 export const gbNum = (mb: number) => formatFixed(mb / 1024, mb % 1024 === 0 ? 0 : 1)
 
 /// Шкала из десяти клеток, как полоска опыта в игре: плотный акцент, без градиента.

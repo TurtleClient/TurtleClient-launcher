@@ -55,7 +55,7 @@ describe('claimFailure', () => {
     [new Error('http 400'), 'miss', 'not subscribed yet is a plain 400'],
     [new Error('Подписки на канал пока не видно: подпишись и нажми «Проверить» ещё раз'), 'miss', 'the core passes the server text'],
     [new Error('http 409'), 'taken', 'the browser sees only the status'],
-    [new Error('Этот Telegram уже получил награду за подписку на другом аккаунте Millida'), 'taken', 'the core passes the server text'],
+    [new Error('Этот Telegram уже получил награду за подписку на другом аккаунте TurtleClient'), 'taken', 'the core passes the server text'],
     [new Error('http 503'), 'net', 'Telegram did not answer the check'],
     [new Error('Telegram не ответил на проверку подписки, попробуй через минуту'), 'net', 'the same, with the server text'],
     [new Error('Failed to fetch'), 'net', 'no connection'],

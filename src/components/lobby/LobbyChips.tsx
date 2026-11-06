@@ -53,7 +53,7 @@ export function LobbyChips({ on }: { on: boolean }) {
   }, [on])
 
   const open = () => openPvp('play')
-  const needAccount = () => showToast(t('Пати — с аккаунтом Millida'), 'error')
+  const needAccount = () => showToast(t('Пати — с аккаунтом TurtleClient'), 'error')
   // «Найти пати» открывает комнаты: видно, кто куда идёт, и вход одной кнопкой.
   const find = () => (signedIn ? usePartyStore.getState().set({ roomsOpen: true }) : needAccount())
   const me = usePartyStore((s) => s.me)

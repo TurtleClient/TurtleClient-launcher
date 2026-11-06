@@ -24,13 +24,13 @@ export { FEEDBACK_SHARDS }
  * полосе лобби — оценить лаунчер звёздами или сообщить о баге.
  * Отзыв идёт в POST /launcher/feedback: сервер кладёт его в оценки сервисов,
  * а не в баг-репорты, и сам решает, давать ли осколки (раз в неделю).
- * Показываем ровно то, что ответил сервер. Отзыв привязан к аккаунту Millida:
+ * Показываем ровно то, что ответил сервер. Отзыв привязан к аккаунту TurtleClient:
  * без входа его некуда положить. Баг-репорт — всегда POST /bug-reports.
  */
 
 type Mode = 'pick' | 'rate' | 'bug'
 
-const GITHUB_REPO_URL = 'https://github.com/millida/launcher'
+const GITHUB_REPO_URL = 'https://github.com/TurtleClient/turtleclient-launcher'
 
 const openGithub = () => (hasTauri() ? openUrl(GITHUB_REPO_URL) : window.open(GITHUB_REPO_URL, '_blank'))
 
@@ -51,7 +51,7 @@ async function send(body: Record<string, unknown>): Promise<BugAck | null> {
 }
 
 async function sendFeedback(text: string, stars: number): Promise<FeedbackAnswer> {
-  if (!hasMillidaAccount()) throw new Error(t('Отзыв привязывается к аккаунту Millida — войди в него и отправь ещё раз'))
+  if (!hasMillidaAccount()) throw new Error(t('Отзыв привязывается к аккаунту TurtleClient — войди в него и отправь ещё раз'))
   return api<FeedbackAnswer>('/launcher/feedback', {
     method: 'POST',
     body: JSON.stringify(stars ? { text, stars } : { text }),

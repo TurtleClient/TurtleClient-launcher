@@ -67,7 +67,7 @@ export function openPvp(tab?: PvpTab) {
  * Очередь из лаунчера, как у MCPVP: игра не запущена, лаунчер стоит в очереди
  * и шлёт «я тут» раз в 10 с; сервер нашёл соперника — лаунчер выходит из
  * очереди и сразу запускает игру прямо в матч. Контракт сервера тиров
- * (Millida SMP, 12.10.2026): POST/DELETE /tiers/queue, GET /tiers/state/<uuid>
+ * (TurtleClient SMP, 12.10.2026): POST/DELETE /tiers/queue, GET /tiers/state/<uuid>
  * с phase queued | matched. Живёт вне экрана — очередь не теряется, если
  * уйти из раздела.
  */

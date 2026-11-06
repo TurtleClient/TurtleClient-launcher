@@ -93,14 +93,14 @@ async fn download_millida(nick: &str, px: u32) -> Result<Vec<u8>, String> {
     let hash = meta["skins"]["default"]
         .as_str()
         .or_else(|| meta["skins"]["slim"].as_str())
-        .ok_or("у игрока нет скина Millida")?;
+        .ok_or("у игрока нет скина TurtleClient")?;
     let res = client()
         .get(format!("{}/yggdrasil/csl/textures/{}", MILLIDA_API, hash))
         .send()
         .await
         .map_err(|e| e.to_string())?;
     if !res.status().is_success() {
-        return Err(format!("скин Millida недоступен ({})", res.status().as_u16()));
+        return Err(format!("скин TurtleClient недоступен ({})", res.status().as_u16()));
     }
     let bytes = read_capped(res, 2_000_000).await.map_err(|_| "скин слишком большой".to_string())?;
     tokio::task::spawn_blocking(move || head_from_skin(&bytes, px))

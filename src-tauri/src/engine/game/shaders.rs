@@ -25,7 +25,7 @@ const FORGE_KITS: &[Kit] = &[Kit { renderer: "embeddium", shaders: "oculus" }, K
 const SHADER_PACKS: &[&str] = &["makeup-ultra-fast-shaders", "complementary-reimagined"];
 
 /// The "Epic" graphics preset asks for the full-looking packs instead, and only
-/// on a discrete card (see `presets.rs`). Both are in the Millida catalogue
+/// on a discrete card (see `presets.rs`). Both are in the TurtleClient catalogue
 /// with a stated licence and are downloaded from Modrinth, never re-hosted.
 pub(super) const EPIC_SHADER_PACKS: &[&str] = &["complementary-reimagined", "bsl-shaders"];
 

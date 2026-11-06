@@ -1,6 +1,6 @@
 // What a modpack holds, before it is installed: mods, resource packs and shader packs, the loader and the weight.
 // A Modrinth pack: downloads the .mrpack from cdn.modrinth.com (checked by the sha512 Modrinth published), reads only modrinth.index.json, and deletes the file.
-// A Millida catalogue pack: asks api.millida.net for the archive's table of contents (names and sizes only), nothing is downloaded.
+// A TurtleClient catalogue pack: asks api.millida.net for the archive's table of contents (names and sizes only), nothing is downloaded.
 use super::catalog_pack::client_file;
 use super::pack_delta::parse_index;
 use crate::engine::*;
@@ -108,14 +108,14 @@ fn file_id_ok(id: &str) -> bool {
     (1..=64).contains(&id.len()) && id.bytes().all(|b| b.is_ascii_alphanumeric() || b == b'-' || b == b'_')
 }
 
-/// Contents of a Millida catalogue pack from the table of contents the catalogue
+/// Contents of a TurtleClient catalogue pack from the table of contents the catalogue
 /// serves for in-place updates. It is given past the same access check as the
-/// download, so it needs a Millida sign-in.
+/// download, so it needs a TurtleClient sign-in.
 pub async fn catalog_pack_contents(slug: String) -> Result<PackContents, String> {
     if !catalog_slug_ok(&slug) {
         return Err("Некорректный адрес сборки".into());
     }
-    // Request for the modpack card to api.millida.net. The Millida token is added if the user is logged in.
+    // Request for the modpack card to api.millida.net. The TurtleClient token is added if the user is logged in.
     let view = millida_api(format!("/catalog/packs/{}", slug), "GET".into(), None, millida_token()).await?;
     let (file_id, size, _) = client_file(&view)?;
     if !file_id_ok(&file_id) {
@@ -123,7 +123,7 @@ pub async fn catalog_pack_contents(slug: String) -> Result<PackContents, String>
     }
     let answer = match millida_api_auth(format!("/catalog/packs/files/{}/index", file_id), "GET".into(), None).await {
         Ok(a) => a,
-        Err(e) if e == "http 401" => return Err("Состав сборки виден после входа в аккаунт Millida".into()),
+        Err(e) if e == "http 401" => return Err("Состав сборки виден после входа в аккаунт TurtleClient".into()),
         Err(e) => return Err(e),
     };
     if answer["entries"].is_null() {

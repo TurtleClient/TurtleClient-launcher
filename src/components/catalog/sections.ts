@@ -215,5 +215,5 @@ export const foreignTailAllowed = (f: Pick<ListingFilters, 'use' | 'price' | 'si
 /** Сиды, головы, плащи — лаунчер ведёт на сайт или в гардероб, ленты у них нет. */
 export const hasFeed = (slug: SectionSlug): boolean => SECTION_SOURCE[slug] !== 'site'
 
-/** Разделы, которые «Скачать в лаунчере» сайта шлёт в millida://install/… (см. millidaCatalog.INSTALL_SECTIONS). */
+/** Разделы, которые «Скачать в лаунчере» сайта шлёт в turtleclient://install/… (см. millidaCatalog.INSTALL_SECTIONS). */
 export const SITE_INSTALL_SECTIONS: SectionSlug[] = ['mods', 'modpacks', 'texture-packs', 'shaders', 'data-packs', 'maps', 'skins', 'capes']

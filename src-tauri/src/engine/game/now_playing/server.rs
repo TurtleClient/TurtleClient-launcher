@@ -1,4 +1,4 @@
-// Local WebSocket server for the Millida mod: accepts only connections from this same computer and only with the launch key in the Authorization header. Sends the player state and takes the commands pause, next, seek.
+// Local WebSocket server for the TurtleClient mod: accepts only connections from this same computer and only with the launch key in the Authorization header. Sends the player state and takes the commands pause, next, seek.
 use super::protocol::{self, FrameError};
 use super::{Hub, PerfSink, Reading};
 use std::collections::HashSet;

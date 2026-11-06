@@ -20,7 +20,7 @@ import { onRealtime } from '../lib/realtime'
 import { liveInterval } from '../lib/liveInterval'
 
 /**
- * Экран Millida PLUS в лаунчере. Пересобран 30.09.2026 вместе с
+ * Экран TurtleClient PLUS в лаунчере. Пересобран 30.09.2026 вместе с
  * millida.net/plus: то же содержание и тот же порядок глав, что у лендинга,
  * а лендинг повторяет /launcher (приказ владельца «возьми лендинг лаунчера
  * целиком»):
@@ -264,9 +264,9 @@ export function Plus({ on }: { on: boolean }) {
       <div className="lp-hero">
         <span className="lp-hero-grid" aria-hidden="true" />
         <div className="lp-hero-head">
-          <span className="lp-eyebrow">{t('Подписка Millida')}</span>
+          <span className="lp-eyebrow">{t('Подписка TurtleClient')}</span>
           <h1>
-            Millida <em>PLUS</em>
+            TurtleClient <em>PLUS</em>
           </h1>
           {price && plusPrice('PLUS') ? <p>{t('{price} / 28 дней · отмена в любой день', { price: plusPrice('PLUS') ?? '' })}</p> : <span className="skel lp-price-skel" aria-hidden="true" />}
           <div className="lp-hero-cta">{cta}</div>
@@ -412,7 +412,7 @@ export function Plus({ on }: { on: boolean }) {
                 <div className="lp-aiex-card">
                   <b>{t('Сборка на сервер')}</b>
                   <small>
-                    <strong>{t('Одной кнопкой')}</strong> · {t('на Millida Hosting')}
+                    <strong>{t('Одной кнопкой')}</strong> · {t('на TurtleClient Hosting')}
                   </small>
                 </div>
               ) : null}

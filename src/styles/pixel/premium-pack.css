@@ -849,7 +849,7 @@ div.ppx-frame { cursor: default; }
 .ppx-ci-badge { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ppx-gold); }
 .ppx-ci-badge svg { width: 13px; height: 13px; color: var(--ppx-gold); }
 
-/* ── «Эксклюзив Millida» под шапкой (06.10.2026) ── */
+/* ── «Эксклюзив TurtleClient» под шапкой (06.10.2026) ── */
 .ppx-excl {
   position: relative; display: flex; flex-direction: column; gap: 12px; margin: 14px 0 4px; padding: 14px;
   background: linear-gradient(180deg, color-mix(in srgb, var(--ppx-gold) 10%, var(--m-surface)), var(--m-surface));

@@ -154,7 +154,7 @@ try {
     const exe = join(
       targetDir,
       config.profile,
-      process.platform === "win32" ? "millida-launcher.exe" : "millida-launcher",
+      process.platform === "win32" ? "turtleclient-launcher.exe" : "turtleclient-launcher",
     );
     if (existsSync(exe)) console.log(`\nГотово: ${exe}`);
   }

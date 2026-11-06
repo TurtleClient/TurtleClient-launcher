@@ -9,8 +9,8 @@ export const ONEBLOCK_PACK = 'oneblock-metalabs'
 export const requiresMillidaAuth = (packSlug: string | null | undefined): boolean => packSlug === ONEBLOCK_PACK
 
 /**
- * Millida SMP (дуэли по тир-листу) пускает и лицензию, но плагин сразу кикает
- * не-Millida аккаунт: тир пишется на аккаунт Millida. Вход туда — только с ним.
+ * TurtleClient SMP (дуэли по тир-листу) пускает и лицензию, но плагин сразу кикает
+ * не-TurtleClient аккаунт: тир пишется на аккаунт TurtleClient. Вход туда — только с ним.
  */
 export const MILLIDA_SMP_ADDR = 'mpvp.millida.host'
 /** Тот же сервер под адресом сайта (millida.net/tiers): smp.millida.net. */
@@ -53,7 +53,7 @@ export const ownServerMode = (cover: string | null = null): LobbyMode => ({
 })
 
 /**
- * Our own survival anarchy. The proxy signs players in with the Millida
+ * Our own survival anarchy. The proxy signs players in with the TurtleClient
  * account, so a clean build of the server's exact version joins it directly.
  * The mode key differs from the rating category ANARCHY, which lists foreign
  * servers.

@@ -137,7 +137,7 @@ async fn offer_manual_download(reason: &str) {
         reason
     ) + "\n\nThe launcher could not open and could not update itself.\n\nDownload the latest version from the website and install it over the current one: your builds, worlds and accounts stay in place.";
     let answer = rfd::AsyncMessageDialog::new()
-        .set_title("Millida Launcher")
+        .set_title("TurtleClient Launcher")
         .set_description(&text)
         .set_level(rfd::MessageLevel::Error)
         .set_buttons(rfd::MessageButtons::OkCancelCustom(DOWNLOAD_BUTTON.into(), CLOSE_BUTTON.into()))

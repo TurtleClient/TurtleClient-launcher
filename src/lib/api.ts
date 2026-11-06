@@ -1,4 +1,5 @@
-// UI requests to the Millida API (api.millida.net/v2) and the site addresses. In the app a request goes through the core, which adds
+import { BRAND } from './branding'
+// UI requests to the TurtleClient API (api.millida.net/v2) and the site addresses. In the app a request goes through the core, which adds
 // the token itself. The direct fetch below has no token, it is a fallback for the browser in development. The Modrinth catalog goes through our API (/launcher/mr).
 import { hasTauri } from '../ipc/tauri'
 import { millidaApi, openUrl, type ApiMarket } from '../ipc/commands'
@@ -20,7 +21,7 @@ export const LAUNCHER_API = API_OVERRIDE || (DEV_LOCAL ? '/papi/v2' : 'https://a
 
 /// Modrinth и CurseForge недоступны в России без VPN, поэтому и каталог, и
 /// картинки идут через наш API: он же отдаёт их с собственного адреса.
-export const MODRINTH_API = LAUNCHER_API + '/launcher/mr'
+export const MODRINTH_API = BRAND.services ? LAUNCHER_API + '/launcher/mr' : 'https://api.modrinth.com'
 
 const MIRRORED_ASSET_HOSTS = [
   'cdn.modrinth.com',
@@ -32,6 +33,7 @@ const MIRRORED_ASSET_HOSTS = [
 /// Адрес картинки с заблокированного CDN — через наш API; всё остальное как есть.
 export function mirrorAsset(url: string | undefined | null): string | undefined {
   if (!url) return undefined
+  if (!BRAND.services) return url
   let host = ''
   try {
     const parsed = new URL(url)
@@ -85,6 +87,7 @@ export const SESSION_EXPIRED_EVENT = 'millida-session-expired'
 export const isUnauthorized = (e: unknown): boolean => /^(error:\s*)?unauthorized$/i.test(String(e).trim())
 
 export async function api<T = any>(pathname: string, opts?: RequestInit): Promise<T> {
+  if (!BRAND.services) throw new Error('TurtleClient online services are not configured')
   // Витрина экономики в dev-приложении (VITE_ECONOMY_SHOWCASE): на проде новых
   // адресов магазина ещё нет, поэтому подменяем их и в Tauri, а не только в
   // браузере — иначе магазин в приложении пустой. Только dev-сборка.

@@ -182,7 +182,7 @@
 /* Цвет и градиент — слоем --px-img (фон пиксельных плиток задаёт рамка, background-color не виден). */
 .ip-color, .ip-block { --px-img: var(--c); --px-img-size: 100% 100%; --px-img-repeat: no-repeat; --px-img-origin: border-box; }
 .ip-block:not(.on) img { opacity: 0.92; }
-/* Значки Modrinth в карточках библиотеки — крупнее блоков Millida: детальный рендер на градиенте. */
+/* Значки Modrinth в карточках библиотеки — крупнее блоков TurtleClient: детальный рендер на градиенте. */
 :root .hub-pane .ph-mine .ph-card-art .bi.mr img { max-height: 86px; width: 86px; height: 86px; transform: translateY(-14px); }
 :root .hub-pane .ph-mine:hover .ph-card-art .bi.mr img { transform: translateY(-17px) rotate(-4deg) scale(1.05); }
 /* Ряды сетки — явной высоты: в WebKit (окно лаунчера) квадрат через aspect-ratio не растягивал

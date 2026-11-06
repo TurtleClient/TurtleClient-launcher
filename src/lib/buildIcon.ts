@@ -11,7 +11,7 @@ import { t } from '../i18n'
  * Старые обложки-обои (`/bg/…`) и пустое поле читаются как иконка по умолчанию.
  */
 
-/** Книжная полка из набора блоков Millida (правка владельца 23.09.2026, 20:00). */
+/** Книжная полка из набора блоков TurtleClient (правка владельца 23.09.2026, 20:00). */
 export const DEFAULT_BLOCK = '/block-icons/Block52Millida.png'
 /** Свой рендер травы 240 px — в наборе для выбора. */
 export const GRASS_BLOCK = '/build-icons/grass.png'

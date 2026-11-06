@@ -26,11 +26,12 @@ use std::sync::Mutex;
 use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
 
 // Public application id from the Discord Developer Portal. Discord needs it to show the name and pictures. It is not a secret.
-const DEFAULT_APP_ID: &str = "1530764069965922354";
+const DEFAULT_APP_ID: &str = "1568214525138968586";
 const RETRY_AFTER: Duration = Duration::from_secs(30);
-const SITE_URL: &str = "https://millida.net/launcher";
-const DISCORD_URL: &str = "https://discord.gg/mcru";
-const PROFILE_BASE: &str = "https://millida.net/u/";
+const SITE_URL: &str = "https://github.com/TurtleClient/turtleclient-launcher";
+const DISCORD_URL: &str = "https://github.com/TurtleClient/turtleclient-launcher/issues";
+#[cfg(test)]
+const PROFILE_BASE: &str = "https://github.com/TurtleClient/";
 
 /// Longest a caller waits for the socket before it is told what is known so
 /// far. The frontend gives presence two seconds before it beats without the
@@ -45,6 +46,7 @@ const OP_TIMEOUT: Duration = Duration::from_secs(10);
 /// After this many, presence stays off until the launcher is restarted.
 const MAX_RESPAWNS: u64 = 3;
 
+#[cfg(test)]
 fn profile_url(slug: &str) -> Option<String> {
     let ok = (1..=48).contains(&slug.len())
         && slug
@@ -58,7 +60,7 @@ fn profile_url(slug: &str) -> Option<String> {
 }
 
 fn app_id() -> String {
-    std::env::var("MILLIDA_DISCORD_APP_ID").unwrap_or_else(|_| DEFAULT_APP_ID.to_string())
+    std::env::var("TURTLECLIENT_DISCORD_APP_ID").unwrap_or_else(|_| DEFAULT_APP_ID.to_string())
 }
 
 static TX: Mutex<Option<Sender<Job>>> = Mutex::new(None);
@@ -104,8 +106,6 @@ pub struct Presence {
     pub details: String,
     pub state: String,
     pub playing: bool,
-    pub large_image: String,
-    pub large_text: String,
     pub join_url: String,
     pub profile_slug: String,
 }
@@ -239,7 +239,7 @@ fn worker(generation: u64, rx: Receiver<Job>) {
                 let slug = lock(&LAST_SLUG).clone();
                 let presence = Presence {
                     details: "In launcher".into(),
-                    state: "Millida Launcher".into(),
+                    state: "TurtleClient Launcher".into(),
                     profile_slug: slug,
                     ..Presence::default()
                 };
@@ -351,15 +351,10 @@ fn apply(client: &mut Option<DiscordIpcClient>, since: &mut Option<i64>, p: &Pre
         *since = None;
     }
 
-    let big = if p.large_image.starts_with("https://") { p.large_image.as_str() } else { "logo" };
-    let big_text = if p.large_text.is_empty() { "Millida Launcher" } else { p.large_text.as_str() };
     let join_ok = p.playing && p.join_url.starts_with(JOIN_PREFIX) && p.join_url.len() <= 512;
-    let profile = profile_url(&p.profile_slug);
     // Presence is read by people of every language, so it stays English whatever the launcher's UI language.
     let join_label = "Join server";
     let download_label = "Download launcher";
-    let profile_label = "Millida profile";
-    let small_text = if p.playing { "In game" } else { "In launcher" };
     let buttons = if join_ok {
         vec![
             activity::Button::new(join_label, p.join_url.as_str()),
@@ -368,23 +363,13 @@ fn apply(client: &mut Option<DiscordIpcClient>, since: &mut Option<i64>, p: &Pre
     } else {
         vec![
             activity::Button::new(download_label, SITE_URL),
-            match profile.as_deref() {
-                Some(url) => activity::Button::new(profile_label, url),
-                None => activity::Button::new("Discord Millida", DISCORD_URL),
-            },
+            activity::Button::new("Source and support", DISCORD_URL),
         ]
     };
     let mut act = activity::Activity::new()
         .activity_type(ActivityType::Playing)
         .details(&p.details)
         .state(&p.state)
-        .assets(
-            activity::Assets::new()
-                .large_image(big)
-                .large_text(big_text)
-                .small_image("logo")
-                .small_text(small_text),
-        )
         .buttons(buttons);
     if let Some(ts) = *since {
         act = act.timestamps(activity::Timestamps::new().start(ts));

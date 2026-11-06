@@ -136,7 +136,7 @@ mod tests {
             (&["--clean"], Some(CliAction { action: "clean", build: None }), "clean needs no build"),
             (&["--launch"], None, "no build: do nothing instead of guessing"),
             (&["--launch", "--clean"], Some(CliAction { action: "clean", build: None }), "a flag is never taken as a build name"),
-            (&["millida://join/x"], None, "deep links stay with the deep-link plugin"),
+            (&["turtleclient://join/x"], None, "deep links stay with the deep-link plugin"),
         ];
         for (input, want, why) in cases {
             assert_eq!(parse(&args(input)), want, "{why}");

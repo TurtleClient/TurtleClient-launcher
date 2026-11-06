@@ -1,6 +1,6 @@
-// What is playing on the computer (title, artist, cover) is given to the Millida mod at the local address 127.0.0.1, with a random port and a key for each game launch, so the mod can show a player in the game.
+// What is playing on the computer (title, artist, cover) is given to the TurtleClient mod at the local address 127.0.0.1, with a random port and a key for each game launch, so the mod can show a player in the game.
 // None of it goes to the internet. On by default, turned off by the "gameMedia" setting. Works only in modpacks that have our mod.
-//! What plays on the computer, handed to the Millida mod's Dynamic Island over
+//! What plays on the computer, handed to the TurtleClient mod's Dynamic Island over
 //! a loopback WebSocket. The contract is millida-mod/docs/media.md.
 
 mod cover;

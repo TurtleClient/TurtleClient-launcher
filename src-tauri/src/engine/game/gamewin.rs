@@ -77,7 +77,7 @@ mod os {
             if SetForegroundWindow(hwnd) != 0 {
                 return true;
             }
-            // The launcher is not in front (a tray menu, --launch, a millida:// link): the system
+            // The launcher is not in front (a tray menu, --launch, a turtleclient:// link): the system
             // refuses the switch from a process that did not get the last input. Sharing the input
             // queue of the window that is in front lifts the refusal for the moment of the call.
             let front = GetForegroundWindow();

@@ -16,7 +16,7 @@ const ICON_MAX_BYTES: usize = 2 * 1024 * 1024;
 const ICON_WAIT: std::time::Duration = std::time::Duration::from_secs(20);
 
 pub const PROTECTED_REFUSAL: &str =
-    "Автор сборки закрыл её содержимое — поделиться можно ссылкой на сборку в каталоге Millida";
+    "Автор сборки закрыл её содержимое — поделиться можно ссылкой на сборку в каталоге TurtleClient";
 
 /// Only a boolean from our card counts: an older API without the field says
 /// nothing, and nothing must not switch the protection off.

@@ -20,7 +20,7 @@ describe('tiers', () => {
     expect(bestTier({})).toBeNull()
   })
 
-  test('only Millida SMP itself forces the Millida account', () => {
+  test('only TurtleClient SMP itself forces the TurtleClient account', () => {
     expect(serverNeedsMillidaAuth('mpvp.millida.host')).toBe(true)
     expect(serverNeedsMillidaAuth('MPVP.millida.host:25565')).toBe(true)
     // Тот же сервер под адресом сайта (millida.net/tiers).

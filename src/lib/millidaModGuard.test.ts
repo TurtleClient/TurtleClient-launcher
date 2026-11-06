@@ -7,7 +7,7 @@ describe('which file is our mod', () => {
     { name: 'millida-mod-fabric-1.20.1-0.2.18.jar', want: true, why: 'the name the core gives the jar it installs' },
     { name: 'millida-mod-forge-1.20.1-0.2.18.jar.disabled', want: true, why: 'a switched-off copy is still ours' },
     { name: 'sodium-fabric-0.6.jar', want: false, why: 'the player removes ordinary mods without our question' },
-    { name: 'CustomSkinLoader.jar', want: false, why: 'the question talks about Millida cosmetics, not the fallback skin mod' },
+    { name: 'CustomSkinLoader.jar', want: false, why: 'the question talks about TurtleClient cosmetics, not the fallback skin mod' },
     { name: 'my-millida-mod-fabric.jar', want: false, why: 'only the prefix the core writes counts' },
     { name: 'millida-mod-fabric-1.20.1-0.2.18.zip', want: false, why: 'the core only treats jars as our mod' },
   ]

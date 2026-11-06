@@ -1,5 +1,6 @@
+import { BRAND } from './branding'
 // Launcher update. The check goes through the Tauri plugin. The version list address and the public part of the signing key are set in tauri.conf.json.
-// Install only with a Millida signature. Fallback: the core downloads the update itself (updateFallback*). Details: SAFETY.md.
+// Install only with a TurtleClient signature. Fallback: the core downloads the update itself (updateFallback*). Details: SAFETY.md.
 import { check, type Update } from '@tauri-apps/plugin-updater'
 import { exit, relaunch } from '@tauri-apps/plugin-process'
 import { hasTauri, tauri } from '../ipc/tauri'
@@ -30,7 +31,7 @@ export interface UpdateInfo {
   install: () => Promise<void>
 }
 
-export const DOWNLOAD_PAGE = 'https://millida.net/launcher'
+export const DOWNLOAD_PAGE = BRAND.repository + '/releases'
 
 const FAILED_KEY = 'm-upd-failed'
 /// The version whose patch update did not install: the full installer is taken for it from then on, in every session.
@@ -158,7 +159,7 @@ function afterQuiet(run: () => void) {
   setTimeout(attempt, QUIET_FIRST_MS)
 }
 
-const updatesAllowed = () => hasTauri() && !import.meta.env.DEV
+const updatesAllowed = () => BRAND.updates && hasTauri() && !import.meta.env.DEV
 
 /// Flatpak updates itself and mounts /app read-only, so the fallback channel cannot install there.
 let managedOutside: boolean | null = null
@@ -172,7 +173,7 @@ async function updatesReady(): Promise<boolean> {
   return updatesAllowed() && !(await updatesManagedOutside())
 }
 
-const FLATPAK_UPDATE_COMMAND = 'flatpak update net.millida.launcher'
+const FLATPAK_UPDATE_COMMAND = 'flatpak update dev.turtleclient.launcher'
 
 async function managedOutsideOnly(): Promise<boolean> {
   return updatesAllowed() && (await updatesManagedOutside())
@@ -423,7 +424,7 @@ const TRANSLOCATED_RE = /запущен из образа/i
 
 function noticeIfTranslocated(e: unknown): boolean {
   if (!TRANSLOCATED_RE.test(String(e))) return false
-  showToast(t('Лаунчер запущен из образа. Перенеси Millida в «Программы» — иначе обновления не установятся'), 'error')
+  showToast(t('Лаунчер запущен из образа. Перенеси TurtleClient в «Программы» — иначе обновления не установятся'), 'error')
   return true
 }
 

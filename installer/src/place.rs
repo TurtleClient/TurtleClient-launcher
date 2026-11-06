@@ -141,8 +141,8 @@ pub fn desktop_entry(target: &Path, icon: Option<&Path>, extract: bool) -> Strin
     let mut entry = String::from("[Desktop Entry]\n");
     entry.push_str("Type=Application\n");
     entry.push_str("Version=1.0\n");
-    entry.push_str("Name=Millida Launcher\n");
-    entry.push_str("Comment=Лаунчер Minecraft от Millida\n");
+    entry.push_str("Name=TurtleClient Launcher\n");
+    entry.push_str("Comment=Лаунчер Minecraft от TurtleClient\n");
     // The menu starts the launcher without the stub, so the fallback has to live
     // in the entry itself: `env` is the portable way to set variables in Exec.
     let prefix = if extract {
@@ -156,7 +156,7 @@ pub fn desktop_entry(target: &Path, icon: Option<&Path>, extract: bool) -> Strin
     entry.push_str("Terminal=false\n");
     entry.push_str("Categories=Game;\n");
     entry.push_str("StartupNotify=true\n");
-    entry.push_str("StartupWMClass=Millida Launcher\n");
+    entry.push_str("StartupWMClass=TurtleClient Launcher\n");
     entry.push_str(&format!("MimeType={};\n", SCHEME));
     entry
 }

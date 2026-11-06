@@ -120,7 +120,7 @@ function takenKeys(items: SiteCard[], resolved: (card: SiteCard) => ModHit | nul
 }
 
 /**
- * While browsing, Millida pages come first and Modrinth waits for the end of them.
+ * While browsing, TurtleClient pages come first and Modrinth waits for the end of them.
  * A search shows it right away: the player typed a name and the mirror may lack
  * that mod for the chosen version and loader.
  */

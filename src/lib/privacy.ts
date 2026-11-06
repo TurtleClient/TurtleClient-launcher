@@ -1,4 +1,4 @@
-// Profile privacy settings: stored on the Millida server (GET/PATCH /users/me/privacy). localStorage holds only a copy of the last answer.
+// Profile privacy settings: stored on the TurtleClient server (GET/PATCH /users/me/privacy). localStorage holds only a copy of the last answer.
 import { create } from 'zustand'
 import { api, hasMillidaAccount } from './api'
 import { DUO_INVITES_DEFAULT, isDuoInvites, type DuoInvites } from './duoEmotes'
@@ -117,7 +117,7 @@ export const usePrivacy = create<PrivacyState>((set, get) => ({
   /// Переключаем только по ответу сервера: при ошибке тумблер остаётся
   /// в прежнем положении и не «прыгает».
   patch: async (part) => {
-    if (!hasMillidaAccount()) throw new Error(t('нужен аккаунт Millida'))
+    if (!hasMillidaAccount()) throw new Error(t('нужен аккаунт TurtleClient'))
     const field = (Object.keys(part)[0] || null) as keyof PrivacySettings | null
     set({ saving: field, error: '' })
     try {

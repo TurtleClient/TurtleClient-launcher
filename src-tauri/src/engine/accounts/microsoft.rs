@@ -1,15 +1,15 @@
 // Microsoft login by code (device code): the user types the password on the Microsoft page, not in the launcher.
-// Then the chain Xbox Live, XSTS, Minecraft Services. All these hosts belong to Microsoft/Mojang. No Millida servers here.
+// Then the chain Xbox Live, XSTS, Minecraft Services. All these hosts belong to Microsoft/Mojang. No TurtleClient servers here.
 use crate::engine::*;
 use serde_json::Value;
 
 /// Azure application client_id, baked in at compile time. Own builds should set
-/// MILLIDA_MS_CLIENT_ID to their own registration.
-// Public Azure application id, not a secret. Custom builds set their own through MILLIDA_MS_CLIENT_ID.
-const MS_CLIENT_ID_FALLBACK: &str = "499c8d36-be2a-4231-9ebd-ef291b7bb64c";
+/// TURTLECLIENT_MS_CLIENT_ID to their own registration.
+// Public Azure application id, not a secret. No upstream application id is used as a fallback.
+const MS_CLIENT_ID_FALLBACK: &str = "";
 
 pub(crate) fn ms_client_id() -> &'static str {
-    match option_env!("MILLIDA_MS_CLIENT_ID") {
+    match option_env!("TURTLECLIENT_MS_CLIENT_ID") {
         Some(v) if !v.trim().is_empty() => v.trim(),
         _ => MS_CLIENT_ID_FALLBACK,
     }
@@ -17,6 +17,9 @@ pub(crate) fn ms_client_id() -> &'static str {
 
 pub async fn ms_device_start() -> Result<Value, String> {
     let client_id = ms_client_id();
+    if client_id.is_empty() {
+        return Err("Microsoft sign-in is not configured for TurtleClient".into());
+    }
     let r = client()
         // Step one: ask Microsoft for a login code. client_id and the list of scopes are sent.
         .post("https://login.microsoftonline.com/consumers/oauth2/v2.0/devicecode")

@@ -160,7 +160,7 @@ export function ImportModal() {
                 <span className="mod-mini">
                   <Icon id="i-download" />
                 </span>
-                <b>{t('Перенести в Millida целиком')}</b>
+                <b>{t('Перенести в TurtleClient целиком')}</b>
                 <span className="pill" style={{ marginRight: '6px' }}>
                   Prism · Modrinth App
                 </span>

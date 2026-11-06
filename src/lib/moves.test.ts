@@ -80,7 +80,7 @@ test('the move button waits for the source launcher unless the player let it be 
   const cases: [typeof prism[], boolean, boolean, string][] = [
     [[], false, true, 'nothing open: the button works'],
     [[prism], false, false, 'the launcher is open and the player closes it themselves'],
-    [[prism], true, true, 'the launcher is open, but the player let Millida close it'],
+    [[prism], true, true, 'the launcher is open, but the player let TurtleClient close it'],
     [[game], true, false, 'a game from the build is never closed for the player'],
     [[prism, game], true, false, 'the game holds the button even when the launcher may be closed'],
   ]

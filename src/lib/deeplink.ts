@@ -42,9 +42,9 @@ function handle(raw: string) {
   } catch {
     return
   }
-  if (url.protocol !== 'millida:') return
+  if (url.protocol !== 'turtleclient:') return
   restoreLauncher()
-  // For millida://join/<host> the host lands in `hostname`, the rest in `pathname`.
+  // For turtleclient://join/<host> the host lands in `hostname`, the rest in `pathname`.
   const action = url.hostname || url.pathname.replace(/^\/+/, '').split('/')[0] || ''
   const rest = url.pathname.replace(/^\/+/, '')
   const q = url.searchParams
@@ -53,12 +53,12 @@ function handle(raw: string) {
     const addr = rest || q.get('addr') || ''
     if (!addr) return
     const name = q.get('name') || addr
-    // Any web page can fire a millida:// link, so starting the game and joining
+    // Any web page can fire a turtleclient:// link, so starting the game and joining
     // someone else's server asks first. Имя приходит из ссылки и может врать —
     // поэтому рядом всегда настоящий адрес, а запоминаем имя только после «да».
     const label = name === addr ? `«${addr}»` : `«${name}» (${addr})`
     void uiConfirm(t('Запустить игру и зайти на сервер {server}?', { server: label }), {
-      title: 'Millida',
+      title: 'TurtleClient',
       confirmLabel: t('Запустить'),
       danger: false,
     }).then((ok) => {
@@ -88,7 +88,7 @@ function handle(raw: string) {
       return
     }
     void uiConfirm(t('Запустить сборку «{name}»?', { name: profile }), {
-      title: 'Millida',
+      title: 'TurtleClient',
       confirmLabel: t('Запустить'),
       danger: false,
     }).then((ok) => {
@@ -110,8 +110,8 @@ function handle(raw: string) {
     openModal('nbModal')
     return
   }
-  // «Установить» на millida.net: материал каталога Millida по его slug.
-  // millida://modpack/<slug> — прежняя кнопка сборок сайта, тот же каталог.
+  // «Установить» на millida.net: материал каталога TurtleClient по его slug.
+  // turtleclient://modpack/<slug> — прежняя кнопка сборок сайта, тот же каталог.
   if (action === 'install') {
     const link = parseInstallLink(action, rest, q)
     if (!link) {
@@ -153,7 +153,7 @@ function handle(raw: string) {
     setScreen('builds')
     const title = q.get('name') || slug
     void uiConfirm(title === slug ? t('Установить сборку «{name}»?', { name: slug }) : t('Установить сборку «{name}» ({slug})?', { name: title, slug }), {
-      title: 'Millida',
+      title: 'TurtleClient',
       confirmLabel: t('Установить'),
       danger: false,
     }).then((ok) => {
@@ -188,9 +188,9 @@ function handle(raw: string) {
   if (action === 'party') {
     const code = normalizePartyCode(rest || q.get('code') || '')
     if (!partyCodeOk(code)) return
-    // Any web page can fire a millida:// link, and a party shares voice, so joining asks first.
+    // Any web page can fire a turtleclient:// link, and a party shares voice, so joining asks first.
     void uiConfirm(t('Вступить в пати {code}?', { code: prettyPartyCode(code) }), {
-      title: 'Millida',
+      title: 'TurtleClient',
       confirmLabel: t('Вступить'),
       danger: false,
     }).then((ok) => {
@@ -228,9 +228,9 @@ function handle(raw: string) {
         return
       }
       const nick = friend.nickname || ''
-      // Any web page can fire a millida:// link, so calling someone asks first.
+      // Any web page can fire a turtleclient:// link, so calling someone asks first.
       void uiConfirm(t('Позвонить {nick}?', { nick: nick || t('этому игроку') }), {
-        title: 'Millida',
+        title: 'TurtleClient',
         confirmLabel: t('Позвонить'),
         danger: false,
       }).then((ok) => {
@@ -251,7 +251,7 @@ export function initDeepLinks(pending?: string[]) {
   void onOpenUrl((urls) => urls.forEach(handle)).catch(noted('deeplink-open'))
 }
 
-/// millida://launch?profile=…&quickplay=world:<folder>|server:<addr>&key=… —
+/// turtleclient://launch?profile=…&quickplay=world:<folder>|server:<addr>&key=… —
 /// a desktop shortcut. Its key proves the shortcut was made on this computer;
 /// a link without it asks first, like every other link that starts the game.
 async function launchFromShortcut(profile: string, quickplay: string | null, key: string): Promise<void> {
@@ -266,7 +266,7 @@ async function launchFromShortcut(profile: string, quickplay: string | null, key
   if (!trusted) {
     const what = world ? t('мир «{name}»', { name: world }) : server ? t('сервер {addr}', { addr: server }) : null
     const ok = await uiConfirm(what ? t('Запустить сборку «{name}» и зайти в {target}?', { name: profile, target: what }) : t('Запустить сборку «{name}»?', { name: profile }), {
-      title: 'Millida',
+      title: 'TurtleClient',
       confirmLabel: t('Запустить'),
       danger: false,
     })
@@ -298,7 +298,7 @@ function installPackFromLink(slug: string, title: string): void {
   })
 }
 
-/// millida://open/<slug> from millida.net: the pack's page in PlayHub. It only shows a page, so it needs no
+/// turtleclient://open/<slug> from millida.net: the pack's page in PlayHub. It only shows a page, so it needs no
 /// confirmation, but the slug must be a pack the catalog actually lists, or PlayHub would wait for it forever.
 async function openPackFromLink(requested: string): Promise<void> {
   const live = arcania2Live()
@@ -307,7 +307,7 @@ async function openPackFromLink(requested: string): Promise<void> {
   const premium = useLobby.getState().premium
   const known = packs.some((p) => p.slug === slug) || premium.some((p) => (p.slug || p.id) === slug)
   if (!known) {
-    showToast(packs.length ? t('Сборки «{name}» нет в каталоге Millida', { name: slug }) : t('Каталог не ответил — повтори'), 'error')
+    showToast(packs.length ? t('Сборки «{name}» нет в каталоге TurtleClient', { name: slug }) : t('Каталог не ответил — повтори'), 'error')
     return
   }
   const open = () => {

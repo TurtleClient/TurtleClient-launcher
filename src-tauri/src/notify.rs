@@ -4,7 +4,7 @@
 
 /// The installer stamps the bundle identifier on the shortcuts as their AppUserModelID.
 #[cfg(target_os = "windows")]
-const AUMID: &str = "net.millida.launcher";
+const AUMID: &str = "dev.turtleclient.launcher";
 
 /// A toast under an id that has no Start menu shortcut (a portable or winget install, a deleted
 /// shortcut) is dropped silently. Registering the id with a display name under the user's own
@@ -16,7 +16,7 @@ fn register_aumid() {
     static ONCE: Once = Once::new();
     ONCE.call_once(|| {
         let key = windows_registry::CURRENT_USER.create(format!(r"Software\Classes\AppUserModelId\{AUMID}"));
-        if let Err(e) = key.and_then(|k| k.set_string("DisplayName", "Millida Launcher")) {
+        if let Err(e) = key.and_then(|k| k.set_string("DisplayName", "TurtleClient Launcher")) {
             eprintln!("[notify] the notification id was not registered: {e}");
         }
     });

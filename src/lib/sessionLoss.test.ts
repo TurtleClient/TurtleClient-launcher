@@ -69,7 +69,7 @@ describe('session loss', () => {
     expect(useAccounts.getState().list.map((a) => a.id)).toEqual(['m1'])
   })
 
-  test('signing out on purpose drops the core session and the Millida row', async () => {
+  test('signing out on purpose drops the core session and the TurtleClient row', async () => {
     signOut()
     await Promise.resolve()
     expect(logouts).toBe(1)

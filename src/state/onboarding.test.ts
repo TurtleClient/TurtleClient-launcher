@@ -59,7 +59,7 @@ test('finishing with the guide starts the tour, without it does not', () => {
   expect(useTour.getState().active).toBe(false)
 })
 
-test('the Millida-login flag is off until a login marks it, and then it sticks', () => {
+test('the TurtleClient-login flag is off until a login marks it, and then it sticks', () => {
   expect(millidaEver()).toBe(false)
   markMillidaEver()
   expect(millidaEver()).toBe(true)
@@ -106,7 +106,7 @@ test('every step points at a selector and carries text', () => {
   })
 })
 
-test('the inviter step is passed over for a player without a Millida account, both ways', () => {
+test('the inviter step is passed over for a player without a TurtleClient account, both ways', () => {
   useOnboarding.setState({ open: true, step: 0 })
   onboardingNext(true)
   expect(useOnboarding.getState().step).toBe(2)

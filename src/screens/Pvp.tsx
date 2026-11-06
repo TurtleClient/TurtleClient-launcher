@@ -21,7 +21,7 @@ import { liveInterval } from '../lib/liveInterval'
  * не переключаться по разделам», «выбор кита и сразу играть»). Слева — киты
  * и кнопка «Играть», под ними свои последние матчи; справа — тир-лист с
  * местами #1, #2, #3 и отдельной строкой «Моё место». Игра стартует сборкой
- * «Millida PvP 26.2», которую лаунчер ставит сам.
+ * «TurtleClient PvP 26.2», которую лаунчер ставит сам.
  */
 
 /**
@@ -209,7 +209,7 @@ function PvpPlay({ on }: { on: boolean }) {
       await api('/tiers/intent', { method: 'POST', body: JSON.stringify({ kit, ranked: true, party: party.members.map((m) => m.userId) }) })
     } catch (e) {
       const msg = String(e)
-      showToast(/403/.test(msg) ? t('Позвать в 2 на 2 может только лидер пати') : /404/.test(msg) ? t('У напарника ещё нет игрового профиля Millida') : t('Сервер не принял заявку 2 на 2 — попробуй ещё раз'), 'error')
+      showToast(/403/.test(msg) ? t('Позвать в 2 на 2 может только лидер пати') : /404/.test(msg) ? t('У напарника ещё нет игрового профиля TurtleClient') : t('Сервер не принял заявку 2 на 2 — попробуй ещё раз'), 'error')
       setBusy(false)
       return
     }

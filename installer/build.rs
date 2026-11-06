@@ -6,8 +6,8 @@ fn main() {
         let mut res = winresource::WindowsResource::new();
         res.set_icon("../src-tauri/icons/icon.ico");
         res.set_manifest_file("setup.manifest");
-        res.set("ProductName", "Millida Launcher");
-        res.set("FileDescription", "Установщик Millida Launcher");
+        res.set("ProductName", "TurtleClient Launcher");
+        res.set("FileDescription", "Установщик TurtleClient Launcher");
         res.set("CompanyName", "ИП Веселов Никита Николаевич");
         res.set("LegalCopyright", "© 2026 Millida (ИП Веселов Никита Николаевич)");
         res.set("OriginalFilename", "MillidaLauncherSetup.exe");

@@ -28,7 +28,7 @@ import '../../styles/pixel/tierlist.css'
 const avatarUrl = (nick: string) => 'https://api.millida.net/v2/heads/avatar/' + encodeURIComponent(nick || 'Steve') + '?size=112&safe=1'
 const bodyUrl = (nick: string, size = 160) => 'https://api.millida.net/v2/heads/body/' + encodeURIComponent(nick || 'Steve') + '?size=' + size + '&safe=1'
 
-/** Ник для тир-листа: тир пишется на аккаунт Millida, без него своего тира нет. */
+/** Ник для тир-листа: тир пишется на аккаунт TurtleClient, без него своего тира нет. */
 export const tierNick = (): string => {
   // Превью (только DEV): ?tiernick=<ник> показывает раздел глазами игрока с тиром.
   if (import.meta.env.DEV) {

@@ -26,7 +26,7 @@ import type { SkelBlock, TrBlock, TrChangelog, TrSuggestion, TrSummary, TrText, 
 import '../styles/pixel/project-translate.css'
 
 /*
- * Описание мода по-русски (перевод Millida, контракт v2 от 04.10.2026).
+ * Описание мода по-русски (перевод TurtleClient, контракт v2 от 04.10.2026).
  *
  * Английский текст сюда не попадает, пока игрок сам не нажмёт «Оригинал»: сверху
  * сразу стоит короткая русская сводка (с сервера, а до его ответа — из того, что
@@ -428,7 +428,7 @@ export function ProjectRuBody(props: Props) {
   )
 }
 
-/** Знак «Перевод Millida» у переключателя языка. */
+/** Знак «Перевод TurtleClient» у переключателя языка. */
 export function TrMark({ view, busy }: { view: TrView | null; busy: boolean }) {
   const t = useT()
   const blocks = view ? view.blocks : []
@@ -439,7 +439,7 @@ export function TrMark({ view, busy }: { view: TrView | null; busy: boolean }) {
     <Guard what="Знак перевода" silent>
       <span
         className="pjt-mark"
-        title={draft ? t('Часть абзацев — черновой перевод, скоро улучшится') : t('Перевод Millida: словари Minecraft, память переводов и правки игроков')}
+        title={draft ? t('Часть абзацев — черновой перевод, скоро улучшится') : t('Перевод TurtleClient: словари Minecraft, память переводов и правки игроков')}
       >
         {busy && blocks.length && ready < blocks.length ? (
           <span className="pjt-mark-n" aria-live="polite">
@@ -447,7 +447,7 @@ export function TrMark({ view, busy }: { view: TrView | null; busy: boolean }) {
           </span>
         ) : null}
         <PxIcon name="sparkle" size={10} />
-        <span className="pjt-mark-t">{t('Перевод Millida')}</span>
+        <span className="pjt-mark-t">{t('Перевод TurtleClient')}</span>
         {community ? <em className="pjt-mark-c">{t('· проверено сообществом')}</em> : null}
       </span>
     </Guard>

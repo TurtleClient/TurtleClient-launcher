@@ -8,7 +8,7 @@ Object.defineProperty(globalThis, 'localStorage', {
 const m = await import('./millidaCatalog')
 type CatalogFile = import('./millidaCatalog').CatalogFile
 
-// millida://open/<slug> can be fired by any web page: only a plain catalog slug may reach the pack page.
+// turtleclient://open/<slug> can be fired by any web page: only a plain catalog slug may reach the pack page.
 describe('parseOpenLink', () => {
   const cases: [string, string | null, string][] = [
     ['arcania-2', 'arcania-2', 'the Arcania 2.0 link the site shares'],
@@ -30,7 +30,7 @@ describe('parseOpenLink', () => {
   }
 })
 
-// Ссылку millida:// может открыть любая страница: разбор обязан пропускать
+// Ссылку turtleclient:// может открыть любая страница: разбор обязан пропускать
 // только адреса сайта и отбрасывать всё остальное целиком.
 describe('parseInstallLink', () => {
   const q = (s = '') => new URLSearchParams(s)

@@ -69,8 +69,8 @@ export const SEGMENTS = 3
  * текстом, а в браузере — голым «http 400»):
  *  miss  — подписки/вступления не видно (400): человек ещё не сделал;
  *  net   — Telegram/Discord/сеть не ответили (5xx, обрыв): повторить можно сразу;
- *  taken — этот аккаунт уже получил награду на другом профиле Millida (409).
- *  auth  — вход в Millida устарел (401/403): подписка тут ни при чём, нужно войти заново.
+ *  taken — этот аккаунт уже получил награду на другом профиле TurtleClient (409).
+ *  auth  — вход в TurtleClient устарел (401/403): подписка тут ни при чём, нужно войти заново.
  * link — не открылась ссылка привязки (её плитка просит у сервера отдельно).
  */
 export type TaskFailure = 'miss' | 'net' | 'taken' | 'link' | 'auth'
@@ -78,7 +78,7 @@ export type TaskFailure = 'miss' | 'net' | 'taken' | 'link' | 'auth'
 export function claimFailure(e: unknown): TaskFailure {
   const raw = String((e as { message?: string } | null)?.message ?? e ?? '')
   if (/\bhttp 409\b|уже получил/i.test(raw)) return 'taken'
-  if (/\bhttp 40[13]\b|\bunauthorized\b|не авторизован|нет токена Millida/i.test(raw)) return 'auth'
+  if (/\bhttp 40[13]\b|\bunauthorized\b|не авторизован|нет токена TurtleClient/i.test(raw)) return 'auth'
   if (isTransientApiError(e) || /не ответил/i.test(raw)) return 'net'
   return 'miss'
 }

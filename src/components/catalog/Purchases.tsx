@@ -11,7 +11,7 @@ import { openAccountAdd } from '../../state/accountAdd'
 import { useT } from '../../i18n'
 
 /*
- * «Покупки» — всё купленное в каталоге Millida (`/catalog/purchases/me`):
+ * «Покупки» — всё купленное в каталоге TurtleClient (`/catalog/purchases/me`):
  * поставить заново в любую сборку теми же кнопками, что в ленте.
  */
 
@@ -49,7 +49,7 @@ export function PurchasesPane({ onOpenPack }: { onOpenPack?: (slug: string) => b
   if (!signed)
     return (
       <CatalogNotice
-        note={{ icon: 'i-wallet', title: t('Покупки — в аккаунте Millida'), action: { label: t('Войти'), primary: true, onClick: () => openAccountAdd('millida') } }}
+        note={{ icon: 'i-wallet', title: t('Покупки — в аккаунте TurtleClient'), action: { label: t('Войти'), primary: true, onClick: () => openAccountAdd('millida') } }}
       />
     )
   if (failed && !(rows && rows.length))

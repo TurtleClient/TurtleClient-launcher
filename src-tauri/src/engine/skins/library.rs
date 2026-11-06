@@ -1,5 +1,5 @@
 // Wardrobe of the player's skins and capes: PNG files in the launcher data folder. Import by link works only from checked sites
-// (Mojang, Millida, Modrinth). Local addresses and foreign hosts are rejected.
+// (Mojang, TurtleClient, Modrinth). Local addresses and foreign hosts are rejected.
 use crate::engine::*;
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;

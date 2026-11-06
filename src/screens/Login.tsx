@@ -1,3 +1,5 @@
+import { BRAND } from '../lib/branding'
+import { enterApp } from '../lib/session'
 import { useEffect, useRef, useState } from 'react'
 import { Icon } from '../components/Icon'
 import { PxIcon } from '../components/PxIcon'
@@ -25,14 +27,17 @@ function GameAccountStep() {
   }, [])
 
   useEffect(() => {
-    if (added) finishFirstRun()
+    if (added) {
+      finishFirstRun()
+      if (!BRAND.services) enterApp()
+    }
   }, [added])
 
   return (
     <div className="login-form lg2-card">
       <LangPicker className="lg2-lang" />
       <div className="login-logo">
-        <img src="/millida-logo.svg" alt="" width={56} height={56} />
+        <img src="/turtleclient-icon.svg" alt="" width={56} height={56} />
       </div>
       <h1>{t('Игровой аккаунт')}</h1>
       <p className="sub">{t('Как будешь играть?')}</p>
@@ -75,15 +80,15 @@ export function Login({ on }: { on: boolean }) {
           в старом UI со старыми персонажами). */}
       <PixelField on={on} />
       <div className="login-wrap lg2-wrap">
-        {step ? (
+        {step || !BRAND.services ? (
           <GameAccountStep />
         ) : (
         <div className="login-form lg2-card">
           <LangPicker className="lg2-lang" />
           <div className="login-logo">
-            <img src="/millida-logo.svg" alt="" width={56} height={56} />
+            <img src="/turtleclient-icon.svg" alt="" width={56} height={56} />
           </div>
-          <h1>{t('Вход в Millida')}</h1>
+          <h1>{t('Вход в TurtleClient')}</h1>
           {/* Одна строка вместо абзаца: остальное показывает сам поток входа —
               код, «Открыть страницу», «Копировать ссылку» (аудит 22.09.2026). */}
           <p className="sub">{t('Нет аккаунта — создастся при входе')}</p>
@@ -138,12 +143,13 @@ export function Login({ on }: { on: boolean }) {
 
           <div className="trust">
             <Icon id="i-shield" />
-            <span>{t('Пароль — только на сайте Millida')}</span>
+            <span>{t('Пароль — только на сайте TurtleClient')}</span>
           </div>
         </div>
         )}
         <div className="login-art lg2-art">
-          <img ref={artRef} src="/lobby/duo@2x.webp" alt="" />
+          <img className="lg2-emblem" src="/turtleclient-icon.svg" alt="" />
+          <img ref={artRef} src="/turtleclient-wordmark.png" alt="TurtleClient" />
           <span className="lg2-shadow" aria-hidden="true" />
         </div>
       </div>

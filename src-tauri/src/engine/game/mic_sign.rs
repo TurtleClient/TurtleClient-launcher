@@ -13,7 +13,7 @@ use std::process::Command;
 // correct if the hardened flag is ever turned back on.
 const MARKER: &str = ".millida-mic-signed";
 const LAUNCH_BIN: &str = "Contents/Home/bin/java";
-const IDENTIFIER: &str = "net.millida.launcher.java";
+const IDENTIFIER: &str = "dev.turtleclient.launcher.java";
 const ENTITLEMENTS_REV: u32 = 1;
 const ENTITLEMENTS: &str = r#"<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">

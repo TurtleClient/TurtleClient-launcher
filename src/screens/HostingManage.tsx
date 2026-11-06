@@ -422,7 +422,7 @@ export function HostingManage({
       return
     }
     if ((detail || server) && detail?.iconLocked) {
-      showToast(t('На бесплатном тарифе иконка наша — она же метка Millida'), 'error')
+      showToast(t('На бесплатном тарифе иконка наша — она же метка TurtleClient'), 'error')
       return
     }
     setSaving('icon')
@@ -887,13 +887,13 @@ export function HostingManage({
             {advOpen ? (
               <div className="card set-group host-set-grid hsx-plate">
                 <Cap first>{t('Сервер')}</Cap>
-                <Row k={t('Иконка')} sub={detail?.iconLocked ? t('На бесплатном — логотип Millida') : 'PNG, 64×64'}>
+                <Row k={t('Иконка')} sub={detail?.iconLocked ? t('На бесплатном — логотип TurtleClient') : 'PNG, 64×64'}>
                   {cur.icon ? (
                     <img
                       src={cur.icon}
                       alt=""
                       onError={(e) => {
-                        e.currentTarget.src = '/millida-logo.svg'
+                        e.currentTarget.src = '/turtleclient-icon.svg'
                       }}
                       style={{ width: 28, height: 28, borderRadius: 6 }}
                     />
@@ -910,7 +910,7 @@ export function HostingManage({
                 <Row k={t('Описание в списке серверов')}>
                   <TextField value={rules.motd || ''} placeholder={cur.name || t('Мой сервер')} busy={saving === 'motd'} onSave={(v) => save({ motd: v }, 'motd')} />
                 </Row>
-                <Row k={t('Вторая строка описания')} sub={free ? t('На бесплатном — подпись Millida') : undefined}>
+                <Row k={t('Вторая строка описания')} sub={free ? t('На бесплатном — подпись TurtleClient') : undefined}>
                   <TextField value={rules.motdLine2 || ''} placeholder="—" busy={saving === 'motdLine2' || free} onSave={(v) => save({ motdLine2: v }, 'motdLine2')} />
                 </Row>
 
@@ -936,7 +936,7 @@ export function HostingManage({
                   <Toggle on={rules.onlineMode !== false} busy={saving === 'onlineMode'} onChange={(v) => save({ onlineMode: v }, 'onlineMode')} />
                 </Row>
                 {rules.onlineMode === false ? (
-                  <Row k={t('Авторизация Millida')} sub={t('Пускать игроков Millida по нику')}>
+                  <Row k={t('Авторизация TurtleClient')} sub={t('Пускать игроков TurtleClient по нику')}>
                     <Toggle on={rules.millidaAuth === true} busy={saving === 'millidaAuth'} onChange={(v) => save({ millidaAuth: v }, 'millidaAuth')} />
                   </Row>
                 ) : null}

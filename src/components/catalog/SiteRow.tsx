@@ -89,7 +89,7 @@ function Glyph({ d }: { d: string }) {
 }
 const SIDE_GLYPH: Record<string, string> = { CLIENT: GLYPH.client!, SERVER: GLYPH.server!, BOTH: GLYPH.both! }
 
-/** Знак Millida Hosting — две стойки квадратами (`HostingMark` сайта). */
+/** Знак TurtleClient Hosting — две стойки квадратами (`HostingMark` сайта). */
 export function HostingMark() {
   return (
     <svg className="mr-host-mark" viewBox="0 0 16 16" aria-hidden="true">
@@ -320,7 +320,7 @@ function Bound({ h, kind, want, onFired, extra }: { h: ModHit; kind: string; wan
 }
 
 /**
- * «На сервер» — материал на свой сервер хостинга Millida (приказ владельца
+ * «На сервер» — материал на свой сервер хостинга TurtleClient (приказ владельца
  * 24.09.2026, 18:35). Окно одно на весь лаунчер (`HostInstall`): нет сервера —
  * «Создать сервер», один — подтверждение, несколько — выбор. В панели сервера
  * ставит сразу на него.
@@ -414,7 +414,7 @@ function Actions({
   const [busy, setBusy] = useState(false)
   const paid = usePaidCard(card)
   const content = CONTENT.has(sec.kind)
-  // Вещь Millida без источника на Modrinth ставится своим файлом каталога.
+  // Вещь TurtleClient без источника на Modrinth ставится своим файлом каталога.
   const native = () =>
     nativeKind(sec)
       ? void installMillidaItem({ slug: card.slug, title: displayName(card.title), kind: sec.kind, paid: isPaid(card.pricing, card.priceKopecks) })

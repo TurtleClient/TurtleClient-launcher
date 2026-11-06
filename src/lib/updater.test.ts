@@ -21,6 +21,8 @@ let manifest = { version: '2.0.302', critical: false }
 let stageFails = false
 let pluginFindsVersion: string | null = '2.0.302'
 
+const testBrand = { name: 'Test launcher', repository: 'https://example.org', updates: true, services: false }
+mock.module('./branding', () => ({ BRAND: testBrand }))
 mock.module('../ipc/tauri', () => ({ hasTauri: () => true, tauri: () => null }))
 mock.module('../ipc/commands', () => ({
   appVersion: async () => '2.0.300',
@@ -177,4 +179,18 @@ describe('обновление лаунчера лежит на диске у я
     expect(calls.run).toEqual([['/updates/x.exe', undefined]])
     expect(calls.showAfter).toBe(1)
   })
+})
+
+test('an unconfigured fork neither downloads nor offers an upstream update', async () => {
+  U.__resetUpdaterForTests()
+  testBrand.updates = false
+  const before = JSON.stringify(calls)
+  try {
+    expect(await U.bootUpdate()).toBe(false)
+    expect(await U.checkForUpdate()).toBeNull()
+    expect(await U.autoUpdate()).toBeNull()
+    expect(JSON.stringify(calls)).toBe(before)
+  } finally {
+    testBrand.updates = true
+  }
 })

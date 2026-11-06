@@ -5,7 +5,7 @@ test('game_crash несёт класс, причину, моды, mc и загр
   const d = gameCrashData(
     {
       profile: 'Сборка Васи',
-      reason: 'Модам не хватает зависимостей: Millida',
+      reason: 'Модам не хватает зависимостей: TurtleClient',
       tail: '',
       culprits: ['sodium-0.5.jar', 'iris.jar'],
       kind: 'missing_deps',
@@ -16,7 +16,7 @@ test('game_crash несёт класс, причину, моды, mc и загр
     [['Сборка Васи', '<build>']],
   )
   expect(d).toEqual({
-    code: 'Модам не хватает зависимостей: Millida',
+    code: 'Модам не хватает зависимостей: TurtleClient',
     kind: 'missing_deps',
     cause: 'net.fabricmc.loader.impl.FormattedException: Mod resolution failed in <build>',
     suspects: 'sodium-0.5.jar, iris.jar',

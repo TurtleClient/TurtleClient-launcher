@@ -7,7 +7,7 @@ const DONE = 'm-onb-done'
 const EVER = 'm-mil-ever'
 
 export const ONBOARDING_STEPS = GRAPHICS_PRESETS_PUBLIC ? 7 : 6
-/** Шаг «Кто тебя позвал?» — без аккаунта Millida спрашивать некого. */
+/** Шаг «Кто тебя позвал?» — без аккаунта TurtleClient спрашивать некого. */
 export const INVITER_STEP = 1
 
 interface OnboardingState {

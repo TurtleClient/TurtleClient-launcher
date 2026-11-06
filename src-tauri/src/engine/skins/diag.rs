@@ -65,7 +65,7 @@ const BUILD_FAULTS: [(BuildSkin, &str, &str); 5] = [
     (
         BuildSkin::ModSilent,
         "mod_silent",
-        "В этой версии игры скин не показывается. Заходи на серверы Millida — там скин виден всегда.",
+        "В этой версии игры скин не показывается. Заходи на серверы TurtleClient — там скин виден всегда.",
     ),
     (
         BuildSkin::ModComplains,
@@ -328,7 +328,7 @@ fn build_report(profile: &Profile, root: &str) -> (Value, BuildFacts) {
 }
 
 async fn texture_ok(url: &str) -> bool {
-    // GET of the texture from the address the Millida skin server named: we check that a picture is served.
+    // GET of the texture from the address the TurtleClient skin server named: we check that a picture is served.
     let Ok(resp) = client().get(url).send().await else { return false };
     resp.status().is_success()
         && resp.headers().get("content-type").and_then(|v| v.to_str().ok())
@@ -435,7 +435,7 @@ pub(crate) fn session_fault(s: &Value) -> Option<(&'static str, &'static str)> {
     if no("agent") {
         return Some((
             "agent",
-            "Файл входа в игру (authlib-injector) не скачался — игра запускается без сессии Millida, а вместе с ней пропадает и скин. Проверь интернет и запусти сборку ещё раз.",
+            "Файл входа в игру (authlib-injector) не скачался — игра запускается без сессии TurtleClient, а вместе с ней пропадает и скин. Проверь интернет и запусти сборку ещё раз.",
         ));
     }
     if no("profile") {
@@ -486,7 +486,7 @@ pub(crate) fn overall(
     if !online {
         return (
             "offline",
-            "Вход Millida не выполнен — скин из гардероба игре брать неоткуда. Войди в аккаунт в лаунчере.".into(),
+            "Вход TurtleClient не выполнен — скин из гардероба игре брать неоткуда. Войди в аккаунт в лаунчере.".into(),
             None,
         );
     }
@@ -512,7 +512,7 @@ pub(crate) fn overall(
     if active.map(|b| b.state) == Some(BuildSkin::Vanilla) && active.and_then(|b| b.agent) == Some(false) {
         return (
             "agent",
-            "Последний запуск этой сборки прошёл без сессии Millida — в журнале нет строки входа, а ванильной сборке скин брать больше неоткуда. Так бывает, когда сборку запускают лицензией Microsoft или когда лаунчер ушёл в офлайн-режим: выбери аккаунт Millida и запусти сборку заново.".into(),
+            "Последний запуск этой сборки прошёл без сессии TurtleClient — в журнале нет строки входа, а ванильной сборке скин брать больше неоткуда. Так бывает, когда сборку запускают лицензией Microsoft или когда лаунчер ушёл в офлайн-режим: выбери аккаунт TurtleClient и запусти сборку заново.".into(),
             None,
         );
     }
@@ -617,9 +617,9 @@ mod tests {
     #[test]
     fn only_failing_lines_of_the_mod_journal_are_kept() {
         let log = "[INFO] Loading profile arar1995\n\
-                   [ERROR] Failed to get profile from Millida: timeout\n\
+                   [ERROR] Failed to get profile from TurtleClient: timeout\n\
                    [INFO] Cache expired\n\
-                   [ERROR] Failed to get profile from Millida: timeout\n";
+                   [ERROR] Failed to get profile from TurtleClient: timeout\n";
         let p = log_problems(log);
         assert_eq!(p.len(), 1, "повтор одной и той же строки не делает диагноз убедительнее, а вытесняет другие");
         assert!(p[0].contains("timeout"));
@@ -653,7 +653,7 @@ mod tests {
     #[test]
     fn the_api_source_of_the_written_config_is_readable_back() {
         let cfg = json!({ "loadlist": [
-            { "name": "Millida", "type": "CustomSkinAPI", "root": "https://api.millida.net/v2/yggdrasil/csl/" },
+            { "name": "TurtleClient", "type": "CustomSkinAPI", "root": "https://api.millida.net/v2/yggdrasil/csl/" },
             { "name": "GameProfile", "type": "GameProfile" }
         ]});
         assert_eq!(config_root(&cfg).as_deref(), Some("https://api.millida.net/v2/yggdrasil/csl/"));

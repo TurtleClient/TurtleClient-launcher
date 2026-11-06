@@ -1,5 +1,5 @@
 // A rebuilt main window (the launcher unloads it into the tray and for the game, see
-// src-tauri/src/background.rs) comes back on the screen it left and gets the millida://
+// src-tauri/src/background.rs) comes back on the screen it left and gets the turtleclient://
 // links that arrived while there was no page. The core keeps both; nothing is stored here.
 import { hasTauri } from '../ipc/tauri'
 import { takeWindowResume } from '../ipc/commands'

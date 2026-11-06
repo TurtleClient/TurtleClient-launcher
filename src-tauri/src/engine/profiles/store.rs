@@ -278,7 +278,7 @@ pub async fn install_modpack(app: AppHandle, slug: String) -> Result<Profile, St
 }
 
 pub async fn install_modpack_ver(app: AppHandle, slug: String, version_id: Option<String>, target: Option<String>) -> Result<Profile, String> {
-    // the slug arrives from the webview, a `millida://` link or a profile's
+    // the slug arrives from the webview, a `turtleclient://` link or a profile's
     // settings file, and lands in an API path and in job keys
     check_modpack_slug(&slug)?;
     if let Some(v) = &version_id {

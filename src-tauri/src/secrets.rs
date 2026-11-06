@@ -1074,7 +1074,7 @@ mod tests {
         assert_eq!(
             after.get("ms-refresh").and_then(|r| decrypt("ms-refresh", r)).as_deref(),
             Some("keep-me"),
-            "signing in to Millida must not drop the Microsoft accounts stored next to it",
+            "signing in to TurtleClient must not drop the Microsoft accounts stored next to it",
         );
     }
 

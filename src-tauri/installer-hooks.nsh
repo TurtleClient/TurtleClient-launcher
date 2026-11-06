@@ -3,7 +3,7 @@
 !ifdef MAINBINARYNAME
   !define MILLIDA_MAIN_EXE "${MAINBINARYNAME}.exe"
 !else
-  !define MILLIDA_MAIN_EXE "millida-launcher.exe"
+  !define MILLIDA_MAIN_EXE "turtleclient-launcher.exe"
 !endif
 
 !define MILLIDA_ASIDE ".millida-old"
@@ -91,7 +91,7 @@ Var MillidaEntry
   SetShellVarContext current
   StrCpy $MillidaGameRoot ""
   ClearErrors
-  FileOpen $MillidaProbe "$APPDATA\net.millida.launcher\game-root.txt" r
+  FileOpen $MillidaProbe "$APPDATA\dev.turtleclient.launcher\game-root.txt" r
   ${IfNot} ${Errors}
     FileRead $MillidaProbe $MillidaGameRoot
     FileClose $MillidaProbe
@@ -180,18 +180,18 @@ Var MillidaEntry
 !macro MillidaCleanTraces
   ${If} $UpdateMode <> 1
     SetShellVarContext current
-    RmDir /r "$LOCALAPPDATA\net.millida.launcher\EBWebView\Default\Cache"
-    RmDir /r "$LOCALAPPDATA\net.millida.launcher\EBWebView\Default\Code Cache"
-    RmDir /r "$LOCALAPPDATA\net.millida.launcher\EBWebView\Default\GPUCache"
-    RmDir /r "$LOCALAPPDATA\net.millida.launcher\EBWebView\Default\DawnGraphiteCache"
-    RmDir /r "$LOCALAPPDATA\net.millida.launcher\EBWebView\Default\DawnWebGPUCache"
-    RmDir /r "$LOCALAPPDATA\net.millida.launcher\EBWebView\Default\Service Worker\CacheStorage"
-    RmDir /r "$LOCALAPPDATA\net.millida.launcher\EBWebView\GrShaderCache"
-    RmDir /r "$LOCALAPPDATA\net.millida.launcher\EBWebView\GraphiteDawnCache"
-    RmDir /r "$LOCALAPPDATA\net.millida.launcher\EBWebView\ShaderCache"
-    RmDir /r "$APPDATA\net.millida.launcher\tmp"
+    RmDir /r "$LOCALAPPDATA\dev.turtleclient.launcher\EBWebView\Default\Cache"
+    RmDir /r "$LOCALAPPDATA\dev.turtleclient.launcher\EBWebView\Default\Code Cache"
+    RmDir /r "$LOCALAPPDATA\dev.turtleclient.launcher\EBWebView\Default\GPUCache"
+    RmDir /r "$LOCALAPPDATA\dev.turtleclient.launcher\EBWebView\Default\DawnGraphiteCache"
+    RmDir /r "$LOCALAPPDATA\dev.turtleclient.launcher\EBWebView\Default\DawnWebGPUCache"
+    RmDir /r "$LOCALAPPDATA\dev.turtleclient.launcher\EBWebView\Default\Service Worker\CacheStorage"
+    RmDir /r "$LOCALAPPDATA\dev.turtleclient.launcher\EBWebView\GrShaderCache"
+    RmDir /r "$LOCALAPPDATA\dev.turtleclient.launcher\EBWebView\GraphiteDawnCache"
+    RmDir /r "$LOCALAPPDATA\dev.turtleclient.launcher\EBWebView\ShaderCache"
+    RmDir /r "$APPDATA\dev.turtleclient.launcher\tmp"
     ; The notification id the launcher registers for toasts when there is no Start menu shortcut.
-    DeleteRegKey HKCU "Software\Classes\AppUserModelId\net.millida.launcher"
+    DeleteRegKey HKCU "Software\Classes\AppUserModelId\dev.turtleclient.launcher"
     DeleteRegValue HKCU "Software\Microsoft\Windows\CurrentVersion\Run" "Millida Launcher"
     DeleteRegValue HKCU "Software\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run" "Millida Launcher"
     ReadRegStr $MillidaName HKCU "Software\Classes\millida\shell\open\command" ""
@@ -201,7 +201,7 @@ Var MillidaEntry
     ${If} $MillidaProbe == $MillidaPrefix
       DeleteRegKey HKCU "Software\Classes\millida"
     ${EndIf}
-    !insertmacro MillidaDropGpuPrefs "$APPDATA\net.millida.launcher\"
+    !insertmacro MillidaDropGpuPrefs "$APPDATA\dev.turtleclient.launcher\"
     ${If} $MillidaGameRoot != ""
       ; Only the launcher's own java folder: a shared root such as D:\Games\ holds
       ; other launchers' java too, and their graphics choices are not ours to drop.
@@ -233,6 +233,6 @@ Var MillidaEntry
   !insertmacro MillidaCleanTraces
   ${If} $MillidaWipe = 1
     SetShellVarContext current
-    !insertmacro MillidaWipeKeepingBuilds "$APPDATA\net.millida.launcher" "$LOCALAPPDATA\net.millida.launcher"
+    !insertmacro MillidaWipeKeepingBuilds "$APPDATA\dev.turtleclient.launcher" "$LOCALAPPDATA\dev.turtleclient.launcher"
   ${EndIf}
 !macroend

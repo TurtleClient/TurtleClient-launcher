@@ -110,7 +110,7 @@ export function MovePanel() {
   const run = async () => {
     if (!selected.length || busy || closing || !gate.ok) return
     const yes = await uiConfirm(confirmText(selected), {
-      title: t('Скопировать в Millida'),
+      title: t('Скопировать в TurtleClient'),
       confirmLabel: t('Скопировать'),
       danger: false,
     })
@@ -238,7 +238,7 @@ export function MoveBuildsModal() {
   return (
     <div className={'modal-bg' + (modal.open ? ' open' : '') + (modal.vis ? ' vis' : '')} id="mvModal" {...backdropClose(close)}>
       <div className="modal mw-md">
-        <h3>{t('Перенести всё в Millida')}</h3>
+        <h3>{t('Перенести всё в TurtleClient')}</h3>
         <div className="sub">{t('Миры, моды, настройки, скриншоты и серверы переедут вместе со сборкой')}</div>
         <MovePanel />
         <div style={{ display: 'flex', marginTop: '14px', justifyContent: 'flex-end' }}>

@@ -10,7 +10,7 @@ import { t, useT } from '../../i18n'
 const SOURCE: Record<string, string> = {
   modrinth: 'Modrinth',
   curseforge: 'CurseForge',
-  millida: 'Millida',
+  millida: 'TurtleClient',
   get unknown() {
     return t('Неизвестно')
   },

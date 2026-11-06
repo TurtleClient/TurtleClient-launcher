@@ -473,7 +473,7 @@ async fn java_25(app: &AppHandle, picked: &Path) -> Result<PathBuf, String> {
 }
 
 /// Only a Microsoft session is handed over: Horizon joins online servers through Mojang's session service,
-/// which knows nothing of a Millida or offline account.
+/// which knows nothing of a TurtleClient or offline account.
 fn microsoft_session(auth: &Auth, nick: &str) -> Option<Value> {
     let name_ok = !nick.is_empty() && nick.chars().count() <= MAX_NAME_LEN;
     let uuid_ok = auth.uuid.chars().filter(|c| *c != '-').count() == 32 && auth.uuid.chars().all(|c| c == '-' || c.is_ascii_hexdigit());
@@ -731,14 +731,14 @@ mod tests {
         assert!(parse_lock(&json!({})).is_none(), "an empty lock is refused");
     }
 
-    /// account -> what the game gets. A Millida or offline token sent to Mojang's session service would only fail.
+    /// account -> what the game gets. A TurtleClient or offline token sent to Mojang's session service would only fail.
     #[test]
     fn only_a_microsoft_session_is_handed_to_horizon() {
         let uuid = "069a79f444e94726a5befca90e38aaf5";
         let auth = |token: &str, ygg: &str| Auth { token: token.into(), uuid: uuid.into(), xuid: String::new(), yggdrasil: ygg.into() };
         let cases: [(Auth, &str, bool, &str); 5] = [
             (auth("mc-token", ""), "Notch", true, "a Microsoft account plays online"),
-            (auth("millida-token", "https://auth.millida.net"), "Notch", false, "a Millida session is not Mojang's"),
+            (auth("millida-token", "https://auth.millida.net"), "Notch", false, "a TurtleClient session is not Mojang's"),
             (auth("", ""), "Notch", false, "an offline account has no session"),
             (auth("mc-token", ""), "SeventeenLetters1", false, "a name Horizon refuses is not written"),
             (Auth { uuid: "../../x".into(), ..auth("mc-token", "") }, "Notch", false, "a malformed uuid is not written"),

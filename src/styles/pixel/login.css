@@ -34,8 +34,8 @@
 .lg2 .lg2-art {
   /* Персонажи целиком в правом нижнем углу, без обрезки: раньше базовый
      .login-art с overflow:hidden срезал их по бёдра (владелец 25.09.2026). */
-  position: absolute; right: 3vw; bottom: 0; height: 92%; width: 56%;
-  display: flex; align-items: flex-end; justify-content: flex-end;
+  position: absolute; right: 3vw; top: 0; bottom: 0; height: 100%; width: 50%;
+  display: flex; flex-direction: column; gap: 32px; align-items: center; justify-content: center;
   overflow: visible; padding: 0; pointer-events: none;
 }
 .lg2 .lg2-art img {
@@ -45,6 +45,7 @@
   transition: transform 120ms linear;
 }
 .lg2 .lg2-shadow { display: none; }
+.lg2 .lg2-art img.lg2-emblem { width: 156px; height: 156px; }
 @media (max-width: 1100px) {
   .lg2 .lg2-wrap { grid-template-columns: minmax(340px, 400px); padding: 24px 32px 0; }
   .lg2 .lg2-art { width: 52%; height: 80%; }

@@ -31,7 +31,7 @@ const isHeadAvatar = (v?: string, from?: string): boolean =>
 export const isMillidaKind = (kind: string) => kind === 'millida' || kind === 'tg'
 
 /// A licence or an offline nick is what the first-run screen offers to play with,
-/// so such an account opens the launcher without a Millida sign-in.
+/// so such an account opens the launcher without a TurtleClient sign-in.
 export const isGameAccountKind = (kind: string) => kind === 'microsoft' || kind === 'offline'
 
 function readAccounts(): Account[] {
@@ -62,7 +62,7 @@ function readActive(): string {
   return localStorage.getItem('m-active') || ''
 }
 
-/// The Millida session lives in one vault slot for the whole launcher, so a second
+/// The TurtleClient session lives in one vault slot for the whole launcher, so a second
 /// sign-in replaces the first one instead of adding to it. Rows written before that
 /// was enforced still sit in storage: they all point at the current session and show
 /// its nick, so the list reads as the same account twice.
@@ -99,7 +99,7 @@ export function retireElyby(list: Account[], active: string): { list: Account[];
   return { list: next, active: current, retired }
 }
 
-/// Guest mode is gone (owner 27.10.2026): the launcher needs a Millida sign-in. "Play as
+/// Guest mode is gone (owner 27.10.2026): the launcher needs a TurtleClient sign-in. "Play as
 /// guest" rows from earlier versions are dropped, or they would linger in the account list.
 export const dropGuests = (list: Account[]): Account[] => list.filter((a) => a.kind !== 'guest')
 
@@ -143,7 +143,7 @@ export const useAccounts = create<AccountsState>((set, get) => ({
       ? l.findIndex((x) => isMillidaKind(x.kind))
       : l.findIndex((x) => x.nick === acc.nick && x.kind === acc.kind)
     if (i >= 0) {
-      // A Millida row is replaced, not merged: keeping the previous balance, avatar
+      // A TurtleClient row is replaced, not merged: keeping the previous balance, avatar
       // or uuid would show one user's facts under another user's login.
       l[i] = isMillidaKind(acc.kind) ? { ...acc, id: l[i].id } : Object.assign(l[i], acc)
       acc.id = l[i].id
@@ -202,7 +202,7 @@ export function getAccount(): Account | null {
 }
 
 /**
- * Чей образ на экране. Строка Millida сохраняет id при входе другим пользователем (add), поэтому
+ * Чей образ на экране. Строка TurtleClient сохраняет id при входе другим пользователем (add), поэтому
  * одного id мало: кэши образа показали бы новому игроку вещи и uuid прежнего.
  */
 export function lookOwner(account: Account | null = getAccount()): string {
@@ -214,7 +214,7 @@ export function getMillidaAccount(): Account | null {
   return list.find((a) => isMillidaKind(a.kind)) || null
 }
 
-/// The Millida game profile carries its own name, and the game uses that one — the site
+/// The TurtleClient game profile carries its own name, and the game uses that one — the site
 /// login is not the in-game nick. Read from cache so callers stay synchronous.
 export const GAME_NICK_KEY = 'm-game-nick'
 
@@ -223,7 +223,7 @@ export const GAME_NICK_KEY = 'm-game-nick'
 export const PROFILE_SLUG_KEY = 'm-profile-slug'
 
 /// Which user the cached game nick and profile slug belong to, so a sign-in with a
-/// different Millida account is told apart from a renamed one.
+/// different TurtleClient account is told apart from a renamed one.
 export const MILLIDA_USER_KEY = 'm-millida-uid'
 
 export function profileSlug(): string {
@@ -249,19 +249,19 @@ export const isOfflineNick = (nick: string): boolean => OFFLINE_NICK.test(nick)
 
 export const millidaGameNick = (): string => localStorage.getItem(GAME_NICK_KEY) || ''
 
-/// While a Millida login is present an offline account is created under the
-/// Millida profile name: that name is held by the account on the server, and a
-/// launch under it can carry the Millida session into servers with Millida sign-in.
+/// While a TurtleClient login is present an offline account is created under the
+/// TurtleClient profile name: that name is held by the account on the server, and a
+/// launch under it can carry the TurtleClient session into servers with TurtleClient sign-in.
 export function pinnedOfflineNick(millidaSession: boolean, profileNick: string): string {
   return millidaSession && isOfflineNick(profileNick) ? profileNick : ''
 }
 
-/// A Millida session names the player after the Millida profile, so an offline
+/// A TurtleClient session names the player after the TurtleClient profile, so an offline
 /// account takes it only when its nick is exactly that name: the offline UUID is
 /// derived from the exact spelling, and a new profile's UUID is that same one.
 /// Any other offline nick starts plain offline and keeps its own name.
 /// A server that checks sessions only against our Yggdrasil turns away a licence
-/// and an offline nick alike, so its build always starts on the Millida session.
+/// and an offline nick alike, so its build always starts on the TurtleClient session.
 export function launchAuthKind(acc: Account | null, millidaSession: boolean, millidaOnly = false, profileNick = ''): LaunchAuthKind {
   if (millidaOnly) return millidaSession ? 'millida' : 'offline'
   if (acc && acc.kind === 'microsoft') return 'microsoft'

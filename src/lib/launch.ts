@@ -99,7 +99,7 @@ export async function reconcileGameSession(): Promise<void> {
 export const discordEnabled = () => localStorage.getItem('m-discord') !== '0'
 
 /**
- * Показывается ли прямо сейчас активность Millida в Discord и на каком
+ * Показывается ли прямо сейчас активность TurtleClient в Discord и на каком
  * аккаунте. Опыт за часы платится только за это время, поэтому сервер узнаёт
  * id из ответа ядра (READY-кадр сокета), а не со слов вьюхи.
  */
@@ -115,7 +115,7 @@ export function discordPresence(status?: string, server?: string | null): Promis
   const details = playing ? (build ? `Playing · ${build}` : 'In game') : 'In launcher'
   const addr = (session && session.server) || ''
   const place = (session && (session.serverName || session.server)) || server || ''
-  const state = playing && place ? `Server: ${place}` : nick ? `Nick: ${nick}` : 'Millida Launcher'
+  const state = playing && place ? `Server: ${place}` : nick ? `Nick: ${nick}` : 'TurtleClient Launcher'
   // Версия сборки уезжает в ссылку: принимающий лаунчер иначе знает только
   // адрес и заходит тем, что у гостя выбрано сейчас.
   const joinUrl = playing && addr ? joinPageUrl(addr, (session && session.serverName) || null, pack && pack.version) : ''
@@ -233,10 +233,10 @@ async function resolveAuth(profile: string | null, server?: string | null): Prom
   const millidaOnly = native || smp || (await profileNeedsMillidaAuth(profile))
   const kind = launchAuthKind(acc, hasMillidaAccount(), millidaOnly, millidaGameNick())
   if (millidaOnly) {
-    const where = smp ? 'Millida SMP' : 'OneBlock'
+    const where = smp ? 'TurtleClient SMP' : 'OneBlock'
     if (kind !== 'millida')
-      throw new Error(native ? t(NATIVE_NEEDS_MILLIDA) : t('{where} пускает только с аккаунтом Millida: войди в Millida и нажми «Играть» ещё раз', { where }))
-    if (!native && acc && !isMillidaKind(acc.kind)) showToast(t('{where}: заходим с аккаунтом Millida', { where }))
+      throw new Error(native ? t(NATIVE_NEEDS_MILLIDA) : t('{where} пускает только с аккаунтом TurtleClient: войди в TurtleClient и нажми «Играть» ещё раз', { where }))
+    if (!native && acc && !isMillidaKind(acc.kind)) showToast(t('{where}: заходим с аккаунтом TurtleClient', { where }))
     return millidaAuth(offline.nick)
   }
   // A live token is required, not just a stored one: Minecraft session tokens expire after a day.
@@ -264,7 +264,7 @@ async function resolveAuth(profile: string | null, server?: string | null): Prom
   return millidaAuth(offline.nick)
 }
 
-/// The HD skin lives on the Millida profile, so only a Millida session carries it into the game.
+/// The HD skin lives on the TurtleClient profile, so only a TurtleClient session carries it into the game.
 async function millidaAuth(nick: string): Promise<{ nick: string; auth: LaunchAuth }> {
   if (await holdLaunchForHdSkin()) throw new Error(CANCELLED_TEXT)
   return { nick, auth: { kind: 'millida' } }

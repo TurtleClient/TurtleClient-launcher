@@ -1,4 +1,4 @@
-// List of content modules: mods, resource packs, modpacks and catalogs (Modrinth, CurseForge, Millida), jar checks, the Millida mod.
+// List of content modules: mods, resource packs, modpacks and catalogs (Modrinth, CurseForge, TurtleClient), jar checks, the TurtleClient mod.
 mod modrinth;
 mod curseforge;
 mod cf_memo;

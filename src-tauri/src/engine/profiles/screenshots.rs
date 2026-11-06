@@ -1,5 +1,5 @@
 // Modpack screenshot gallery: show, save somewhere else, delete, share a link.
-// The network gets something only on the "Share" button: one chosen PNG to the Millida server.
+// The network gets something only on the "Share" button: one chosen PNG to the TurtleClient server.
 //! Screenshot gallery: what the game wrote into `screenshots/`, plus the two
 //! things a player wants next — keep it somewhere else, or send it to someone.
 
@@ -159,7 +159,7 @@ pub async fn share_screenshot(profile: String, name: String) -> Result<String, S
     }
     let bytes = std::fs::read(&path).map_err(|e| e.to_string())?;
     let file = safe_file_name(&name)?;
-    // Uploads a screenshot to the Millida server (with the account token) on the "Share" button. A link comes back.
+    // Uploads a screenshot to the TurtleClient server (with the account token) on the "Share" button. A link comes back.
     let res = millida_upload_auth(SHARE_ENDPOINT.to_string(), file, "image/png", bytes, vec![]).await?;
     res.get("url")
         .and_then(|v| v.as_str())

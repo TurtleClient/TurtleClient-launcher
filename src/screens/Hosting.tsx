@@ -466,7 +466,7 @@ export function Hosting({ on }: { on: boolean }) {
       <div id="hostBody">
         {view === 'initial' || view === 'loading' ? <HostSkeleton /> : null}
         {view === 'gate' ? (
-          // Сервер живёт в аккаунте Millida: обе дороги ведут на вход, после него
+          // Сервер живёт в аккаунте TurtleClient: обе дороги ведут на вход, после него
           // человек вернётся сюда и выберет тариф по-настоящему.
           <HostRoads paidId="hostLoginCta" freeId="hostLoginFree" onPaid={() => showLogin()} onFree={() => showLogin()} />
         ) : null}

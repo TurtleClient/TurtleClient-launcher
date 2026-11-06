@@ -5,7 +5,7 @@ import { useGame } from '../state/game'
 /// The control plane keeps a claim for at most a minute, so it is renewed a little earlier.
 export const CLAIM_EVERY_MS = 50_000
 
-/// Only a nick the Millida login owns is vouched for: the server takes the name from
+/// Only a nick the TurtleClient login owns is vouched for: the server takes the name from
 /// the account's game profile, so an offline nick counts only when it is exactly that name.
 export function claimsJoin(acc: Account | null, millidaSession: boolean, profileNick: string): boolean {
   if (!acc || !millidaSession) return false

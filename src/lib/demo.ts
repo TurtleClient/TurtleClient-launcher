@@ -5,7 +5,7 @@
  * внутри `import.meta.env.DEV`: в релизной сборке ветка вырезается, а сам флаг
  * без параметра `preview=user` остаётся false даже в dev.
  *
- * Зачем: без приложения (Tauri) сессии Millida нет, половина экранов упирается
+ * Зачем: без приложения (Tauri) сессии TurtleClient нет, половина экранов упирается
  * в «Войти», и посмотреть залогиненный вид в браузере нельзя. Здесь лежат
  * ответы только на те адреса, которые сервер отдаёт лишь вошедшему. Всё
  * публичное (рейтинг серверов, каталог сборок, тарифы хостинга, правила и
@@ -1240,7 +1240,7 @@ const ROUTES: [RegExp, Handler][] = [
     return {
       code: 'K7M2QX9R',
       link: 'https://millida.net/?ref=K7M2QX9R',
-      deepLink: 'millida://invite/K7M2QX9R',
+      deepLink: 'turtleclient://invite/K7M2QX9R',
       qualified: 2,
       pending: 1,
       perFriendPlusDays: 1,

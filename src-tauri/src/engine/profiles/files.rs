@@ -114,7 +114,7 @@ mod tests {
         let cases: [(&str, bool, &str); 5] = [
             ("millida-settings.json", true, "the build's settings hold its Java and memory"),
             ("mods/millida-content.json", true, "a service name deeper down is still a service file"),
-            ("Millida-pack-launch.json", true, "case does not hide a service file on Windows"),
+            ("TurtleClient-pack-launch.json", true, "case does not hide a service file on Windows"),
             ("mods/sodium.jar", false, "an ordinary mod is the player's to remove"),
             ("saves/Мой мир", false, "a world is the player's to remove"),
         ];

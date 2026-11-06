@@ -61,8 +61,8 @@ describe('redactSecrets', () => {
     ],
     [
       'macOS: в журнале уже лежат пути с именами игроков из апдейтера',
-      'старую копию не сдвинуть (/Users/olgakansina/Desktop/Millida Launcher.app): Operation not permitted (os error 1)',
-      'старую копию не сдвинуть (~/Desktop/Millida Launcher.app): Operation not permitted (os error 1)',
+      'старую копию не сдвинуть (/Users/olgakansina/Desktop/TurtleClient Launcher.app): Operation not permitted (os error 1)',
+      'старую копию не сдвинуть (~/Desktop/TurtleClient Launcher.app): Operation not permitted (os error 1)',
     ],
     ['Linux', 'java: /home/vasya/.local/share/millida/java/17/bin/java', 'java: ~/.local/share/millida/java/17/bin/java'],
     [
@@ -137,7 +137,7 @@ describe('gameCrashMessage', () => {
       },
     ],
     [
-      'та же поломка, но в сборке каталога Millida',
+      'та же поломка, но в сборке каталога TurtleClient',
       {
         reason: WRONG_VERSION,
         catalogPack: 'create-2',
@@ -284,7 +284,7 @@ describe('safeArgs', () => {
 
 describe('installTarget', () => {
   const cases: Array<[string, string, ReturnType<typeof installTarget>]> = [
-    ['сборка каталога Millida', 'catalog-pack:create-2', { kind: 'catalog-pack', profile: null, catalogPack: 'create-2' }],
+    ['сборка каталога TurtleClient', 'catalog-pack:create-2', { kind: 'catalog-pack', profile: null, catalogPack: 'create-2' }],
     ['мод в сборку', 'mr-mod:Моя сборка:AANobbMI', { kind: 'mr-mod', profile: 'Моя сборка', catalogPack: null }],
     ['зависимости: двоеточие в самом проекте', 'mr-mod:Моя сборка:millida:deps', { kind: 'mr-mod', profile: 'Моя сборка', catalogPack: null }],
     ['обновление сборки Modrinth поверх своей', 'mr-modpack:fo:Моя сборка', { kind: 'mr-modpack', profile: 'Моя сборка', catalogPack: null }],

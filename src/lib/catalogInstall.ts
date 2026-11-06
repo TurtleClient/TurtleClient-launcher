@@ -1,4 +1,4 @@
-// Install from the Millida catalog and Modrinth: works out what to install and calls core commands. The core downloads files and checks the hash.
+// Install from the TurtleClient catalog and Modrinth: works out what to install and calls core commands. The core downloads files and checks the hash.
 // From here only metadata requests go out, to api.millida.net (/launcher/mr, /launcher/cf).
 import { hasTauri } from '../ipc/tauri'
 import {
@@ -50,8 +50,8 @@ import { detectSlimFromUrl } from './skinArms'
 import { setScreen, showToast } from '../state/ui'
 import { t, tx } from '../i18n'
 
-/// «Установить» из каталога Millida — одна точка и для кнопки на сайте
-/// (millida://install/…), и для библиотеки внутри лаунчера. Решение «откуда
+/// «Установить» из каталога TurtleClient — одна точка и для кнопки на сайте
+/// (turtleclient://install/…), и для библиотеки внутри лаунчера. Решение «откуда
 /// брать байты» живёт здесь, экраны его не знают:
 ///  - файл лежит на нашем зеркале — качает ядро по ссылке, которую само берёт у API;
 ///  - зеркала нет, но первоисточник Modrinth — тот же файл через Modrinth-путь
@@ -91,7 +91,7 @@ const profiles = () => useProfiles.getState().profiles
 const buildOf = (name: string) => profiles().find((p) => p.name === name)
 
 function notFound(section: string, slug: string) {
-  showToast(t('В каталоге Millida нет «{slug}»', { slug }), 'error', undefined, {
+  showToast(t('В каталоге TurtleClient нет «{slug}»', { slug }), 'error', undefined, {
     label: t('На сайт'),
     run: () => openExt(sitePage(section, slug)),
   })
@@ -125,7 +125,7 @@ async function chooseBuild(
       pr
         ? t('Поставить «{name}» в сборку «{pack}» ({version} · {loader})?', { name: title, pack: fit[0] ?? '', version: pr.version, loader: LOADER_NAME(pr) })
         : t('Поставить «{name}» в сборку «{pack}»?', { name: title, pack: fit[0] ?? '' }),
-      { title: 'Millida', confirmLabel: t('Поставить'), danger: false },
+      { title: 'TurtleClient', confirmLabel: t('Поставить'), danger: false },
     )
     return ok ? fit[0] : null
   }
@@ -268,7 +268,7 @@ async function viaPlan(prof: string, kind: string, item: CatalogItem): Promise<b
       const extra = r.installed.length ? (r.installed.length === 1 ? t('и ещё {n} зависимость', { n: 1 }) : t('и ещё {n} зависимости', { n: r.installed.length })) : ''
       done(prof, kind, r.file, extra)
       if (r.missing.length)
-        showToast(t('Нет в каталоге Millida, поставь вручную: {list}', { list: r.missing.join(', ') }), 'error', undefined, {
+        showToast(t('Нет в каталоге TurtleClient, поставь вручную: {list}', { list: r.missing.join(', ') }), 'error', undefined, {
           label: t('Открыть'),
           run: () => openExt(sitePage(item.section || 'mods', item.slug)),
         })
@@ -319,7 +319,7 @@ async function installContentItem(section: string, slug: string, kind: string, o
   if (mr) return viaModrinth(prof, kind, mr, file, item.title)
   const cfid = kind === 'world' ? null : await cfProjectOf(item)
   if (cfid) return viaCurseforge(prof, kind, cfid, file, item.title)
-  toSite(section, slug, t('Файла «{name}» нет на зеркале Millida — он у автора', { name: item.title }))
+  toSite(section, slug, t('Файла «{name}» нет на зеркале TurtleClient — он у автора', { name: item.title }))
   return false
 }
 
@@ -334,7 +334,7 @@ function packDone(p: Profile | null, title: string, startedAt: number, source: s
 async function confirmPack(title: string, what: string, opts: CatalogInstallOpts): Promise<boolean> {
   if (!opts.fromLink) return true
   return uiConfirm(what ? t('Установить сборку «{name}» ({what})? Она появится отдельной сборкой.', { name: title, what }) : t('Установить сборку «{name}»? Она появится отдельной сборкой.', { name: title }), {
-    title: 'Millida',
+    title: 'TurtleClient',
     confirmLabel: t('Установить'),
     danger: false,
   })
@@ -342,7 +342,7 @@ async function confirmPack(title: string, what: string, opts: CatalogInstallOpts
 
 /// Сборка, которую собрала Милли и выложили в каталог (`aiGenerated`): файла
 /// на зеркале нет, есть код сборки лаунчера. Ставит её тот же путь ядра, что и
-/// «Сборка по коду» / millida://pack/<код> — `install_shared_pack`.
+/// «Сборка по коду» / turtleclient://pack/<код> — `install_shared_pack`.
 export async function installPackCode(code: string, title: string, opts: CatalogInstallOpts = {}, slug = code): Promise<boolean> {
   if (!hasTauri()) {
     showToast(t('Установка доступна в приложении'))
@@ -382,7 +382,7 @@ async function installModpackItem(slug: string, opts: CatalogInstallOpts): Promi
       return false
     }
     if (!hasMillidaAccount()) {
-      showToast(t('Войди в аккаунт Millida — сборки каталога ставятся на аккаунт'), 'error')
+      showToast(t('Войди в аккаунт TurtleClient — сборки каталога ставятся на аккаунт'), 'error')
       return false
     }
     if (!(await confirmPack(pack.title, [pack.game, pack.loader].filter(Boolean).join(' · '), opts))) return false
@@ -446,21 +446,21 @@ async function installModpackItem(slug: string, opts: CatalogInstallOpts): Promi
       onError: (e) => showToast('' + e, 'error'),
     })
   }
-  toSite('modpacks', slug, t('Файла сборки «{name}» нет на зеркале Millida', { name: item.title }))
+  toSite('modpacks', slug, t('Файла сборки «{name}» нет на зеркале TurtleClient', { name: item.title }))
   return false
 }
 
 /// Скин каталога сайта — в гардероб аккаунта и сразу надеть. Гардероб живёт на
-/// аккаунте Millida, без входа надеть его некуда.
+/// аккаунте TurtleClient, без входа надеть его некуда.
 async function applySkin(slug: string, opts: CatalogInstallOpts): Promise<boolean> {
   setScreen('skins')
   if (!hasMillidaAccount()) {
-    showToast(t('Войди в аккаунт Millida, чтобы надеть скин'), 'error')
+    showToast(t('Войди в аккаунт TurtleClient, чтобы надеть скин'), 'error')
     return false
   }
   const name = opts.name || slug
   if (opts.fromLink) {
-    const ok = await uiConfirm(t('Надеть скин «{name}»?', { name }), { title: 'Millida', confirmLabel: t('Надеть'), danger: false })
+    const ok = await uiConfirm(t('Надеть скин «{name}»?', { name }), { title: 'TurtleClient', confirmLabel: t('Надеть'), danger: false })
     if (!ok) return false
   }
   try {
@@ -489,17 +489,17 @@ async function fetchSkinPng(slug: string): Promise<string> {
 }
 
 /// Плащи сайта — это плащи Mojang и OptiFine: их выдаёт не лаунчер. Надеть
-/// можно только плащ из каталога Millida, если он открыт на аккаунте.
+/// можно только плащ из каталога TurtleClient, если он открыт на аккаунте.
 async function applyCape(slug: string): Promise<boolean> {
   setScreen('skins')
   if (!hasMillidaAccount()) {
-    showToast(t('Войди в аккаунт Millida, чтобы надеть плащ'), 'error')
+    showToast(t('Войди в аккаунт TurtleClient, чтобы надеть плащ'), 'error')
     return false
   }
   const list = await loadCapeCatalog().catch(() => [])
   const cape = list.find((c) => c.id === slug)
   if (!cape) {
-    showToast(t('Этот плащ выдаёт Mojang, а не лаунчер — плащи Millida во вкладке «Скины»'))
+    showToast(t('Этот плащ выдаёт Mojang, а не лаунчер — плащи TurtleClient во вкладке «Скины»'))
     return false
   }
   if (cape.unlocked === false) {

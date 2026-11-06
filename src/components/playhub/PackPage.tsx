@@ -660,7 +660,7 @@ export function PackPage({
                 <div className="pkb-key">
                   <div className="pkb-bought">
                     <b>
-                      <Icon id="i-key" /> {t('Войдите в аккаунт Millida, чтобы купить или ввести ключ')}
+                      <Icon id="i-key" /> {t('Войдите в аккаунт TurtleClient, чтобы купить или ввести ключ')}
                     </b>
                   </div>
                 </div>

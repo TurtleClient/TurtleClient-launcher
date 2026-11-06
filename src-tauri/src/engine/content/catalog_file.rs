@@ -1,10 +1,10 @@
-// Installs one file from the Millida catalog (mod, resource pack, shader, world) into a modpack.
-// Paid file: api.millida.net gives the link after it checks the purchase (Millida token). Downloads only from a short list of exact https hosts. The file is checked by hash.
+// Installs one file from the TurtleClient catalog (mod, resource pack, shader, world) into a modpack.
+// Paid file: api.millida.net gives the link after it checks the purchase (TurtleClient token). Downloads only from a short list of exact https hosts. The file is checked by hash.
 use crate::engine::*;
 use serde_json::Value;
 use tauri::AppHandle;
 
-// A file of the Millida catalogue (a mod, resource pack, shader, data pack or
+// A file of the TurtleClient catalogue (a mod, resource pack, shader, data pack or
 // map uploaded by an author, free or paid) put into a build.
 //
 // The webview names the build, the item and the file id; the address is asked
@@ -92,7 +92,7 @@ async fn install_catalog_file_job(
         return Err("Сборка не найдена".into());
     }
     job.emit(app, 5.0, "Получаем ссылку…");
-    // If the user is logged in, we ask api.millida.net for the file link with the Millida token. Otherwise we use the public link.
+    // If the user is logged in, we ask api.millida.net for the file link with the TurtleClient token. Otherwise we use the public link.
     let signed_in = millida_token().is_some_and(|t| !t.is_empty());
     let (url, name, size, sha512) = if signed_in {
         let link: Value =

@@ -32,7 +32,7 @@
   flex: none;
 }
 
-/* Скины: вход в Millida — строка с кнопкой, а не абзац-уговор. */
+/* Скины: вход в TurtleClient — строка с кнопкой, а не абзац-уговор. */
 .sk-login-row {
   display: flex;
   align-items: center;

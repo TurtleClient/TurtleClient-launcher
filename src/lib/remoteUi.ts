@@ -5,6 +5,7 @@
 // The module is split: the core (ui.js and the chunks it imports statically) is fetched with the manifest, every
 // other chunk (a hosting section, the server wizard...) on first use. All chunk hashes sit under the signature.
 import * as React from 'react'
+import { BRAND } from './branding'
 import * as ReactJsx from 'react/jsx-runtime'
 import * as ReactDOM from 'react-dom'
 import * as ReactDOMClient from 'react-dom/client'
@@ -54,6 +55,7 @@ export interface RemoteUiModule {
 }
 
 export function remoteUiEnabled(now = Date.now()): boolean {
+  if (!BRAND.updates) return false
   try {
     if (localStorage.getItem(OFF_KEY) === '1') return false
     const off = Number(localStorage.getItem(SITE_OFF_KEY) || 0)

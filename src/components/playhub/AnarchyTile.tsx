@@ -46,7 +46,7 @@ export function AnarchyTile({ online, on, index, onClick }: { online: number | n
         <i />
       </span>
       <span className="an-head">
-        <span className="an-co">MCRU.ME × Millida</span>
+        <span className="an-co">MCRU.ME × TurtleClient</span>
         <b className="an-title">
           {t('Полная')}
           <br />

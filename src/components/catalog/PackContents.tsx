@@ -11,7 +11,7 @@ const stem = (file: string) => file.replace(/\.(jar|zip)$/i, '')
 
 /// «Состав» of a modpack before it is installed: what lands in mods,
 /// resource packs and shader packs, the loader and the download weight.
-/// `project` — a Modrinth pack; `catalog` — a Millida catalogue pack by slug.
+/// `project` — a Modrinth pack; `catalog` — a TurtleClient catalogue pack by slug.
 export function PackContents({ project, catalog }: { project?: string; catalog?: string }) {
   const t = useT()
   const [data, setData] = useState<Contents | null>(null)

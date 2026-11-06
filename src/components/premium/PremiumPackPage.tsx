@@ -379,13 +379,13 @@ export function PremiumPackPage(m: PremiumPackModel) {
         cta={<div className="mr-actions">{heroCta}</div>}
       />
 
-      {/* «Только в Millida» (владелец 06.10.2026: «мало эксклюзивности»): то, чего нет ни в одной
+      {/* «Только в TurtleClient» (владелец 06.10.2026: «мало эксклюзивности»): то, чего нет ни в одной
           другой сборке, — сразу под шапкой, золотыми плитками; клик — глава в «Описании». */}
       {exclusives.length ? (
-        <section className="ppx-excl" aria-label={t('Только в Millida')}>
+        <section className="ppx-excl" aria-label={t('Только в TurtleClient')}>
           <div className="ppx-excl-h">
             <span className="ppx-excl-badge">
-              <Icon id="i-crown" /> {t('Эксклюзив Millida')}
+              <Icon id="i-crown" /> {t('Эксклюзив TurtleClient')}
             </span>
             <span className="ppx-excl-sub">{t('Есть только здесь')}</span>
           </div>

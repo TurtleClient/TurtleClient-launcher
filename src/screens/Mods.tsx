@@ -3,8 +3,8 @@ import { openHubBuild } from '../components/playhub/hubTab'
 import { SiteCatalog } from '../components/catalog/SiteCatalog'
 
 /*
- * Millida Каталог в лаунчере — каталог millida.net один в один (владелец
- * 24.09.2026, 15:25: «возьми прямо с сайта Millida каталог»): те же разделы,
+ * TurtleClient Каталог в лаунчере — каталог millida.net один в один (владелец
+ * 24.09.2026, 15:25: «возьми прямо с сайта TurtleClient каталог»): те же разделы,
  * фильтры, счётчики, строки и данные (`components/catalog/Site*`). Серверное
  * (плагины, ядра, серверные сборки) — в «Хостинге».
  */

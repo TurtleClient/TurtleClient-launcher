@@ -28,7 +28,7 @@ pub async fn share_log(profile: String, name: String) -> Result<String, String> 
     if content.trim().is_empty() { return Err(EMPTY_LOG.into()); }
     let home = dirs::home_dir().map(|h| h.to_string_lossy().into_owned());
     let content = redact_log(&content, home.as_deref());
-    // Third-party service mclo.gs, not Millida: the log becomes a public page. Sent only after the button click.
+    // Third-party service mclo.gs, not TurtleClient: the log becomes a public page. Sent only after the button click.
     let resp: Value = client().post("https://api.mclo.gs/1/log")
         .form(&[("content", content)])
         .send().await.map_err(|e| e.to_string())?

@@ -55,7 +55,7 @@ fn stored_install_id(file: &Path) -> Option<String> {
 /// Best effort by design: the uninstall goes on whether the report lands or not,
 /// and there is no window left to show a failure in.
 pub fn report_uninstall() {
-    if !super::game_telemetry_enabled() {
+    if crate::fork::upstream_service("api.millida.net") || !super::game_telemetry_enabled() {
         return;
     }
     let Some(install_id) = stored_install_id(&install_id_file()) else { return };

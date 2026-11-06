@@ -17,8 +17,8 @@ const acc = (kind: string, nick = 'Steve') => ({ id: 'a1', nick, kind })
 
 describe('which account vouches for its nick to the reserve login check', () => {
   const cases: Array<{ name: string; account: ReturnType<typeof acc> | null; millida: boolean; profile: string; expect: boolean; why: string }> = [
-    { name: 'Millida account', account: acc('millida'), millida: true, profile: 'Steve', expect: true, why: 'an existing Millida game account plays under the profile name the claim vouches for' },
-    { name: 'Telegram Millida account', account: acc('tg'), millida: true, profile: '', expect: true, why: 'tg is a Millida login too, the server names the nick itself' },
+    { name: 'TurtleClient account', account: acc('millida'), millida: true, profile: 'Steve', expect: true, why: 'an existing TurtleClient game account plays under the profile name the claim vouches for' },
+    { name: 'Telegram TurtleClient account', account: acc('tg'), millida: true, profile: '', expect: true, why: 'tg is a TurtleClient login too, the server names the nick itself' },
     { name: 'offline nick of the profile', account: acc('offline'), millida: true, profile: 'Steve', expect: true, why: 'the offline account linked to the login must reach servers in reserve mode' },
     { name: 'offline nick of someone else', account: acc('offline', 'Alex'), millida: true, profile: 'Steve', expect: false, why: 'the claim would vouch for Steve while the game joins as Alex' },
     { name: 'offline nick in another case', account: acc('offline', 'steve'), millida: true, profile: 'Steve', expect: false, why: 'the game joins as steve, a different player to the server' },
@@ -35,7 +35,7 @@ describe('which account vouches for its nick to the reserve login check', () => 
 
 describe('the server a claim names', () => {
   const cases: Array<{ raw: string | null; expect: string; why: string }> = [
-    { raw: 'Smp.Millida.Host', expect: 'smp.millida.host', why: 'the gate routes by the lower-case host, a claim in another case would never match' },
+    { raw: 'Smp.Example.Host', expect: 'smp.example.host', why: 'the gate routes by the lower-case host, a claim in another case would never match' },
     { raw: 'play.example.ru:25570', expect: 'play.example.ru:25570', why: 'the port stays for the API to strip, the game reports it as host:port' },
     { raw: '  mc.example.net  ', expect: 'mc.example.net', why: 'an address pasted with spaces is still that server' },
     { raw: '', expect: '', why: 'a launch without a server has nothing to claim yet; the game reports the server it joins' },

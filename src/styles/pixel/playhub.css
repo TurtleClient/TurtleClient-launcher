@@ -337,7 +337,7 @@
 .ph-row.one { grid-template-rows: auto; grid-auto-rows: 0; row-gap: 0; overflow: hidden; }
 .ph-count { font-variant-numeric: tabular-nums; opacity: 0.6; }
 
-/* Свой сервер Millida — широкая карточка первой строкой. */
+/* Свой сервер TurtleClient — широкая карточка первой строкой. */
 .ph-own {
   position: relative;
   display: flex;
@@ -859,7 +859,7 @@
 /* ---------- «Мои сборки» (правка владельца 23.09.2026, 19:23) ---------- */
 .ph-shelf-extra { display: inline-flex; gap: 8px; }
 .ph-mine { cursor: pointer; }
-/* Блок Millida — в родном размере, не крупнее 64 px (рендеры 96 px мылятся
+/* Блок TurtleClient — в родном размере, не крупнее 64 px (рендеры 96 px мылятся
    при растяжении); подложка карточки ровная, без градиента обложки. */
 .ph-mine .ph-card-art .cover-img.block {
   inset: 50% auto auto 50%;
@@ -1393,7 +1393,7 @@ button.ph-hs:hover > .ph-hs-img { transform: scale(1.03); }
 
 /* ============================================================
    Четыре вкладки хаба (24.09.2026): «Мои сборки», «Мои серверы»,
-   «Режимы», «Каталог Millida».
+   «Режимы», «Каталог TurtleClient».
    ============================================================ */
 @media (max-width: 1100px) {
   .hub-sw-btn { gap: 8px; padding: 0 8px 4px; font-size: 16px; }

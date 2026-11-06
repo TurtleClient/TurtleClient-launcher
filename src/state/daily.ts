@@ -137,7 +137,7 @@ let stopWatch: (() => void) | null = null
 
 /** Ссылка на оплату шлюза живёт 15 минут — столько же её и переиспользуем. */
 const PAY_TTL = 15 * 60_000
-/// Ссылка привязана к аккаунту Millida: после смены аккаунта на том же
+/// Ссылка привязана к аккаунту TurtleClient: после смены аккаунта на том же
 /// компьютере чужая неоплаченная ссылка не открывается (аудит 24.09.2026).
 const payKey = (): string | null => {
   const uid = localStorage.getItem(MILLIDA_USER_KEY)
@@ -317,7 +317,7 @@ export const useDaily = create<DailyState>((set, get) => ({
   openOne: async (id) => {
     if (!hasMillidaAccount()) {
       showLogin()
-      return { error: t('Войди в аккаунт Millida') }
+      return { error: t('Войди в аккаунт TurtleClient') }
     }
     const drop = () => {
       const cur = get().status
@@ -360,7 +360,7 @@ export const useDaily = create<DailyState>((set, get) => ({
         return { error: t('Этого сундука уже нет') }
       }
       if (/\b404\b|not found|cannot post/i.test(raw))
-        return { error: t('Откроется после обновления Millida'), outdated: true }
+        return { error: t('Откроется после обновления TurtleClient'), outdated: true }
       trackFailure('chest_open', e)
       return { error: apiErrorText(e, t('Сундук не открылся, попробуй ещё раз')) }
     }

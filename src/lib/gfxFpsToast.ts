@@ -13,7 +13,7 @@ const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms))
 /**
  * «Игра закрыта» со средним FPS сессии. Его считает ядро по отчётам мода и
  * пишет в настройки сборки, когда процесс игры закрыт, — чуть позже события
- * выхода, поэтому спрашиваем дважды. Без мода Millida отчётов нет — обычный тост.
+ * выхода, поэтому спрашиваем дважды. Без мода TurtleClient отчётов нет — обычный тост.
  */
 export async function exitToastWithFps(profile: string, wait: (ms: number) => Promise<void> = sleep): Promise<void> {
   if (GRAPHICS_PRESETS_PUBLIC && hasTauri()) {

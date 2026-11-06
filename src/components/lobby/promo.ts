@@ -13,7 +13,7 @@ export const PROMO_ROTATE_MS = 7_000
 
 /** Отдельное вечное приглашение лаунчера: по числу входов видно, сколько привёл баннер. */
 export const DISCORD_INVITE = 'https://discord.gg/ec8xAhDSH7'
-/** Канал Millida в Telegram: баннер зовёт подписаться. */
+/** Канал TurtleClient в Telegram: баннер зовёт подписаться. */
 export const TELEGRAM_CHAT = 'https://t.me/millida'
 export { ARCANIA_SLUG } from '../../lib/arcaniaRelease'
 

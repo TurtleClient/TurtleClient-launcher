@@ -260,7 +260,7 @@ function AnarchyPromo({ on, hover, dots }: { on: boolean; hover: Hover; dots: Re
       <span className="an-lava" aria-hidden="true" style={{ '--lava': 'url("' + LAVA_STRIP + '")' } as CSSProperties}>
         <i />
       </span>
-      <span className="lan-co">MCRU.ME × Millida</span>
+      <span className="lan-co">MCRU.ME × TurtleClient</span>
       <span className="lan-title">
         {t('Полная')}
         <br />
@@ -377,7 +377,7 @@ function InvitePromo({ plusDays }: { plusDays: number }) {
   )
 }
 
-/** Сервер PvP-тиров: вход сразу на экзамен, тир пишется на аккаунт Millida. */
+/** Сервер PvP-тиров: вход сразу на экзамен, тир пишется на аккаунт TurtleClient. */
 function SmpPromo({ hover, dots }: { hover: Hover; dots: ReactNode }) {
   const t = useT()
   const rig = modeIcon('PVP')?.rig

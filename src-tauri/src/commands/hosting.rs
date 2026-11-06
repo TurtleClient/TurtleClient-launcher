@@ -1,5 +1,5 @@
-// Millida hosting panel: server console stream, file download and upload.
-// Talks only to api.millida.net with the Millida account token. The user picks the file to upload in a dialog.
+// TurtleClient hosting panel: server console stream, file download and upload.
+// Talks only to api.millida.net with the TurtleClient account token. The user picks the file to upload in a dialog.
 // Live server console. The API serves an SSE stream without CORS headers, so it
 // is consumed here and forwarded to the frontend as "host-console" events.
 // Cancellation works by generation counter: only the newest stream stays active.
@@ -14,10 +14,10 @@ static CONSOLE_GEN: AtomicU64 = AtomicU64::new(0);
 #[tauri::command]
 pub async fn host_console_start(app: AppHandle, id: String) -> Result<(), String> {
     check_id(&id)?;
-    // The Millida token comes from secrets and goes only to api.millida.net in the Authorization header.
+    // The TurtleClient token comes from secrets and goes only to api.millida.net in the Authorization header.
     let token = secrets::get("millida")
         .or_else(|| secrets::get("mc"))
-        .ok_or("нет токена Millida")?;
+        .ok_or("нет токена TurtleClient")?;
     let generation = CONSOLE_GEN.fetch_add(1, Ordering::SeqCst) + 1;
     let url = format!("{}/hosting/servers/{}/console/stream", engine::MILLIDA_API, id);
     tauri::async_runtime::spawn(async move {
@@ -111,7 +111,7 @@ fn b64(bytes: &[u8]) -> String {
 fn token() -> Result<String, String> {
     secrets::get("millida")
         .or_else(|| secrets::get("mc"))
-        .ok_or_else(|| "нет токена Millida".to_string())
+        .ok_or_else(|| "нет токена TurtleClient".to_string())
 }
 
 /// id сервера подставляется в путь API: только [A-Za-z0-9_-], иначе «?», «#»,
@@ -147,7 +147,7 @@ pub async fn host_download(app: AppHandle, id: String, path: Option<String>) -> 
     let Some(dest) = dest else { return Ok(None) };
 
     let mut res = engine::client()
-        // Downloads a server file from Millida hosting (api.millida.net, with the token) to the place the user picked.
+        // Downloads a server file from TurtleClient hosting (api.millida.net, with the token) to the place the user picked.
         .get(&url)
         .header("Authorization", format!("Bearer {}", token))
         .send()
@@ -213,7 +213,7 @@ async fn download_world(app: &AppHandle, id: &str, token: &str) -> Result<Option
 
     world_progress(app, "archiving", 0, 0);
     let res = engine::client()
-        // Asks Millida hosting (api.millida.net, with the token) to pack the server world into an archive on the node.
+        // Asks TurtleClient hosting (api.millida.net, with the token) to pack the server world into an archive on the node.
         .post(format!("{}/export", base))
         .header("Authorization", format!("Bearer {}", token))
         .json(&serde_json::json!({}))
@@ -239,7 +239,7 @@ async fn wait_world_export(url: &str, token: &str) -> Result<(), String> {
     loop {
         tokio::time::sleep(EXPORT_POLL).await;
         let res = engine::client()
-            // Polls Millida hosting (api.millida.net, with the token) for the world archive build state.
+            // Polls TurtleClient hosting (api.millida.net, with the token) for the world archive build state.
             .get(url)
             .header("Authorization", format!("Bearer {}", token))
             .send()
@@ -338,7 +338,7 @@ async fn fetch_range(url: &str, token: &str, offset: u64, size: u64) -> Result<(
             piece = (piece / 2).max(CHUNK_MIN);
         }
         let sent = engine::client()
-            // Downloads the packed world archive from Millida hosting (api.millida.net, with the token) one byte range at a time.
+            // Downloads the packed world archive from TurtleClient hosting (api.millida.net, with the token) one byte range at a time.
             .get(url)
             .header("Authorization", format!("Bearer {}", token))
             .header(reqwest::header::RANGE, format!("bytes={}-{}", offset, offset + piece - 1))

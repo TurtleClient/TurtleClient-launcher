@@ -1,4 +1,4 @@
-// Mod search and list: requests go to our API (/launcher/mr and the Millida catalog), results are cached in memory.
+// Mod search and list: requests go to our API (/launcher/mr and the TurtleClient catalog), results are cached in memory.
 import { create } from 'zustand'
 import { hasTauri } from '../ipc/tauri'
 import { cfSearch, listContent, listWorldInstalls, millidaPacks, packReviewQueue } from '../ipc/commands'
@@ -22,9 +22,9 @@ export interface ModHit {
   pid?: string
   cfid?: number
   website?: string
-  /** Раздел каталога Millida (mods, texture-packs…): строка из нашего каталога. */
+  /** Раздел каталога TurtleClient (mods, texture-packs…): строка из нашего каталога. */
   section?: string
-  /** Адрес нашей сборки в каталоге Millida — ставится не как чужие. */
+  /** Адрес нашей сборки в каталоге TurtleClient — ставится не как чужие. */
   packSlug?: string
   /** Платная сборка: ставится по доступу на аккаунте. */
   packPaid?: boolean
@@ -430,7 +430,7 @@ function warmOtherTabs(): void {
 }
 
 export const useMods = create<ModsState>((set, get) => ({
-  // «Каталог Millida» открывается разделом «Сборки».
+  // «Каталог TurtleClient» открывается разделом «Сборки».
   modTab: 'modpack',
   modSource: 'all',
   mq: '',

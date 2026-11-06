@@ -2,7 +2,7 @@
    ПИКСЕЛЬНЫЙ ЯЗЫК ЛАУНЧЕРА (22.09.2026)
    ------------------------------------------------------------
    Перенос языка millida.net (docs/PIXEL-LANGUAGE.md, оригинал —
-   ~/Documents/Claude/Работа/Дизайн-Millida/ПИКСЕЛЬНЫЙ-ЯЗЫК.md) в лаунчер.
+   ~/Documents/Claude/Работа/Дизайн-TurtleClient/ПИКСЕЛЬНЫЙ-ЯЗЫК.md) в лаунчер.
    Приказ владельца 22.09.2026: «полный редизайн всего лаунчера в новом
    стиле за один подход».
 
@@ -525,7 +525,7 @@
 @keyframes pxTipIn { from { opacity: 0; } to { opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .px-tip { animation: none; } }
 
-/* Рендеры блоков Millida (public/block-icons, 96px) — объёмные картинки, а не
+/* Рендеры блоков TurtleClient (public/block-icons, 96px) — объёмные картинки, а не
    пиксель-арт: pixelated рисовал лесенку на наклонных гранях («шакалит»,
    правка владельца 23.09.2026). Головы и скины остаются pixelated. */
 img[src*='/block-icons/'] {
@@ -533,9 +533,9 @@ img[src*='/block-icons/'] {
   object-fit: contain;
 }
 
-/* Знак Millida — пиксельный квадрат со срезанными углами и объёмом кнопки
+/* Знак TurtleClient — пиксельный квадрат со срезанными углами и объёмом кнопки
    (23.09.2026): скругление, где оно задано инлайном, его бы съело. */
-img[src$='/millida-logo.svg'] { border-radius: 0 !important; }
+img[src$='/turtleclient-icon.svg'] { border-radius: 0 !important; }
 
 .px-excl { position: relative; }
 /* Рамка партнёра — «Бегущий свет» (владелец 06.10.2026 выбрал П2 из вариантов):

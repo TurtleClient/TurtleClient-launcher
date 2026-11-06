@@ -1,6 +1,6 @@
 // Downloads the launcher installer and runs it. Only talks to the hosts in the allow-list in manifest.rs
 // (GitHub Releases and launcher-storage.millida.net). Plain GET requests, nothing about you is sent.
-// The downloaded file runs only after the Millida signature check passes. Writes to its own work folder and deletes it at the end.
+// The downloaded file runs only after the TurtleClient signature check passes. Writes to its own work folder and deletes it at the end.
 use std::fs::File;
 use std::io::{Read, Write};
 use std::path::{Path, PathBuf};
@@ -35,7 +35,7 @@ const PART_BUFFER: usize = 256 * 1024;
 #[cfg(windows)]
 fn base_dir() -> PathBuf {
     match std::env::var_os("LOCALAPPDATA") {
-        Some(local) if !local.is_empty() => PathBuf::from(local).join("Millida").join("setup"),
+        Some(local) if !local.is_empty() => PathBuf::from(local).join("TurtleClient").join("setup"),
         _ => std::env::temp_dir(),
     }
 }
@@ -46,7 +46,7 @@ fn base_dir() -> PathBuf {
 fn base_dir() -> PathBuf {
     let home = home_dir().ok();
     #[cfg(target_os = "macos")]
-    let dir = home.map(|h| h.join("Library").join("Caches").join("Millida").join("setup"));
+    let dir = home.map(|h| h.join("Library").join("Caches").join("TurtleClient").join("setup"));
     #[cfg(not(target_os = "macos"))]
     let dir = std::env::var_os("XDG_CACHE_HOME")
         .filter(|value| !value.is_empty())

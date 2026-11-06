@@ -58,7 +58,7 @@ impl GfxPreset {
     }
 }
 
-/// Simplified 16x textures for "Potato": in the Millida catalogue with its
+/// Simplified 16x textures for "Potato": in the TurtleClient catalogue with its
 /// licence stated (bare-bones-dlya-minecraft), downloaded from Modrinth, never
 /// re-hosted. Only a file made for this exact game version is taken.
 const POTATO_PACKS: &[&str] = &["bare-bones"];
@@ -805,7 +805,7 @@ fn changed_by_hand(profile: &str, s: &Value) -> bool {
     read_options(profile).is_ok_and(|opts| edited_after(&s["gfxWritten"], &opts.rows))
 }
 
-/// Profile for the Millida mod in the build folder (format: work/MOD-optimize.md,
+/// Profile for the TurtleClient mod in the build folder (format: work/MOD-optimize.md,
 /// mod docs/perf.md). The mod applies a profile once per `revision` and only
 /// to options the player has not changed, so every write takes a new revision.
 const PERF_FILE: &str = "millida-perf.json";

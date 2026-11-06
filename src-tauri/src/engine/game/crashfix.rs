@@ -962,7 +962,7 @@ mod tests {
             ),
             (
                 "наш мод убирается карантином, починка его не трогает",
-                "\t - Mod 'Millida' (millida) 0.1.11 requires any version of fabric-api, which is missing!",
+                "\t - Mod 'TurtleClient' (millida) 0.1.11 requires any version of fabric-api, which is missing!",
                 vec![],
             ),
         ];

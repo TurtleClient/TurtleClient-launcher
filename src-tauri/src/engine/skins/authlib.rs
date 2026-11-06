@@ -1,4 +1,4 @@
-// authlib-injector agent: a small jar attached to the game with the -javaagent flag. It points login and skins to the Millida server.
+// authlib-injector agent: a small jar attached to the game with the -javaagent flag. It points login and skins to the TurtleClient server.
 // Downloaded from the project's GitHub release (pinned version and sha256) and put into agents/ in the launcher data. It is loaded only after the sha256 check.
 use crate::engine::game::{ansi_readable_as_is, managed_runtime_home};
 use crate::engine::*;
@@ -251,7 +251,7 @@ mod private_dir {
 
     pub fn claim(base: &Path) -> Result<(PathBuf, File), String> {
         let user = UserSid::current()?;
-        let dir = base.join(format!("net.millida.launcher.agents.{}", user.text));
+        let dir = base.join(format!("dev.turtleclient.launcher.agents.{}", user.text));
         let pin = owned(&dir, &user)?;
         Ok((dir, pin))
     }
@@ -531,7 +531,7 @@ mod pin_tests {
 /// The skin server's description is reused this long without asking the server at all.
 const YGG_FRESH: Duration = Duration::from_secs(10 * 60);
 /// With an older copy on disk a launch waits this long for the live answer (it used to be 30 s
-/// times three tries, on every launch with a Millida account).
+/// times three tries, on every launch with a TurtleClient account).
 const YGG_WAIT: Duration = Duration::from_secs(3);
 
 fn yggdrasil_copy_path(url: &str) -> PathBuf {
@@ -539,7 +539,7 @@ fn yggdrasil_copy_path(url: &str) -> PathBuf {
     data_dir().join("agents").join(format!("yggdrasil-{}.json", &tag[..16]))
 }
 
-/// What the Millida skin server says about itself (public key, skin domains), which the launcher
+/// What the TurtleClient skin server says about itself (public key, skin domains), which the launcher
 /// hands to the agent so the game does not fetch it at start. One GET to the server given in
 /// `url`; no token and no account data. A copy on disk makes the launch independent of how the
 /// server feels today: a fresh copy is used as is, an older one gives the server three seconds.

@@ -108,7 +108,7 @@ test('порядок источников сохраняется', () => {
   expect(list.map((c) => c.name)).toEqual(['первый', 'второй'])
 })
 
-test('ключом плаща каталога Millida служит его адрес', () => {
+test('ключом плаща каталога TurtleClient служит его адрес', () => {
   expect(capeKey({ url: 'https://millida.net/capes/veteran.png', name: 'Ветеран' })).toBe(
     'https://millida.net/capes/veteran.png',
   )

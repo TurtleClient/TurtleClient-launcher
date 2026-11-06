@@ -11,7 +11,7 @@ describe('запуск с HD-скином без PLUS', () => {
     [{ skinWidth: 0 }, 'play', 'размер не узнали — не мешаем играть'],
     [{ skinWidth: 128, plusActive: true }, 'play', 'с действующим PLUS HD разрешён'],
     [{ skinWidth: 256, orderedSkin: true }, 'play', 'скин из оплаченного заказа сервер разрешает навсегда'],
-    [{ skinWidth: 128, millidaSkin: false }, 'play', 'лицензия и офлайн-ник берут не скин профиля Millida'],
+    [{ skinWidth: 128, millidaSkin: false }, 'play', 'лицензия и офлайн-ник берут не скин профиля TurtleClient'],
   ]
   for (const [patch, want, why] of cases) {
     test(why, () => {

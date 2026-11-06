@@ -119,7 +119,7 @@ describe('one preparation per build', () => {
       runs += 1
       return 'x'
     }
-    await Promise.all([sharedPreparation('Minecraft 1.8.9', work), sharedPreparation('Millida PvP 1.8.9', work)])
+    await Promise.all([sharedPreparation('Minecraft 1.8.9', work), sharedPreparation('TurtleClient PvP 1.8.9', work)])
     expect(runs).toBe(2)
   })
 })

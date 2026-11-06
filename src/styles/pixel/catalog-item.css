@@ -131,7 +131,7 @@
 .ci-chip.is-link { border: 0; cursor: pointer; font-family: inherit; }
 .ci-chip.is-link:hover { background: var(--m-raised); }
 
-/* ── Бесплатная сборка Millida в виде страницы материала (PackPage, 05.10.2026) ── */
+/* ── Бесплатная сборка TurtleClient в виде страницы материала (PackPage, 05.10.2026) ── */
 .pp-ci .ci-banner { height: 220px; }
 .pp-ci .ci-banner .pp-play { width: 64px; height: 64px; }
 .pp-ci .ci-desc.pp-desc { max-height: none; overflow: visible; }

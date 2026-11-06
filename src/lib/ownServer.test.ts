@@ -75,7 +75,7 @@ describe('targetsAnarchy', () => {
   })
   test('the anarchy mode joins by address with the server version, no license', () => {
     const m = anarchyMode()
-    expect(m.kind === 'server' && [m.ip, m.versions, m.licensed], 'the proxy signs in with the Millida account on 1.21.11').toEqual([
+    expect(m.kind === 'server' && [m.ip, m.versions, m.licensed], 'the proxy signs in with the TurtleClient account on 1.21.11').toEqual([
       'mcru.me',
       ['1.21.11'],
       false,

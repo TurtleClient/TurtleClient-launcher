@@ -412,7 +412,7 @@ mod tests {
     #[test]
     fn staged_files_are_recognised_by_their_name() {
         assert!(is_delta_file(Path::new("/x/updates/millida-launcher-2.0.9.delta.exe")));
-        assert!(!is_delta_file(Path::new("/x/updates/Millida-Launcher_2.0.9_x64-setup.exe")));
+        assert!(!is_delta_file(Path::new("/x/updates/TurtleClient-Launcher_2.0.9_x64-setup.exe")));
         assert_eq!(staged_name("2.0.9"), "millida-launcher-2.0.9.delta.exe");
         let odd = staged_name("../2.0\\9");
         assert!(!odd.contains('/') && !odd.contains('\\') && odd.ends_with(DELTA_SUFFIX), "no path pieces get into the name: {odd}");

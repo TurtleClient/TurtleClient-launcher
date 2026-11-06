@@ -335,12 +335,12 @@ pub fn write<W: Write + Seek>(out: &mut W, clip: &Clip, audio_bitrate: u32) -> s
     let format = &clip.format;
     let mut vmhd = Boxer::new();
     vmhd.full(0, 1).zeros(8);
-    let mut traks = vec![video.trak(b"vide", "Millida Video", format.width, format.height, vmhd.wrap(b"vmhd"), avc1(format))];
+    let mut traks = vec![video.trak(b"vide", "TurtleClient Video", format.width, format.height, vmhd.wrap(b"vmhd"), avc1(format))];
     let mut duration = video.movie_duration();
     if !clip.audio.is_empty() {
         let mut smhd = Boxer::new();
         smhd.full(0, 0).zeros(4);
-        traks.push(audio.trak(b"soun", "Millida Audio", 0, 0, smhd.wrap(b"smhd"), mp4a(audio_bitrate)));
+        traks.push(audio.trak(b"soun", "TurtleClient Audio", 0, 0, smhd.wrap(b"smhd"), mp4a(audio_bitrate)));
         duration = duration.max(audio.movie_duration() + to_scale(audio.delay, MOVIE_SCALE));
     }
     let mut mvhd = Boxer::new();

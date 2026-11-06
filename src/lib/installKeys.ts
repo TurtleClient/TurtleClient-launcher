@@ -13,7 +13,7 @@ export const keyMigrate = (profile: string): string => 'migrate:' + profile
 export const keyContent = (source: 'cf' | 'mr' | 'millida', profile: string, kind: string, project: string | number): string =>
   source + '-' + kind + ':' + profile + ':' + project
 
-/// Каталог Millida: ключ по slug карточки (engine/content/millida.rs).
+/// Каталог TurtleClient: ключ по slug карточки (engine/content/millida.rs).
 export const keyMillida = (profile: string, kind: string, slug: string): string =>
   'millida-' + kind + ':' + profile + ':' + slug
 

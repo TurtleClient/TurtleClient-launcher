@@ -23,8 +23,8 @@ pub(crate) fn check_modpack_slug(slug: &str) -> Result<(), String> {
     }
 }
 
-/// Millida catalogue pack slug: `^[a-z0-9-]{1,80}$`. It names a keep folder
-/// and a pack-launch descriptor on disk, and arrives from `millida://` links.
+/// TurtleClient catalogue pack slug: `^[a-z0-9-]{1,80}$`. It names a keep folder
+/// and a pack-launch descriptor on disk, and arrives from `turtleclient://` links.
 pub(crate) fn catalog_slug_ok(slug: &str) -> bool {
     (1..=80).contains(&slug.len()) && slug.bytes().all(|c| c.is_ascii_lowercase() || c.is_ascii_digit() || c == b'-')
 }

@@ -145,7 +145,7 @@ export function TabPlan({
               <Row k={t('Оплачен до')} sub={t('период {n} дн.', { n: subscription.periodDays })}>
                 <span className="host-cfg-v">{dateLabel(subscription.paidUntil)}</span>
               </Row>
-              <Row k={t('Автопродление')} sub={t('Списывается с баланса Millida')}>
+              <Row k={t('Автопродление')} sub={t('Списывается с баланса TurtleClient')}>
                 <Toggle on={autoRenew} busy={busy === 'renew'} onChange={(v) => void toggleRenew(v)} />
               </Row>
             </>

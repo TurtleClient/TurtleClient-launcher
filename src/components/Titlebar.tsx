@@ -36,8 +36,8 @@ export function Titlebar() {
       <div className="tb-drag" data-tauri-drag-region="" style={{ flex: 1 }}></div>
       <ServiceStatus />
       <div className="tb-center">
-        <img src="/millida-logo.svg" alt="" style={{ width: '22px', height: '22px', borderRadius: '6px' }} />
-        <span className="tb-name">MILLIDA LAUNCHER</span>
+        <img src="/turtleclient-icon.svg" alt="" style={{ width: '22px', height: '22px', borderRadius: '6px' }} />
+        <span className="tb-name">TURTLECLIENT LAUNCHER</span>
       </div>
       {IS_MAC ? null : (
         <div className="tb-btns">

@@ -1,4 +1,4 @@
-// Millida account login by code: the launcher opens a millida.net page in the browser and waits for confirmation (millidaLoginPoll through the core).
+// TurtleClient account login by code: the launcher opens a millida.net page in the browser and waits for confirmation (millidaLoginPoll through the core).
 // The password is never typed into the launcher, the token stays in the core.
 import { create } from 'zustand'
 import { hasTauri } from '../ipc/tauri'
@@ -41,12 +41,12 @@ interface LoginState {
   set: (patch: Partial<LoginState>) => void
 }
 
-const idleLabel = (): string => t('Войти через аккаунт Millida')
+const idleLabel = (): string => t('Войти через аккаунт TurtleClient')
 
 // The browser does not always come up (no default browser, a portable build, a
 // second machine). Saying where the code goes turns a dead end into a two-step
 // login: millida.net/auth/launcher has a field for exactly this code.
-const manualHint = (): string => t('Подтверди код на странице Millida. Не открылась — зайди на millida.net/auth/launcher и введи код там.')
+const manualHint = (): string => t('Подтверди код на странице TurtleClient. Не открылась — зайди на millida.net/auth/launcher и введи код там.')
 
 export const useLogin = create<LoginState>((set) => ({
   webLabel: idleLabel(),
@@ -108,13 +108,13 @@ function resetLogin(hint?: string, dropCode = false) {
 }
 
 function nickFromUser(user: LauncherUser): string {
-  if (!user) return 'Millida'
+  if (!user) return 'TurtleClient'
   if (user.nickname) return user.nickname
   const local = (user.email || '').split('@')[0]
-  return local || 'Millida'
+  return local || 'TurtleClient'
 }
 
-/// The launcher holds one Millida session, so a second sign-in takes the place of the
+/// The launcher holds one TurtleClient session, so a second sign-in takes the place of the
 /// first. Everything cached for the previous user has to go with it.
 function adoptUser(user: LauncherUser) {
   const id = (user && user.id) || ''
@@ -158,7 +158,7 @@ export async function startWebLogin(reopen = false) {
     return
   }
   if (!hasTauri()) {
-    showToast(t('Вход через аккаунт Millida доступен только в приложении лаунчера'), 'error')
+    showToast(t('Вход через аккаунт TurtleClient доступен только в приложении лаунчера'), 'error')
     return
   }
   s.set({ webBusy: true, webLabel: t('Ждём подтверждения…') })
@@ -170,7 +170,7 @@ export async function startWebLogin(reopen = false) {
     try {
       init = await api<LauncherInit>('/auth/launcher/init', {
         method: 'POST',
-        body: JSON.stringify({ clientName: 'Millida Launcher' }),
+        body: JSON.stringify({ clientName: 'TurtleClient Launcher' }),
       })
     } catch (e) {
       resetLogin()

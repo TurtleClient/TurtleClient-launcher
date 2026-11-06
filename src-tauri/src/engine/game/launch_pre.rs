@@ -72,7 +72,7 @@ pub(crate) enum Ygg {
 
 pub(crate) async fn prepare_skin_server(url: String) -> Ygg {
     match ensure_authlib_injector().await.and_then(|jar| agent_for_game(&jar)) {
-        // One GET to the Millida skin server for its description (cached, see authlib.rs). The
+        // One GET to the TurtleClient skin server for its description (cached, see authlib.rs). The
         // password and the Microsoft token are not sent there.
         Ok(agent) => match yggdrasil_meta(&url).await {
             Ok(meta) => Ygg::Ready(agent, meta),
@@ -139,7 +139,7 @@ pub(crate) struct Preflight {
 pub(crate) type SkinJob = (String, Job<Ygg>);
 
 impl Preflight {
-    /// `yggdrasil`: the skin server of the account as far as it is known now. A Millida account
+    /// `yggdrasil`: the skin server of the account as far as it is known now. A TurtleClient account
     /// whose session is still being issued names ours: the description is asked for at once, and
     /// thrown away if the session does not come.
     pub(crate) fn start(
@@ -293,7 +293,7 @@ mod tests {
                     kill_switch: true,
                     ..sample()
                 },
-                "a modded build with a Millida account: skin server, mod token and the list",
+                "a modded build with a TurtleClient account: skin server, mod token and the list",
             ),
             (
                 json!({}),

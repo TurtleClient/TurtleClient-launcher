@@ -220,11 +220,11 @@ export function ForYou({
   onMore?: () => void
   on: boolean
   arcania: HubPack | null
-  /** Платные сборки Millida, Arcania первой: голова ленты после хостинга. */
+  /** Платные сборки TurtleClient, Arcania первой: голова ленты после хостинга. */
   exclusives?: HubPack[]
   /** Премиум ещё грузится — на месте Arcania скелет. */
   premiumWait: boolean
-  /** Бесплатные сборки Millida от самых популярных. */
+  /** Бесплатные сборки TurtleClient от самых популярных. */
   packs: HubPack[]
   oneblockOnline: number | null
   anarchyOnline: number | null
@@ -235,7 +235,7 @@ export function ForYou({
   onPack: (p: HubPack) => void
   onMode: (cat: string) => void
   onMap?: (name: string) => void
-  /** Материал каталога из ленты — его страница в каталоге Millida. */
+  /** Материал каталога из ленты — его страница в каталоге TurtleClient. */
   onItem: (section: string, card: SiteCard) => void
 }) {
   const t = useT()
@@ -264,7 +264,7 @@ export function ForYou({
     if (on) void load()
   }, [on])
 
-  // Пулы ленты — популярное каталога Millida по разделам (кэш каталога лаунчера).
+  // Пулы ленты — популярное каталога TurtleClient по разделам (кэш каталога лаунчера).
   useEffect(() => {
     if (!on) return
     let alive = true
@@ -313,7 +313,7 @@ export function ForYou({
     >
       <img className="fy-host-art" src="/lobby/duo@2x.webp" alt="" draggable={false} />
       <span className="fy-host-body">
-        <span className="ph-card-tag">{t('Хостинг Millida')}</span>
+        <span className="ph-card-tag">{t('Хостинг TurtleClient')}</span>
         <b>{t('Играть по сети с другом')}</b>
         <span className="btn md primary fy-host-cta">{nServers ? t('Мои серверы · {n}', { n: nServers }) : t('Создать бесплатно')}</span>
       </span>

@@ -53,7 +53,7 @@ fn set(identifier: &str, description: &str, cmds: &[String]) -> String {
 const MAIN_THREAD_STACK: usize = 8 * 1024 * 1024;
 
 fn main() {
-    println!("cargo:rerun-if-env-changed=MILLIDA_MS_CLIENT_ID");
+    println!("cargo:rerun-if-env-changed=TURTLECLIENT_MS_CLIENT_ID");
     // media.rs reads it with option_env!: a release build with MEDIA_REMOTE=1 must not reuse an object built without it.
     println!("cargo:rerun-if-env-changed=MEDIA_REMOTE");
     println!("cargo:rerun-if-changed=src/lib.rs");

@@ -9,7 +9,7 @@ const cases: Array<[Partial<ArcaniaOfferState>, ArcaniaOffer, HeroAction, string
   [{ installed: true, detail: 'failed' }, 'play', 'play', 'a failed price request must not hide Play for an installed pack'],
   [{ access: true }, 'install', 'install', 'access without the pack on disk installs'],
   [{ access: true, detail: 'loading' }, 'install', 'install', 'access already known from the lobby card does not wait for the detail'],
-  [{ signedIn: false }, 'signin', 'reveal', 'buying and keys need a Millida account: a guest gets the sign-in prompt, not an empty head'],
+  [{ signedIn: false }, 'signin', 'reveal', 'buying and keys need a TurtleClient account: a guest gets the sign-in prompt, not an empty head'],
   [{ signedIn: false, detail: 'failed' }, 'signin', 'reveal', 'a guest is not shown a network error for prices they cannot use yet'],
   [{ detail: 'loading' }, 'loading', 'reveal', 'while the plans load the head holds a placeholder, not empty space'],
   [{ detail: 'failed' }, 'error', 'reveal', 'a failed load says so and offers Retry: this was the empty head players kept asking about'],

@@ -306,7 +306,7 @@ mod tests {
     #[cfg(target_os = "linux")]
     #[test]
     fn desktop_entry_icon_is_replaced_once() {
-        let t = "[Desktop Entry]\nName=Millida\nIcon=/opt/icon.png\nExec=x\n";
+        let t = "[Desktop Entry]\nName=TurtleClient\nIcon=/opt/icon.png\nExec=x\n";
         let r = shortcuts::retarget(t, "/data/gold.png");
         assert!(r.contains("Icon=/data/gold.png\n"));
         assert!(!r.contains("/opt/icon.png"));

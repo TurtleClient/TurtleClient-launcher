@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test'
-import { REMOTE_UI_PUBLIC_KEY, chunksText, rewriteChunk, staticDeps, sha256Hex, signedText, verifyManifest, type RemoteUiManifest } from './remoteUi'
+import { remoteUiEnabled, chunksText, rewriteChunk, staticDeps, sha256Hex, signedText, verifyManifest, type RemoteUiManifest } from './remoteUi'
 
 const b64 = (buf: ArrayBuffer) => Buffer.from(buf).toString('base64')
 
@@ -63,8 +63,10 @@ describe('remote ui manifest', () => {
     expect(await verifyManifest(outside.m, outside.key)).toBe(false)
   })
 
-  it('ships a 32-byte public key', () => {
-    expect(Buffer.from(REMOTE_UI_PUBLIC_KEY, 'base64').length).toBe(32)
+  it('does not activate unconfigured remote code or trust an upstream signing key', async () => {
+    const { m } = await signed()
+    expect(remoteUiEnabled()).toBe(false)
+    expect(await verifyManifest(m)).toBe(false)
   })
 })
 

@@ -1,4 +1,4 @@
-// Millida catalog (mods, texture packs, modpacks): requests to api.millida.net/v2/launcher/*. No direct calls to Modrinth and CurseForge, they go through our API.
+// TurtleClient catalog (mods, texture packs, modpacks): requests to api.millida.net/v2/launcher/*. No direct calls to Modrinth and CurseForge, they go through our API.
 import { LAUNCHER_API } from './api'
 import type { ModHit } from '../state/mods'
 import type { DepNode, DepPlan, Profile } from '../ipc/commands'
@@ -8,7 +8,7 @@ import { cfProxyBackoff, proxyVerdict } from './proxyBackoff'
 import { t } from '../i18n'
 import { withCatalogLang } from '../components/catalog/catalogLang'
 
-/// Каталог Millida — библиотека лаунчера (приказ владельца 21.09.2026): то же,
+/// Каталог TurtleClient — библиотека лаунчера (приказ владельца 21.09.2026): то же,
 /// что на millida.net/mods, /texture-packs, /modpacks, с тем же поиском и теми же
 /// карточками. Экраны ходят сюда, а не в Modrinth и CurseForge: у сайта и
 /// лаунчера один каталог, и «Установить» на сайте открывает здесь тот же
@@ -19,7 +19,7 @@ import { withCatalogLang } from '../components/catalog/catalogLang'
 
 export const CATALOG_API = LAUNCHER_API + '/catalog'
 
-/// Разделы, которые сайт шлёт в millida://install/<раздел>/<slug>.
+/// Разделы, которые сайт шлёт в turtleclient://install/<раздел>/<slug>.
 export const INSTALL_SECTIONS = [
   'mods',
   'modpacks',
@@ -256,7 +256,7 @@ export function planToDepPlan(plan: ResolvePlan, slug: string, title: string): D
   const missing = (Array.isArray(plan.missing) ? plan.missing : [])
     .map((m) => (typeof m === 'string' ? m : m.title || m.name || m.slug || ''))
     .filter(Boolean)
-    .map((slug) => ({ ...node({ slug, role: 'required', fileName: '', url: '' }, 'required'), problem: t('нет в каталоге Millida — поставь вручную') }))
+    .map((slug) => ({ ...node({ slug, role: 'required', fileName: '', url: '' }, 'required'), problem: t('нет в каталоге TurtleClient — поставь вручную') }))
   return {
     title,
     version_number: (files.find(isPrimary) || { version: '' }).version || '',
@@ -297,7 +297,7 @@ const LOADER = /^[a-z][a-z0-9_-]{0,23}$/
 // Pack pages are addressed by the catalog slug the site prints: lowercase only, so one pack has one link.
 const PACK_SLUG = /^[a-z0-9][a-z0-9-]{0,63}$/
 
-/// millida://open/<slug>: the slug of a catalog pack whose page to show, or null for anything else.
+/// turtleclient://open/<slug>: the slug of a catalog pack whose page to show, or null for anything else.
 export function parseOpenLink(rest: string): string | null {
   const parts = rest.split('/').filter(Boolean)
   if (parts.length !== 1) return null
@@ -310,8 +310,8 @@ export function parseOpenLink(rest: string): string | null {
   return PACK_SLUG.test(slug) ? slug : null
 }
 
-/// Разбор millida://install/<раздел>/<slug>?version=…&loader=… и старого
-/// millida://modpack/<slug>. Ссылку может открыть любая страница, поэтому всё,
+/// Разбор turtleclient://install/<раздел>/<slug>?version=…&loader=… и старого
+/// turtleclient://modpack/<slug>. Ссылку может открыть любая страница, поэтому всё,
 /// что не похоже на наш адрес, отбрасывается целиком, а не «чинится».
 export function parseInstallLink(action: string, rest: string, q: URLSearchParams): InstallLink | null {
   const parts = rest.split('/').filter(Boolean).map((p) => {
@@ -511,7 +511,7 @@ export function cleanTitle(title: string): string {
 export function cardToHit(c: CatalogCard, section: string): ModHit {
   return {
     title: cleanTitle(c.title),
-    author: c.author || 'Millida',
+    author: c.author || 'TurtleClient',
     desc: clipWords(c.summary || '', 120),
     dl: Math.max(c.downloads || 0, c.sourceDownloads || 0),
     icon: c.icon || c.cover || undefined,

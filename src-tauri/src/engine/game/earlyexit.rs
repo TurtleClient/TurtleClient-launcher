@@ -247,7 +247,7 @@ mod tests {
 
     #[test]
     fn real_error_comes_first_not_agent_noise() {
-        let log = "[authlib-injector] [INFO] Logging file: C:\\Users\\User\\AppData\\Roaming\\net.millida.launcher\\logs\\authlib.log\n\
+        let log = "[authlib-injector] [INFO] Logging file: C:\\Users\\User\\AppData\\Roaming\\dev.turtleclient.launcher\\logs\\authlib.log\n\
                    [authlib-injector] [INFO] Version: 1.2.5\n\
                    \n\
                    Unrecognized option: -p\n\

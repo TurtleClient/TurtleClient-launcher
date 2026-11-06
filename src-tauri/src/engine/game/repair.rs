@@ -51,7 +51,7 @@ enum RestoreFrom {
     Catalog,
 }
 
-/// Downloads go through Millida mirrors, so the final host legitimately differs
+/// Downloads go through TurtleClient mirrors, so the final host legitimately differs
 /// from the recorded one: the recorded hash, not the host, is what proves the
 /// bytes are the catalogue's file. Without a hash nothing is restored.
 fn restore_from(download_url: &str, has_hash: bool) -> RestoreFrom {
@@ -198,7 +198,7 @@ pub async fn repair_profile_files(app: AppHandle, profile: String) -> Result<Rep
         if trusted_pack_launch_spec(&profile).is_none() {
             emit(&app, "content", 96.0, "Проверяем моды…");
             if let Err(e) = restore_millida_mod(&app, &profile).await {
-                warn(&app, &format!("Мод Millida не поставлен: {}", e));
+                warn(&app, &format!("Мод TurtleClient не поставлен: {}", e));
             }
         }
     }

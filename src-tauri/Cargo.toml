@@ -1,8 +1,8 @@
 [package]
-name = "millida-launcher"
+name = "turtleclient-launcher"
 version = "2.0.0"
-description = "Millida Launcher — безопасный лаунчер Minecraft"
-authors = ["Millida"]
+description = "TurtleClient Launcher — Minecraft launcher"
+authors = ["TurtleClient contributors", "Millida contributors"]
 edition = "2021"
 license = "GPL-3.0-only"
 
@@ -11,7 +11,7 @@ members = [".", "voice"]
 default-members = [".", "voice"]
 
 [lib]
-name = "millida_launcher_lib"
+name = "turtleclient_launcher_lib"
 crate-type = ["rlib"]
 
 [build-dependencies]
@@ -130,7 +130,7 @@ codegen-units = 1
 
 # The app crate is the critical path of a release build: with a single codegen
 # unit it compiles serially long after every dependency has finished.
-[profile.release.package.millida-launcher]
+[profile.release.package.turtleclient-launcher]
 codegen-units = 16
 # CI keeps the incremental state of this crate between releases, so a release
 # recompiles what changed instead of the whole crate.

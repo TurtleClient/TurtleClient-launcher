@@ -1,8 +1,9 @@
 // App assembly: wires up the Tauri plugins, registers the commands for the UI and opens the windows.
-// No network of its own. Plugins: auto-update, autostart, global hotkey for the overlay, clipboard, millida:// links. Which files the window may read is written at asset_dirs().
+// No network of its own. Plugins: auto-update, autostart, global hotkey for the overlay, clipboard, turtleclient:// links. Which files the window may read is written at asset_dirs().
 use tauri::Manager;
 
 pub mod engine;
+mod fork;
 mod app_icon;
 #[cfg(target_os = "macos")]
 mod autostart_mac;
@@ -63,14 +64,14 @@ fn on_run_event(app: &tauri::AppHandle, event: &tauri::RunEvent) {
         // because the overlay counts as visible while the launcher is in the tray.
         #[cfg(target_os = "macos")]
         tauri::RunEvent::Reopen { .. } => tray::show_main(app),
-        // On macOS a millida:// link arrives as an Apple event to the running copy, not as a second
+        // On macOS a turtleclient:// link arrives as an Apple event to the running copy, not as a second
         // start (cli.rs sees only that). The deep-link plugin hands it to the windows, and an
         // unloaded launcher has none: the link is kept for the page that comes back, and the
         // window is built.
         #[cfg(target_os = "macos")]
         tauri::RunEvent::Opened { urls } => {
             let links: Vec<String> = urls.iter().map(|u| u.to_string()).collect();
-            if background::unloaded() && links.iter().any(|l| l.starts_with("millida:")) {
+            if background::unloaded() && links.iter().any(|l| l.starts_with("turtleclient:")) {
                 background::keep_links(&links);
                 tray::show_main(app);
             }

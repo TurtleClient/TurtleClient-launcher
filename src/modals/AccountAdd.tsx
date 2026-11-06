@@ -28,7 +28,7 @@ const MC_ICON = <PxIcon name="mc-grass" size={24} />
 function kindMeta(kind: Kind, t: (key: string, vars?: Vars) => string): KindMeta {
   if (kind === 'microsoft') return { id: kind, icon: MC_ICON, title: t('Лицензия Minecraft'), sub: t('Вход через Microsoft') }
   if (kind === 'offline') return { id: kind, icon: <Icon id="i-mo-user" />, title: t('Офлайн-аккаунт'), sub: t('нет Realms и нет лицензионных серверов') }
-  return { id: kind, icon: <Icon id="i-mo-key" />, title: t('Аккаунт Millida'), sub: t('Друзья, ник и баланс') }
+  return { id: kind, icon: <Icon id="i-mo-key" />, title: t('Аккаунт TurtleClient'), sub: t('Друзья, ник и баланс') }
 }
 
 export function KindPanel({ kind, onBack, onDone, onSafety }: { kind: Kind; onBack: () => void; onDone: () => void; onSafety: () => void }) {
@@ -109,7 +109,7 @@ export function KindPanel({ kind, onBack, onDone, onSafety }: { kind: Kind; onBa
               }}
             />
           </div>
-          {carriesMillida ? <p className="faint-note">{t('Ник аккаунта Millida: пускает на серверы с входом Millida')}</p> : null}
+          {carriesMillida ? <p className="faint-note">{t('Ник аккаунта TurtleClient: пускает на серверы с входом TurtleClient')}</p> : null}
           <button className="btn md primary" style={{ width: '100%', marginTop: '12px' }} onClick={createOffline}>
             {t('Создать')}
           </button>
@@ -150,7 +150,7 @@ export function KindPanel({ kind, onBack, onDone, onSafety }: { kind: Kind; onBa
               onClick={() => void (millida ? startWebLogin() : startMsLogin())}
             >
               {millida ? <Icon id="i-mo-key" /> : <Icon id="i-mo-shield" />}
-              {busy ? t('Ждём подтверждения…') : millida ? t('Войти через Millida') : t('Войти через Microsoft')}
+              {busy ? t('Ждём подтверждения…') : millida ? t('Войти через TurtleClient') : t('Войти через Microsoft')}
             </button>
           )}
           {kind === 'microsoft' ? (

@@ -71,7 +71,7 @@ import { getAccount, getMillidaAccount, useAccounts } from '../state/accounts'
 import { balanceText, openTopup, useMoney } from '../lib/useMoney'
 // Наличие аккаунта берём из стора, а не вызовом hasMillidaAccount(): вызов не
 // реактивен, и вкладка «Приватность», открытая до готовности хранилища сессий
-// (или до входа в аккаунт), навсегда застревала на «Нужен аккаунт Millida».
+// (или до входа в аккаунт), навсегда застревала на «Нужен аккаунт TurtleClient».
 import { useHasMillida } from '../state/auth'
 import { setSkinSource, skinSource } from '../lib/gameProfile'
 import { millidaModEnabled, setMillidaModEnabled } from '../ipc/commands'
@@ -786,7 +786,7 @@ export function Settings({ on }: { on: boolean }) {
           <Segs<SkinSource>
             value={skins}
             options={[
-              ['millida', 'Millida'],
+              ['millida', 'TurtleClient'],
               ['mojang', t('Лицензия')],
             ]}
             onPick={(v) => {
@@ -801,10 +801,10 @@ export function Settings({ on }: { on: boolean }) {
             }}
           />
         </Row>
-        <Row title={t('Мод Millida')} hint={t('Скины, плащи и эмоции в игре')} keys="мод эмоции плащи">
+        <Row title={t('Мод TurtleClient')} hint={t('Скины, плащи и эмоции в игре')} keys="мод эмоции плащи">
           <Toggle
             id="setMillidaMod"
-            label={t('Мод Millida')}
+            label={t('Мод TurtleClient')}
             on={modOn}
             onChange={() => {
               const next = !modOn
@@ -1071,7 +1071,7 @@ export function Settings({ on }: { on: boolean }) {
 
       <Group title={t('Видно в профиле на millida.net')}>
         {!hasMillida ? (
-          <Row title={t('Нужен аккаунт Millida')} keys="приватность профиль видно">
+          <Row title={t('Нужен аккаунт TurtleClient')} keys="приватность профиль видно">
             <button className="btn sm primary" onClick={() => showLogin()}>
               <Icon id="i-login" /> {t('Войти')}
             </button>
@@ -1148,9 +1148,10 @@ export function Settings({ on }: { on: boolean }) {
     <>
       <Block keys="версия обновление обновить проверить">
         <div className="s2-hero">
-          <img src="/millida-logo.svg" alt="" width={48} height={48} />
+          <img src="/turtleclient-icon.svg" alt="" width={48} height={48} />
           <span className="s2-hero-txt">
-            <b>Millida Launcher</b>
+            <b>TurtleClient Launcher</b>
+            <small>Based on Millida Launcher · GPL-3.0-only</small>
             <small>
               {upd
                 ? updStaged
@@ -1201,7 +1202,7 @@ export function Settings({ on }: { on: boolean }) {
         <Row title={t('Собран на GitHub')} hint={ver ? 'v' + ver : undefined} keys="github исходный код открытый безопасность вирус проверить сборка">
           <button
             className="btn md secondary"
-            onClick={() => void openUrl('https://github.com/millida/launcher/releases' + (ver ? '/tag/v' + ver : '')).catch(() => {})}
+            onClick={() => void openUrl('https://github.com/TurtleClient/turtleclient-launcher').catch(() => {})}
           >
             {t('Открыть')}
           </button>

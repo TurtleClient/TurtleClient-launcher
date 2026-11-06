@@ -38,7 +38,7 @@ export function totalBytes(list: Pick<MoveCandidate, 'bytes'>[]): number {
 export function confirmText(list: MoveCandidate[]): string {
   const n = list.length + ' ' + plural(list.length, t('сборку'), t('сборки'), t('сборок'))
   const where = launchersText(list)
-  return t('Перенесём {count} ({size}) из {from} в Millida: миры, моды, настройки, скриншоты и серверы. В {from} всё останется как есть.', { count: n, size: sizeText(totalBytes(list)), from: where })
+  return t('Перенесём {count} ({size}) из {from} в TurtleClient: миры, моды, настройки, скриншоты и серверы. В {from} всё останется как есть.', { count: n, size: sizeText(totalBytes(list)), from: where })
 }
 
 export type RowResult = { kind: 'ok'; outcome: MoveOutcome } | { kind: 'error'; text: string }
@@ -61,7 +61,7 @@ export function batchSummary(results: RowResult[]): { text: string; kind: 'ok' |
 
 /**
  * Whether Move can be pressed and what holds the button. A game from the build is never closed;
- * the source launcher holds the button only until the player lets Millida close it.
+ * the source launcher holds the button only until the player lets TurtleClient close it.
  */
 export function moveGate(blockers: MoveBlocker[], autoClose: boolean): { ok: boolean; holder: string } {
   const holding = blockers.filter((b) => b.game || !autoClose)

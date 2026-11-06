@@ -531,7 +531,7 @@ export function Compat({ versions, loaders, side, extra }: { versions: string[];
   )
 }
 
-/* ── Материал ленты (Millida, Modrinth, CurseForge) ─────────── */
+/* ── Материал ленты (TurtleClient, Modrinth, CurseForge) ─────────── */
 
 function CardPage({ card, sec }: { card: SiteCard; sec: SiteSection }) {
   const t = useT()

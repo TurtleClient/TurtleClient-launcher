@@ -31,7 +31,7 @@ pub async fn set_game_dir(app: tauri::AppHandle, path: String, move_data: bool) 
 pub async fn pick_game_dir() -> Result<Option<String>, String> {
     let start = engine::game_root();
     let picked =
-        engine::pick_folder(engine::dialog().set_directory(&start).set_title(crate::engine::ui("Папка игры Millida"))).await;
+        engine::pick_folder(engine::dialog().set_directory(&start).set_title(crate::engine::ui("Папка игры TurtleClient"))).await;
     let Some(d) = picked else { return Ok(None) };
     let d = engine::game_root_from_pick(d);
     // refused at pick time, so the player sees why right away

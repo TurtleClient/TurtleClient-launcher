@@ -35,5 +35,5 @@ export function foundStatusText(u: FoundUser, now?: number): string {
     const ago = seenAgo(u.lastSeen, now)
     return ago ? t('Не в сети · {ago}', { ago }) : t('Не в сети')
   }
-  return t('Игрок Millida')
+  return t('Игрок TurtleClient')
 }

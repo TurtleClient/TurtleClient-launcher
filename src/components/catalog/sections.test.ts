@@ -69,7 +69,7 @@ describe('группы разделов как на сайте', () => {
 })
 
 describe('«Скачать в лаунчере» с сайта ставится в нужное место', () => {
-  it('каждый раздел с кнопкой лаунчера на сайте понимает millida://install', () => {
+  it('каждый раздел с кнопкой лаунчера на сайте понимает turtleclient://install', () => {
     for (const s of SITE_INSTALL_SECTIONS) expect((INSTALL_SECTIONS as readonly string[]).includes(s), s).toBe(true)
   })
 

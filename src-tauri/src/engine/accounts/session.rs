@@ -262,12 +262,12 @@ async fn millida_launch_auth(app: &AppHandle) -> ResolvedAuth {
     };
     crate::engine::warn(
         app,
-        &format!("Вход Millida не выдан, играем офлайн (Multiplayer и Realms будут недоступны): {}", last),
+        &format!("Вход TurtleClient не выдан, играем офлайн (Multiplayer и Realms будут недоступны): {}", last),
     );
     known_identity_offline()
 }
 
-/// Vault slot with the game profile of the last session issued to this Millida
+/// Vault slot with the game profile of the last session issued to this TurtleClient
 /// login. The server often creates the session yet answers after the launch
 /// budget, and a game started with the nick-derived uuid is a different player
 /// to every world: FTB quests, advancements and LAN inventories reset, then come
@@ -321,7 +321,7 @@ fn remember_game_profile(uuid: &str, name: &str) {
     let Some(subject) = millida_token().as_deref().and_then(token_subject) else { return };
     let Some(record) = remembered_profile_record(&subject, uuid, name) else { return };
     if let Err(e) = crate::secrets::set_many(vec![(SEC_MILLIDA_GAME_PROFILE.to_string(), record)]) {
-        eprintln!("[auth] игровой профиль Millida не запомнен, при сбое входа игра стартует с UUID по нику: {e}");
+        eprintln!("[auth] игровой профиль TurtleClient не запомнен, при сбое входа игра стартует с UUID по нику: {e}");
     }
 }
 
@@ -343,7 +343,7 @@ fn known_identity_offline() -> ResolvedAuth {
     }
 }
 
-// For a Millida account we ask api.millida.net for a one-time game session and give it to authlib-injector.
+// For a TurtleClient account we ask api.millida.net for a one-time game session and give it to authlib-injector.
 async fn issue_game_session() -> Result<ResolvedAuth, String> {
     let mut last = String::new();
     for attempt in 0..SESSION_ATTEMPTS {

@@ -22,7 +22,7 @@ import { marketPacks } from '../../lib/paidPacks'
 export interface ServerModeDef {
   cat: string
   title: string
-  /** Воксельный блок Millida (public/block-icons) — лицо режима. */
+  /** Воксельный блок TurtleClient (public/block-icons) — лицо режима. */
   block: number
   /** Цвет подложки карточки: у каждого режима свой, как у событий Brawl Stars. */
   color: string
@@ -53,7 +53,7 @@ export const SERVER_MODES: ServerModeDef[] = [
   { cat: 'VANILLA', get title() { return t('Ванилла') }, block: 32, color: '#1d7d37' },
 ]
 
-export const blockArt = (n: number) => '/block-icons/Block' + n + 'Millida.png'
+export const blockArt = (n: number) => '/block-icons/Block' + n + 'TurtleClient.png'
 
 export interface ModeStats {
   total: number
@@ -103,7 +103,7 @@ export function loadMode(cat: string): Promise<ModeStats | null> {
 }
 
 /**
- * Режимы — только те, что реально есть в рейтинге Millida (правка владельца
+ * Режимы — только те, что реально есть в рейтинге TurtleClient (правка владельца
  * 23.09.2026, 19:42: «никаких выдуманных режимов»). Коды берутся из самого
  * рейтинга (поле `categories` у серверов первых страниц) плюс известные коды
  * экрана «Серверы»; каждый проверяется запросом. Рейтинг на неизвестный код
@@ -385,7 +385,7 @@ export function loadPackServer(title: string): Promise<SnapshotServer | null> {
 
 /**
  * Сервер OneBlock — партнёрский (приказ владельца 23.09.2026). На экране он
- * НИКАК не подписан как наш: ни «Сервер Millida», ни «наш» — просто самый
+ * НИКАК не подписан как наш: ни «Сервер TurtleClient», ни «наш» — просто самый
  * красивый баннер первой карточкой «Режимов». Плитка запускает его клиент
  * (lib/ownServer), а не открывает категорию ONEBLOCK.
  */
@@ -519,7 +519,7 @@ export function loadModrinthPacks(): Promise<HubPack[]> {
   return mrCache
 }
 
-/** Сборка, которую хостинг Millida ставит на сервер целиком (GET /hosting/packs). */
+/** Сборка, которую хостинг TurtleClient ставит на сервер целиком (GET /hosting/packs). */
 export interface HostingPack {
   key: string
   name: string

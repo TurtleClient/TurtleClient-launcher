@@ -15,7 +15,7 @@ import type { AccessState, Pricing, Purchase } from './paid'
 import { t } from '../../i18n'
 
 /*
- * Покупка и подписка материала каталога Millida из лаунчера — те же адреса и
+ * Покупка и подписка материала каталога TurtleClient из лаунчера — те же адреса и
  * тот же порядок, что у кнопки «Купить» на странице материала сайта
  * (`item-paid-cta.tsx`): доступ → подтверждение с ценой → списание с кошелька
  * (или оплата подписки у шлюза) → доступ открыт → установка.
@@ -106,10 +106,10 @@ export async function loadPurchases(): Promise<void> {
   }
 }
 
-/** Покупки привязаны к аккаунту Millida: без него — одно окно «Войти». */
+/** Покупки привязаны к аккаунту TurtleClient: без него — одно окно «Войти». */
 export async function requireMillida(): Promise<boolean> {
   if (hasMillidaAccount()) return true
-  if (await uiConfirm(t('Покупки и доступ хранятся в аккаунте Millida.'), { title: t('Войди в Millida'), confirmLabel: t('Войти'), danger: false })) {
+  if (await uiConfirm(t('Покупки и доступ хранятся в аккаунте TurtleClient.'), { title: t('Войди в TurtleClient'), confirmLabel: t('Войти'), danger: false })) {
     openAccountAdd('millida')
   }
   return false
@@ -235,7 +235,7 @@ export async function confirmBuy(): Promise<void> {
     usePaid.setState({ busy: false })
     // Обрыв связи или 5xx могли уже списать: повтор идёт с тем же ключом.
     if (isTransientApiError(e)) {
-      showToast(apiErrorText(e, t('Millida не ответила — повтори')), 'error')
+      showToast(apiErrorText(e, t('TurtleClient не ответила — повтори')), 'error')
       return
     }
     buyKey = null

@@ -9,7 +9,7 @@ interface State {
   close: () => void
 }
 
-/// A paid catalog pack started outside a pack page (a millida://modpack link) still has to ask for its key.
+/// A paid catalog pack started outside a pack page (a turtleclient://modpack link) still has to ask for its key.
 export const usePackKey = create<State>((set) => ({
   slug: null,
   title: '',

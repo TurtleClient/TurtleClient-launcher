@@ -1,5 +1,10 @@
 # Third-party components
 
+Fork build tooling: `sharp` (Apache-2.0) rasterizes the original TurtleClient SVG
+branding assets in `scripts/turtleclient-brand-assets.mjs`. It is a development
+dependency and is not shipped in the launcher runtime. Its prebuilt libvips
+components retain their own licenses in the installed npm packages.
+
 Russian version: [THIRD-PARTY.ru.md](THIRD-PARTY.ru.md)
 
 Millida Launcher is distributed under [GPL-3.0-only](LICENSE). Below are the components

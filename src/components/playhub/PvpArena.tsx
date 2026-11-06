@@ -15,9 +15,9 @@ import { useT } from '../../i18n'
 import { liveInterval } from '../../lib/liveInterval'
 
 /**
- * PvP-арена Millida (владелец 11.10.2026: «как в Dawn — выбор класса, сразу
+ * PvP-арена TurtleClient (владелец 11.10.2026: «как в Dawn — выбор класса, сразу
  * поиск и тебя сразу на сервер»). Карточки китов каруселью: в покое серые,
- * выбранная оживает. «Играть» запускает игру прямо на Millida SMP и просит
+ * выбранная оживает. «Играть» запускает игру прямо на TurtleClient SMP и просит
  * сервер поставить в очередь выбранного кита. Живёт в разделе PvP хаба —
  * игрокам не из PvP не мешает.
  */
@@ -106,7 +106,7 @@ function ArenaStatus({ uuid, launching, modes }: { uuid: string | null; launchin
   else if (st && st.state === 'match') line = { cls: 'm', t: st.mode === '2v2' ? t('Бой 2 на 2') : t('Бой идёт'), sub: [kitName, timer].filter(Boolean).join(' · ') }
   else if (st && st.state === 'bot') line = { cls: 'm', t: t('Бой с ботом'), sub: timer }
   else if (st && st.state === 'spectating') line = { cls: 'l', t: t('Смотришь бой') }
-  else if (st && st.state !== 'offline') line = { cls: 'l', t: t('Ты на Millida SMP'), sub: t('лобби') }
+  else if (st && st.state !== 'offline') line = { cls: 'l', t: t('Ты на TurtleClient SMP'), sub: t('лобби') }
   else if (launching) line = { cls: 'l', t: t('Запускаем Minecraft'), sub: t('очередь начнётся при входе') }
   if (!line) return null
   return (
@@ -158,7 +158,7 @@ export function PvpArena() {
   const duo = !!party && party.members.length === 2 && isLeader(party, partyMe)
 
   /**
-   * 2 на 2 из пати лаунчера: заявка на обоих (по id аккаунтов Millida), затем
+   * 2 на 2 из пати лаунчера: заявка на обоих (по id аккаунтов TurtleClient), затем
    * обычный запуск пати на сервер — напарнику достаточно нажать «Готов».
    */
   const playDuo = async () => {
@@ -168,7 +168,7 @@ export function PvpArena() {
       await api('/tiers/intent', { method: 'POST', body: JSON.stringify({ kit, ranked: true, party: party.members.map((m) => m.userId) }) })
     } catch (e) {
       const msg = String(e)
-      showToast(/403/.test(msg) ? t('Позвать в 2 на 2 может только лидер пати') : /404/.test(msg) ? t('У напарника ещё нет игрового профиля Millida') : t('Сервер не принял заявку 2 на 2 — попробуй ещё раз'), 'error')
+      showToast(/403/.test(msg) ? t('Позвать в 2 на 2 может только лидер пати') : /404/.test(msg) ? t('У напарника ещё нет игрового профиля TurtleClient') : t('Сервер не принял заявку 2 на 2 — попробуй ещё раз'), 'error')
       setBusy(false)
       return
     }
@@ -186,7 +186,7 @@ export function PvpArena() {
     // ставит в очередь кита. Не ответил за 3 с — игрок просто окажется в лобби сервера.
     const intent = api('/tiers/intent', { method: 'POST', body: JSON.stringify({ kit: k, ranked: true }) }).catch(() => {})
     await Promise.race([intent, new Promise((r) => setTimeout(r, 3000))])
-    showToast(t('Заходим на Millida SMP · {name}', { name }))
+    showToast(t('Заходим на TurtleClient SMP · {name}', { name }))
     setLaunchAt(Date.now())
     quickJoin(TIER_SERVER.ip, TIER_SERVER.name, false, TIER_SERVER.versions)
       .catch(() => {})
@@ -199,7 +199,7 @@ export function PvpArena() {
         <span className="ar-head-t">
           <h1>{t('PvP-арена')}</h1>
           <span className="ar-sub">
-            {t('Millida SMP · дуэли по тир-листу')}
+            {t('TurtleClient SMP · дуэли по тир-листу')}
             {me ? ' · ' + t(me.title) + ' · ' + plural(me.points, t('{n} очко', { n: me.points }), t('{n} очка', { n: me.points }), t('{n} очков', { n: me.points })) : ''}
           </span>
         </span>

@@ -14,7 +14,7 @@ import { trackFailure } from '../../lib/telemetry'
 import { t, useT } from '../../i18n'
 
 /**
- * Вкладка «Мои серверы» хаба: свои серверы хостинга Millida (статус, «Зайти»,
+ * Вкладка «Мои серверы» хаба: свои серверы хостинга TurtleClient (статус, «Зайти»,
  * «Позвать друзей», «Управлять»), под ними — поиск сервера по имени или адресу
  * и недавние серверы из статистики. Своего сервера нет — одна крупная
  * карточка «Свой сервер для друзей» с бесплатным созданием.
@@ -131,7 +131,7 @@ export function ServersPane({ on, onPlay, part }: { on: boolean; onPlay: (m: Lob
     }
   }
 
-  // Создание: без аккаунта Millida — в «Хостинг», там вход; с аккаунтом —
+  // Создание: без аккаунта TurtleClient — в «Хостинг», там вход; с аккаунтом —
   // сразу выбор тарифа на бесплатном.
   const create = () => (hasMillidaAccount() ? setPicker(true) : setScreen('hosting'))
 
@@ -165,7 +165,7 @@ export function ServersPane({ on, onPlay, part }: { on: boolean; onPlay: (m: Lob
       ) : (
         <section className="ph-shelf">
           <div className="ph-shelf-head">
-            <h2>{part === 'own' ? t('Мой сервер') : t('Хостинг Millida')}</h2>
+            <h2>{part === 'own' ? t('Мой сервер') : t('Хостинг TurtleClient')}</h2>
             <button className="btn sm secondary" data-track="server_create" onClick={create}>
               <Icon id="i-plus" /> {t('Новый сервер')}
             </button>

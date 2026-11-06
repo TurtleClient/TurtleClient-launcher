@@ -147,7 +147,7 @@ async function callModel(target: Target, sourceName: string, batch: Entry[], att
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
-      'X-Title': 'millida-launcher-i18n',
+      'X-Title': 'turtleclient-launcher-i18n',
     },
     body: JSON.stringify({
       model: MODEL,

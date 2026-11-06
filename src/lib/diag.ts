@@ -123,7 +123,7 @@ export async function buildDiagnostics(): Promise<string> {
   const skin = tauri && acc ? await safe(() => skinDiagnose(acc.nick, !!millida)) : null
 
   const lines: (string | null)[] = [
-    '=== Millida Launcher · диагностика ===',
+    '=== TurtleClient Launcher · диагностика ===',
     'Снято: ' + new Date().toISOString(),
     'Версия: ' + (ver || 'неизвестна') + (tauri ? '' : ' (веб-режим, без ядра)'),
     upd ? 'Обновление: доступна ' + upd.version + (updateReady() ? ' (готова к установке)' : ' (качается)') : 'Обновление: нет',
@@ -150,8 +150,8 @@ export async function buildDiagnostics(): Promise<string> {
     '--- Аккаунты ---',
     'Всего: ' + accounts.length,
     'Активный: ' + (acc ? acc.nick + ' · ' + accKindLabel(acc.kind) : 'не выбран'),
-    'Millida: ' + (millida ? 'вход выполнен' : 'не выполнен вход'),
-    'Скины: ' + (skinSource() === 'millida' ? 'Millida' : 'Mojang'),
+    'TurtleClient: ' + (millida ? 'вход выполнен' : 'не выполнен вход'),
+    'Скины: ' + (skinSource() === 'millida' ? 'TurtleClient' : 'Mojang'),
     ...skinBlock(skin),
     '',
     '--- Настройки ---',

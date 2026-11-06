@@ -245,7 +245,7 @@
 .tb-mine-rank { font: 900 20px/1 var(--m-font); color: var(--tb-c); }
 #s-top .tb-shield-line { margin: 4px 0 6px; font: 700 13px/1 var(--m-font); color: var(--m-fg-subtle); }
 
-/* ---------- PvP-тиры Millida SMP (11.10.2026) ---------- */
+/* ---------- PvP-тиры TurtleClient SMP (11.10.2026) ---------- */
 #s-top.theme-pvp { --tb-c: #f07a18; --tb-c2: #ffc24a; --tb-glow: rgba(240, 122, 24, 0.2); --tb-soft: rgba(240, 122, 24, 0.1); }
 /* Значок тира: ступень 1 — золото, 2 — серебро, 3 — бронза, 4–5 — сталь; HT плотнее LT. */
 .tr-badge {

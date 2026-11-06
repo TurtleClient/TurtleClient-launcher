@@ -2,13 +2,13 @@ import { create } from 'zustand'
 import { api } from '../lib/api'
 
 /**
- * PvP-тиры Millida SMP (владелец 11.10.2026: «где огоньки и место по часам —
+ * PvP-тиры TurtleClient SMP (владелец 11.10.2026: «где огоньки и место по часам —
  * чтоб писался твой PvP-тир и был топ тиров»). Данные — тир-лист сервера
  * mpvp.millida.host: /v2/tiers/player/<ник> и /v2/tiers/overall.
  */
 
-/** Сервер дуэлей: туда ведёт «Определить свой тир». Пускает только аккаунт Millida. */
-export const TIER_SERVER = { ip: 'mpvp.millida.host', name: 'Millida SMP', versions: ['26.2'] }
+/** Сервер дуэлей: туда ведёт «Определить свой тир». Пускает только аккаунт TurtleClient. */
+export const TIER_SERVER = { ip: 'mpvp.millida.host', name: 'TurtleClient SMP', versions: ['26.2'] }
 
 export interface TierMode {
   tier: string

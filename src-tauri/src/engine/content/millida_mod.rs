@@ -1,12 +1,12 @@
-// Installs the Millida mod (skins, cosmetics) into the player's modpacks and updates it.
-// The version list comes from cdn.millida.net/mod, the jar is downloaded from there and checked against the sha256 from the list. The list is also signed with the Millida key. The list of blocked versions is api.millida.net/v2/launcher/mod/blocked.
+// Installs the TurtleClient mod (skins, cosmetics) into the player's modpacks and updates it.
+// The version list comes from cdn.millida.net/mod, the jar is downloaded from there and checked against the sha256 from the list. The list is also signed with the TurtleClient key. The list of blocked versions is api.millida.net/v2/launcher/mod/blocked.
 // Can be turned off in settings. Mod summaries are switched off by the statistics switch.
 use crate::engine::*;
 use serde_json::Value;
 use std::path::{Path, PathBuf};
 use std::time::Duration;
 
-// Mod version list on the Millida CDN.
+// Mod version list on the TurtleClient CDN.
 const MANIFEST_URL: &str = "https://cdn.millida.net/mod/variants.json";
 // Kill switch: mod versions the launcher must not install (crashes).
 const BLOCKED_URL: &str = "https://api.millida.net/v2/launcher/mod/blocked";
@@ -64,7 +64,7 @@ fn version_below(version: &str, bound: &str) -> bool {
 /// Снапшот, пре-релиз или кандидат («25w05a», «1.21.9-rc1», «26.2-snapshot-7»).
 /// Наш jar объявляет диапазон релизов, и загрузчик считает такую версию
 /// МЛАДШЕ релиза: «1.21.9-rc1» не проходит «>=1.21.9», и сборка падала с
-/// «Моды собраны под другую версию игры: Millida».
+/// «Моды собраны под другую версию игры: TurtleClient».
 fn is_prerelease(game_version: &str) -> bool {
     game_version.chars().any(|c| c.is_ascii_alphabetic())
 }
@@ -273,7 +273,7 @@ async fn install_for_launch(app: &AppHandle, profile: &str) -> Result<MillidaMod
 }
 
 async fn run_install(app: &AppHandle, profile: String, wait: Option<Duration>) -> Result<MillidaModState, String> {
-    let job = Job::start(format!("millida-mod:{}", profile), "Косметика Millida")?;
+    let job = Job::start(format!("millida-mod:{}", profile), "Косметика TurtleClient")?;
     let res = install_job(app, &job, profile, wait).await;
     job.finish(app, res)
 }
@@ -462,7 +462,7 @@ fn write_settings(dir: &Path, licensed: bool) -> Result<(), String> {
         .and_then(|v| v.as_object().cloned())
         .unwrap_or_default();
     cfg.insert("apiRoot".into(), Value::String(MILLIDA_API.to_string()));
-    // Millida, потом файлы игрока. Лицензионный профиль спрашиваем последним и
+    // TurtleClient, потом файлы игрока. Лицензионный профиль спрашиваем последним и
     // только если аккаунт и правда мояновский: иначе этот ник там принадлежит
     // постороннему, и игрок увидит чужой скин.
     let order: Vec<Value> = if licensed {
@@ -816,7 +816,7 @@ const FABRIC_API_IDS: [&str; 3] = ["fabric-api", "fabric", "quilted_fabric_api"]
 /// Проверка по ВКЛЮЧЁННЫМ файлам в mods/, а не по спискам лаунчера. Индекс
 /// установленного помнит и выключенный (.disabled), и удалённый руками Fabric
 /// API — лаунчер считал его на месте, ставил наш мод, и Fabric ронял сборку с
-/// «Модам не хватает зависимостей: Millida» (893 игрока за 14 дней, 25.09.2026).
+/// «Модам не хватает зависимостей: TurtleClient» (893 игрока за 14 дней, 25.09.2026).
 fn fabric_api_state(profile: &str, game_version: &str) -> FabricApi {
     let dir = profile_dir(profile).join("mods");
     let Ok(entries) = std::fs::read_dir(&dir) else { return FabricApi::Missing };
@@ -1206,7 +1206,7 @@ async fn kill_switch_blocked(app: &AppHandle, variant: &str, version: &str, pref
         // The copy of the list already says so, so the next launch starts the build without the mod.
         // Not a bare literal on purpose: a core text found by the translation scan needs all 20 tables, and
         // this one is the same kind of status line as before.
-        warn(&app, &format!("Мод «{}» отключён сервером: со следующего запуска сборка стартует без него", "Millida"));
+        warn(&app, &format!("Мод «{}» отключён сервером: со следующего запуска сборка стартует без него", "TurtleClient"));
     })
     .await
 }
@@ -1298,7 +1298,7 @@ pub(crate) async fn ensure_millida_mod_with(
         remove_mod_from(profile);
         warn(
             app,
-            "Косметике Millida нужен Fabric API под версию этой сборки, а его нет или он от другой версии игры. Сборка запустится без косметики",
+            "Косметике TurtleClient нужен Fabric API под версию этой сборки, а его нет или он от другой версии игры. Сборка запустится без косметики",
         );
         return Ok(None);
     }
@@ -1728,7 +1728,7 @@ mod tests {
             &dir,
             "millida-mod-forge-1.7.10-0.1.15.jar",
             "mcmod.info",
-            r#"[{"modid":"millida","name":"Millida","version":"0.1.15","mcversion":"1.7.10"}]"#,
+            r#"[{"modid":"millida","name":"TurtleClient","version":"0.1.15","mcversion":"1.7.10"}]"#,
         );
         assert!(
             jar_fits(&legacy, &profile("1.7.10", "forge", Some("10.13.4.1614"))),
@@ -1749,7 +1749,7 @@ mod tests {
             (false, false, false, false, Remove, "the player turned the mod off for every build"),
             (true, false, false, true, Leave, "Arcania: a protected pack verifies its own files, our jar is a change behind the author's back"),
             (true, false, false, false, Leave, "a pack we never touched stays untouched even when the switch is off"),
-            (true, true, false, true, Place, "OneBlock 27.09: players see each other's Millida cosmetics"),
+            (true, true, false, true, Place, "OneBlock 27.09: players see each other's TurtleClient cosmetics"),
             (true, true, true, false, Remove, "the player's off switch wins over our opt-in"),
             (true, false, true, true, Remove, "an opt-in we withdrew takes our jar back out of the pack"),
             (true, true, true, true, Place, "an opt-in that stands keeps the mod in place"),

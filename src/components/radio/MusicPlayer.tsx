@@ -78,7 +78,7 @@ export function MusicPlayer() {
     <>
       <Row
         title={t('Плеер')}
-        hint={cur ? (live?.title || cur.title) + ' · ' + (live?.author || cur.author || 'Millida') : undefined}
+        hint={cur ? (live?.title || cur.title) + ' · ' + (live?.author || cur.author || 'TurtleClient') : undefined}
         keys="музыка громкость плеер трек"
       >
         {cur ? (
@@ -98,11 +98,11 @@ export function MusicPlayer() {
       </Row>
 
       <Row
-        title={t('Радио Millida')}
+        title={t('Радио TurtleClient')}
         hint={radio ? t('Играет вместе со своей музыкой') : t('Выключено, только своя музыка')}
         keys="музыка радио плеер"
       >
-        <Toggle on={radio} label={t('Радио Millida')} onChange={() => setRadio(!radio)} />
+        <Toggle on={radio} label={t('Радио TurtleClient')} onChange={() => setRadio(!radio)} />
       </Row>
 
       <Source

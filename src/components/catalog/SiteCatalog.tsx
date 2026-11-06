@@ -48,7 +48,7 @@ import '../../styles/pixel/catalog2.css'
 import { intlTag, useT } from '../../i18n'
 
 /*
- * Каталог Millida в лаунчере — страница раздела millida.net один в один
+ * Каталог TurtleClient в лаунчере — страница раздела millida.net один в один
  * (`mr-section-frame.tsx`): вкладки разделов сверху; слева колонка фильтров;
  * справа заголовок раздела, поиск по разделу, «N материалов», «Популярные |
  * Новые» и лента. У шейдеров и ресурс-паков лента карточками с обложкой, у
@@ -680,7 +680,7 @@ function SectionPane({ sec, narrow, onOpenPack }: { sec: SiteSection; narrow: bo
   const searching = q.length >= 2
   const tail = useMemo(() => mrTail(s.items, s.mr, s.page, s.pages, peekHit, searching), [s.items, s.mr, s.page, s.pages, searching])
   const cfRows = useMemo(() => cfTail(s.items, tail, s.cf, s.page, s.pages, peekHit, searching), [s.items, tail, s.cf, s.page, s.pages, searching])
-  // Одно число — материалы Millida под фильтры (хвост Modrinth в заголовок не идёт: «86 036» сбивал).
+  // Одно число — материалы TurtleClient под фильтры (хвост Modrinth в заголовок не идёт: «86 036» сбивал).
   const count = s.page ? materials(s.total) : null
   const items = useMemo(
     () => (sec.kind === 'mod' && (s.sort ?? 'recommended') === 'recommended' && !searching ? librariesLast(s.items) : s.items),
@@ -883,7 +883,7 @@ function SectionPane({ sec, narrow, onOpenPack }: { sec: SiteSection; narrow: bo
 /*
  * Скины — сетка `/skins/katalog` сайта (`/v2/skins`): рендер во весь рост, имя,
  * сколько носят. «В гардероб» — то же, что «Скачать в лаунчере» на сайте
- * (millida://install/skins/<id>): скин ложится в гардероб аккаунта и надевается.
+ * (turtleclient://install/skins/<id>): скин ложится в гардероб аккаунта и надевается.
  */
 function SkinsPane() {
   const t = useT()
@@ -1027,7 +1027,7 @@ function SkinCard({ k, pos }: { k: SkinTile; pos: number }) {
 /*
  * Сиды, головы, плащи — разделы сайта без файла для папки игры: сид — строка
  * для поля «Сид», голова — команда /give, плащи Mojang и OptiFine выдаёт не
- * лаунчер. Лента у них на сайте; плащ Millida надевается в гардеробе.
+ * лаунчер. Лента у них на сайте; плащ TurtleClient надевается в гардеробе.
  */
 function SitePane({ slug }: { slug: 'seeds' | 'heads' | 'capes' }) {
   const t = useT()
@@ -1090,7 +1090,7 @@ function GroupNav({
               >
                 <span className="mr-tab-art" aria-hidden="true">
                   {g.key === 'packs' ? (
-                    // Сборки — книжная полка Millida вместо сундука (владелец 10.10.2026).
+                    // Сборки — книжная полка TurtleClient вместо сундука (владелец 10.10.2026).
                     <img className="mr-tab-block" src="/block-icons/Block52Millida.png" alt="" draggable={false} />
                   ) : GROUP_ART[g.key] ? (
                     <PxArt name={GROUP_ART[g.key]!} size={32} glint={false} />
@@ -1306,7 +1306,7 @@ export function SiteCatalog({
     if (slug !== section) store.getState().setSection(slug as SiteSection['slug'])
     toTop()
   }
-  // Карт в каталоге Millida может не быть (раздел наполняется) — тогда, как и
+  // Карт в каталоге TurtleClient может не быть (раздел наполняется) — тогда, как и
   // раньше, лента CurseForge. Любой фильтр или поиск — уже ответ каталога.
   const mapsEmpty = store((s) => s.section === 'maps' && s.page > 0 && !s.items.length && !s.q.trim() && !activeFilters(s))
   const grouped = !server && !content

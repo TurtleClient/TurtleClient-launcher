@@ -1,6 +1,6 @@
 // Game launch: builds the Java command line, starts the process, watches it and analyzes crashes.
-// Almost no network here: only the mod token and the paid modpack key from the Millida API, and the data of
-// the Millida skin server if that account is selected. Writes the launch log and crash snapshots to the modpack folder.
+// Almost no network here: only the mod token and the paid modpack key from the TurtleClient API, and the data of
+// the TurtleClient skin server if that account is selected. Writes the launch log and crash snapshots to the modpack folder.
 use super::gameserver::track_server_hop;
 use super::pipeline::AuthSource;
 use crate::engine::*;
@@ -676,7 +676,7 @@ pub(crate) fn crash_verdict(text: &str) -> CrashVerdict {
         cause: super::crashcause::crash_cause(text),
     };
     let (reason, kind): (&str, &'static str) = if auth_server_certificate_rejected(&low) {
-        ("Java этой сборки не доверяет сертификату сервера входа Millida, поэтому игра закрылась на старте. Чаще всего сертификат подменяет антивирус с проверкой защищённых соединений (Kaspersky, ESET, Dr.Web, AdGuard) — выключи в нём проверку HTTPS. Если на компьютере старая версия Java, поставь свежую кнопкой ниже.", "auth_cert")
+        ("Java этой сборки не доверяет сертификату сервера входа TurtleClient, поэтому игра закрылась на старте. Чаще всего сертификат подменяет антивирус с проверкой защищённых соединений (Kaspersky, ESET, Dr.Web, AdGuard) — выключи в нём проверку HTTPS. Если на компьютере старая версия Java, поставь свежую кнопкой ниже.", "auth_cert")
     } else if system_memory_exhausted(&low) {
         (SYSTEM_MEMORY_REASON, "system_memory")
     } else if low.contains("outofmemoryerror") || low.contains("out of memory") {
@@ -1295,7 +1295,7 @@ pub(crate) fn build_args_on(
             .replace("${user_property_map}", "{}")
             .replace("${auth_session}", &session)
             .replace("${game_assets}", &game_assets)
-            .replace("${profile_name}", "Millida")
+            .replace("${profile_name}", "TurtleClient")
             .replace("${version_name}", v["id"].as_str().unwrap_or(""))
             .replace("${game_directory}", &game_dir.to_string_lossy())
             .replace("${assets_root}", &assets_root.to_string_lossy())
@@ -1310,7 +1310,7 @@ pub(crate) fn build_args_on(
             .replace("${library_directory}", &libraries_dir.to_string_lossy())
             .replace("${classpath_separator}", sep)
             .replace("${primary_jar}", &primary_jar)
-            .replace("${launcher_name}", "MillidaLauncher")
+            .replace("${launcher_name}", "TurtleClientLauncher")
             .replace("${launcher_version}", "0.1")
             .replace("${classpath}", &cp)
     };
@@ -1454,7 +1454,7 @@ pub async fn install_and_launch_in(
 }
 
 /// Play for the account the window named: its session is issued next to the install instead of
-/// before it (the Millida session alone could take up to 12 s).
+/// before it (the TurtleClient session alone could take up to 12 s).
 pub async fn launch_with_account(
     app: AppHandle,
     version_id: String,
@@ -1765,7 +1765,7 @@ fn watch_game(w: Watch, perf: &super::launch_perf::LaunchPerf) {
             // weaker than "implicates" costs the player their skins for nothing.
             if skin_blamed && drop_custom_skin_loader(&pname) {
                 if others.is_empty() {
-                    reason = "Мод скинов Millida не ужился со сборкой — мы его убрали. Запусти игру ещё раз.".into();
+                    reason = "Мод скинов TurtleClient не ужился со сборкой — мы его убрали. Запусти игру ещё раз.".into();
                     kind = "skin_mod";
                 } else {
                     reason = mod_fault_reason(&others);
@@ -1780,7 +1780,7 @@ fn watch_game(w: Watch, perf: &super::launch_perf::LaunchPerf) {
                 if !jar.is_empty() && quarantine_millida_mod(&pname, &jar) {
                     if others.is_empty() {
                         reason =
-                            "Косметика Millida не запустилась на этой сборке — мы её отключили. Запусти игру ещё раз, а мы починим и вернём её сами."
+                            "Косметика TurtleClient не запустилась на этой сборке — мы её отключили. Запусти игру ещё раз, а мы починим и вернём её сами."
                                 .into();
                         kind = "own_mod";
                     } else {
@@ -2257,7 +2257,7 @@ mod tests {
                 "список загруженных модов печатается при КАЖДОМ запуске — это не поломка",
             ),
             (
-                r"|  12 | Millida | millida | 0.1.0 | Forge | <game>\mods\millida-mod-forge-1.20.1-0.1.0.jar |",
+                r"|  12 | TurtleClient | millida | 0.1.0 | Forge | <game>\mods\millida-mod-forge-1.20.1-0.1.0.jar |",
                 false,
                 "таблица модов в отчёте о вылете повторяет те же имена",
             ),
@@ -2305,7 +2305,7 @@ mod tests {
         assert!(!b.skin && !b.own, "виноват walkers, скины и косметику не трогаем");
         assert_eq!(b.others.first().map(|f| f.name.as_str()), Some("walkers"));
 
-        let own = "[main/ERROR]: Incompatible mods found!\n\t - Mod 'Millida' (millida) 0.1.11 requires any version of fabric-api, which is missing!";
+        let own = "[main/ERROR]: Incompatible mods found!\n\t - Mod 'TurtleClient' (millida) 0.1.11 requires any version of fabric-api, which is missing!";
         let b = blame(own);
         assert!(b.own && b.others.is_empty(), "отказ назвал наш мод — он и уходит в карантин, чтобы не падать каждый запуск");
     }
@@ -3050,7 +3050,7 @@ mod tests {
         const VERDICT: &str = "Не хватает зависимости одного из модов.";
         let cases: &[(&str, bool, &str)] = &[
             (
-                "[main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file C:\\Users\\Nest\\AppData\\Roaming\\net.millida.launcher\\minecraft\\libraries\\net\\minecraftforge\\fmlcore\\1.20.1-47.4.10\\fmlcore-1.20.1-47.4.10.jar is missing mods.toml file\n\
+                "[main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file C:\\Users\\Nest\\AppData\\Roaming\\dev.turtleclient.launcher\\minecraft\\libraries\\net\\minecraftforge\\fmlcore\\1.20.1-47.4.10\\fmlcore-1.20.1-47.4.10.jar is missing mods.toml file\n\
                  [main/INFO] [cpw.mods.modlauncher.LaunchServiceHandler/MODLAUNCHER]: Launching target 'forgeclient' with arguments\n\
                  [Render thread/INFO] [minecraft/Minecraft]: Backend library: LWJGL version 3.3.1",
                 false,

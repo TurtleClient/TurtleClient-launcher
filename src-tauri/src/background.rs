@@ -588,7 +588,7 @@ pub fn keep_links(argv: &[String]) {
         return;
     }
     let mut r = lock(&RESUME);
-    for a in argv.iter().filter(|a| a.starts_with("millida:")) {
+    for a in argv.iter().filter(|a| a.starts_with("turtleclient:")) {
         if r.links.len() < MAX_LINKS && a.len() <= 2048 {
             r.links.push(a.clone());
         }

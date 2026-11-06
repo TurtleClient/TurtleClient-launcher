@@ -1,4 +1,4 @@
-// Search and install from CurseForge. Requests go through the Millida proxy (api.millida.net/v2/launcher/cf, the API key lives there). Fallback is the public mirror api.curse.tools.
+// Search and install from CurseForge. Requests go through the TurtleClient proxy (api.millida.net/v2/launcher/cf, the API key lives there). Fallback is the public mirror api.curse.tools.
 // Files are downloaded from forgecdn.net and checked against the sha1 from the API answer.
 use super::cf_memo::{cf_memo, cf_memo_key, proxy_verdict, ProxyVerdict};
 use crate::engine::*;
@@ -8,12 +8,12 @@ use tauri::AppHandle;
 
 /// CurseForge requests go through the backend proxy so the API key stays
 /// server-side; the public keyless mirror is the fallback.
-// Main path: our proxy. The CurseForge key stays on the Millida server.
+// Main path: our proxy. The CurseForge key stays on the TurtleClient server.
 pub(crate) fn cf_base() -> String {
     format!("{}/launcher/cf", MILLIDA_API)
 }
 
-// The fallback mirror api.curse.tools is a third-party public service, not Millida. It gets the same request (search, project id), no tokens are added. Used only if the Millida proxy did not answer.
+// The fallback mirror api.curse.tools is a third-party public service, not TurtleClient. It gets the same request (search, project id), no tokens are added. Used only if the TurtleClient proxy did not answer.
 pub(crate) const CF_MIRROR: &str = "https://api.curse.tools";
 
 pub(crate) async fn cf_get(path: &str, q: &[(String, String)]) -> Result<Value, String> {

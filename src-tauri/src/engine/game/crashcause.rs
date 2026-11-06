@@ -6,7 +6,7 @@
 //! «Виноват ли мод» решался по имени мода рядом со словом failed/exception в
 //! ЛЮБОЙ строке — и мод, который сам поймал сетевую ошибку и честно написал о
 //! ней WARN, отправлялся в карантин за чужой вылет (25.09.2026: «Косметика
-//! Millida не запустилась» у 2432 игроков на всех версиях и загрузчиках).
+//! TurtleClient не запустилась» у 2432 игроков на всех версиях и загрузчиках).
 //! «Что сломалось» не отвечалось вовсе: 3189 игроков получили «загляни в лог»,
 //! а телеметрия — ничего.
 
@@ -1493,7 +1493,7 @@ mod tests {
 
     #[test]
     fn cause_leaves_no_home_build_nick_or_token() {
-        let raw = "java.io.FileNotFoundException: C:\\Users\\Вася\\AppData\\Roaming\\net.millida.launcher\\minecraft\\profiles\\Моя сборка\\config\\Grash.json (Session ID is token:eyJhbGciOi.abc) player Grash";
+        let raw = "java.io.FileNotFoundException: C:\\Users\\Вася\\AppData\\Roaming\\dev.turtleclient.launcher\\minecraft\\profiles\\Моя сборка\\config\\Grash.json (Session ID is token:eyJhbGciOi.abc) player Grash";
         let got = scrub_cause(raw, Some("C:\\Users\\Вася"), "grash");
         for leaked in ["Вася", "Моя сборка", "Grash", "eyJhbGciOi"] {
             assert!(!got.contains(leaked), "{leaked} утёк: {got}");

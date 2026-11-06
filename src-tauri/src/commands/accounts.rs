@@ -15,12 +15,12 @@ pub async fn discord_presence(
     join_url: Option<String>,
     profile_slug: Option<String>,
 ) -> discord::DiscordStatus {
+    // Kept in the IPC signature for compatibility; TurtleClient has no Discord image assets yet.
+    let _ = (large_image, large_text);
     discord::set_activity(discord::Presence {
         details,
         state,
         playing,
-        large_image: large_image.unwrap_or_default(),
-        large_text: large_text.unwrap_or_default(),
         join_url: join_url.unwrap_or_default(),
         profile_slug: profile_slug.unwrap_or_default(),
     })

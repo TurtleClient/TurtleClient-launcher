@@ -849,17 +849,17 @@ export function InstancePage() {
     setSkinModBusy(true)
     try {
       setSkinModState(await liftMillidaModQuarantine(profile))
-      showToast(t('Косметика Millida вернётся в сборку при следующем запуске'))
+      showToast(t('Косметика TurtleClient вернётся в сборку при следующем запуске'))
     } catch (e) {
-      showToast(t('Не удалось вернуть косметику Millida: {error}', { error: tx(e) }), 'error')
+      showToast(t('Не удалось вернуть косметику TurtleClient: {error}', { error: tx(e) }), 'error')
     } finally {
       setSkinModBusy(false)
     }
   }
 
   const askOwnModRemoval = () =>
-    uiConfirm(t('Скины, плащи и косметика Millida пропадут в этой сборке. Вернуть можно в настройках сборки.'), {
-      title: t('Отключить косметику Millida в этой сборке?'),
+    uiConfirm(t('Скины, плащи и косметика TurtleClient пропадут в этой сборке. Вернуть можно в настройках сборки.'), {
+      title: t('Отключить косметику TurtleClient в этой сборке?'),
       confirmLabel: t('Отключить'),
       cancelLabel: t('Отмена'),
     })
@@ -1238,7 +1238,7 @@ export function InstancePage() {
     const picked = sel.has(md.name)
     const modrinth = md.project_id && !md.project_id.startsWith('cf:') && !md.project_id.startsWith('millida:') ? md.project_id : ''
     const curse = md.project_id && md.project_id.startsWith('cf:') ? md.project_id.slice(3) : ''
-    const src = modrinth ? 'Modrinth' : curse ? 'CurseForge' : md.project_id && md.project_id.startsWith('millida:') ? 'Millida' : t('Файл')
+    const src = modrinth ? 'Modrinth' : curse ? 'CurseForge' : md.project_id && md.project_id.startsWith('millida:') ? 'TurtleClient' : t('Файл')
     const fresh = freshNames.has(md.name)
     const facts = [
       md.version_number ? t('версия {version}', { version: md.version_number }) : '',
@@ -2757,7 +2757,7 @@ export function InstancePage() {
               {pr && loaderId(pr) !== 'vanilla' ? (
                 <div className="set-row">
                   <span className="lab">
-                    {t('Скин Millida в игре')}
+                    {t('Скин TurtleClient в игре')}
                     <small>
                       {skinMod?.conflict
                         ? t('Уже есть свой мод скинов: {name}', { name: skinMod.conflict })
@@ -2789,7 +2789,7 @@ export function InstancePage() {
                     data-skinmod={skinMod?.on ? 'on' : 'off'}
                     role="switch"
                     aria-checked={!!skinMod?.on}
-                    aria-label={t('Скин Millida в игре')}
+                    aria-label={t('Скин TurtleClient в игре')}
                     onClick={() => {
                       if (!skinModBusy && skinMod) void toggleSkinMod()
                     }}

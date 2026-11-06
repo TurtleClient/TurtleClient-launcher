@@ -3,11 +3,9 @@
 // it imports nothing, so the dictionaries can use it without pulling React in.
 
 // Public half of the signing key (raw Ed25519, base64). The private key never leaves the site's CI.
-export const REMOTE_UI_PUBLIC_KEY = 'TgYsbCG1NTtZWwyTeaj2dozeEUWkBxqgNmbhrr9frjE='
+export const REMOTE_UI_PUBLIC_KEY = ''
 
-export const REMOTE_UI_BASE: string =
-  (import.meta.env.DEV && typeof localStorage !== 'undefined' && localStorage.getItem('m-ui-base')) ||
-  (import.meta.env.DEV ? '/mlu-site/launcher-ui' : 'https://millida.net/launcher-ui')
+export const REMOTE_UI_BASE: string = ''
 
 const b64 = (s: string): Uint8Array<ArrayBuffer> => {
   const bin = atob(s)
@@ -19,6 +17,7 @@ const b64 = (s: string): Uint8Array<ArrayBuffer> => {
 let verifyKey: Promise<CryptoKey | null> | null = null
 
 export function publicKey(): Promise<CryptoKey | null> {
+  if (!REMOTE_UI_PUBLIC_KEY) return Promise.resolve(null)
   verifyKey ??= crypto.subtle
     .importKey('raw', b64(REMOTE_UI_PUBLIC_KEY), { name: 'Ed25519' }, false, ['verify'])
     .catch(() => null)

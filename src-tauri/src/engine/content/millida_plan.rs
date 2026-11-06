@@ -5,7 +5,7 @@ use serde_json::Value;
 use std::path::{Path, PathBuf};
 use tauri::AppHandle;
 
-/// Установка материала каталога Millida вместе с зависимостями — по плану,
+/// Установка материала каталога TurtleClient вместе с зависимостями — по плану,
 /// который собирает наш API: `GET /v2/catalog/items/:slug/resolve?gameVersion=&loader=`.
 ///
 /// Подход тот же, что у Modrinth App (theseus `install_project_with_dependencies`):
@@ -42,7 +42,7 @@ pub struct CatalogPlanDone {
     pub installed: Vec<String>,
     /// Уже стояли в сборке — не качали.
     pub skipped: Vec<String>,
-    /// Нужны, но в каталоге Millida их нет — человеку говорим, что поставить руками.
+    /// Нужны, но в каталоге TurtleClient их нет — человеку говорим, что поставить руками.
     pub missing: Vec<String>,
 }
 

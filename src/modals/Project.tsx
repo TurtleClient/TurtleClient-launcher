@@ -504,7 +504,7 @@ export function ProjectModal() {
 
   const ctx = pj.ctx && benchIn !== null ? { ...pj.ctx, inPack: benchIn } : pj.ctx
   const canToggle = !!ctx && (benchIn !== null || !!ctx.onToggle)
-  const srcName = isMl ? 'Millida' : isCf ? 'CurseForge' : 'Modrinth'
+  const srcName = isMl ? 'TurtleClient' : isCf ? 'CurseForge' : 'Modrinth'
   const lic = licenseLabel(pj.license)
   const side = sideLabel(pj.clientSide, pj.serverSide)
   const loaders = pj.loaders.filter((l) => l !== 'minecraft' && l !== 'datapack' ? true : pj.kind === 'datapack')

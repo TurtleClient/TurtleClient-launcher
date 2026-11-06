@@ -10,14 +10,14 @@
       "built": "вне GitHub, 03.09.2026; замена — подписанный файл из релиза setup-v*"
     },
     {
-      "name": "Millida-Launcher-aarch64.dmg",
+      "name": "TurtleClient-Launcher-aarch64.dmg",
       "sha256": "de02f546a62628eaba800c90d526ce80c0493c201bbe7d68744c6d00bfd114e4",
       "signed": "developer-id, notarized",
       "signer": "Developer ID Application: Mark Sheremeta (G6P84BXZCC)",
       "built": "вне GitHub, 10.09.2026"
     },
     {
-      "name": "Millida-Launcher-x64.dmg",
+      "name": "TurtleClient-Launcher-x64.dmg",
       "sha256": "a01ddb8021ccf6035adeab07b390d14f07bb507a7f6077f940d98ae0ebd55e40",
       "signed": "developer-id, notarized",
       "signer": "Developer ID Application: Mark Sheremeta (G6P84BXZCC)",

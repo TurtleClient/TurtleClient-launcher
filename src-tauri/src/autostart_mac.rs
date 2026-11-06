@@ -4,7 +4,7 @@
 // `Contents/MacOS/millida-launcher`, so Background Task Management lists a bare
 // binary named after the cargo package and shows «App Background Activity:
 // "millida-launcher" can run in the background» again whenever that binary changes
-// (every update). mainApp is tied to the bundle: the name is «Millida Launcher»,
+// (every update). mainApp is tied to the bundle: the name is «TurtleClient Launcher»,
 // the notice comes once, when the player flips the switch.
 //
 // A login item gets no arguments, so «started by the system» is read from the

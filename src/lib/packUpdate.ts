@@ -64,7 +64,7 @@ export type PackLaunchStep =
 
 export function packLaunchStep(s: PackSettings | null | undefined, card: PackCard): PackLaunchStep {
   if (!packNeedsCheck(s)) return { kind: 'launch' }
-  if ('error' in card) return { kind: 'launch-unchecked', reason: apiErrorText(card.error, t('каталог Millida не ответил')) }
+  if ('error' in card) return { kind: 'launch-unchecked', reason: apiErrorText(card.error, t('каталог TurtleClient не ответил')) }
   const update = packUpdateFor(s, card.view)
   return update ? { kind: 'update', update } : { kind: 'launch' }
 }

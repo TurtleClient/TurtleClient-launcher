@@ -150,7 +150,7 @@ pub async fn create_build_shortcut(profile: String, world: Option<String>, serve
     super::blocking(move || engine::create_build_shortcut(&profile, world, server)).await?
 }
 
-/// Whether a millida://launch link came from a shortcut made on this computer.
+/// Whether a turtleclient://launch link came from a shortcut made on this computer.
 #[tauri::command(async)]
 pub fn shortcut_trusted(key: String, profile: String, quickplay: Option<String>) -> bool {
     engine::shortcut_trusted(&key, &profile, quickplay.as_deref())
@@ -183,7 +183,7 @@ pub async fn install_server_pack_file(
     engine::install_server_pack_file(app, server_id, sha512, size, name).await
 }
 
-/// What a Millida catalogue pack holds, from the archive index the catalogue serves.
+/// What a TurtleClient catalogue pack holds, from the archive index the catalogue serves.
 #[tauri::command]
 pub async fn catalog_pack_contents(slug: String) -> Result<engine::PackContents, String> {
     engine::catalog_pack_contents(slug).await
@@ -468,7 +468,7 @@ pub async fn millida_packs() -> Result<serde_json::Value, String> {
     engine::catalog_packs().await
 }
 
-/// Ready-made pack from the Millida catalogue. The webview names only the
+/// Ready-made pack from the TurtleClient catalogue. The webview names only the
 /// catalogue address; the file, the link and the hash are the core's business.
 #[tauri::command]
 pub async fn install_catalog_pack(app: tauri::AppHandle, slug: String) -> Result<engine::Profile, String> {
@@ -560,13 +560,13 @@ pub fn import_instance(path: String, name: String, version: String, loader: Stri
     engine::import_instance(path, name, version, loader)
 }
 
-/// Builds of Prism, MultiMC and Modrinth App that can move into Millida whole.
+/// Builds of Prism, MultiMC and Modrinth App that can move into TurtleClient whole.
 #[tauri::command]
 pub async fn plan_moves() -> Result<Vec<engine::MoveCandidate>, String> {
     super::blocking(engine::plan_moves).await
 }
 
-/// Copies one build from `plan_moves` into Millida; the build in the other
+/// Copies one build from `plan_moves` into TurtleClient; the build in the other
 /// launcher is left as it was.
 #[tauri::command]
 pub async fn move_instance(path: String) -> Result<engine::MoveOutcome, String> {

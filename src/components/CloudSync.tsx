@@ -66,7 +66,7 @@ export function CloudSync() {
   if (!status) return null
   if (!status.signedIn) {
     return (
-      <Row title={t('Сборки в облаке')} hint={t('Нужен аккаунт Millida')} keys="облако облачный профиль синхронизация сборки выгрузить забрать">
+      <Row title={t('Сборки в облаке')} hint={t('Нужен аккаунт TurtleClient')} keys="облако облачный профиль синхронизация сборки выгрузить забрать">
         <button className="btn sm primary" onClick={() => showLogin()}>
           <Icon id="i-login" /> {t('Войти')}
         </button>

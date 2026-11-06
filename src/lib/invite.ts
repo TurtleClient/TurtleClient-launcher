@@ -20,7 +20,7 @@ const cleanVersion = (v?: string | null): string => {
   return VERSION_RE.test(t) ? t : ''
 }
 
-/** Public page that hands the address back to the launcher over `millida://join`. */
+/** Public page that hands the address back to the launcher over `turtleclient://join`. */
 export function joinPageUrl(addr: string, name?: string | null, version?: string | null): string {
   const host = (addr || '').trim()
   if (!isServerAddr(host)) return ''

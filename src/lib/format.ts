@@ -205,7 +205,7 @@ export const accKindLabel = (k?: string): string =>
   k === 'microsoft'
     ? t('Лицензия Microsoft')
     : k === 'tg' || k === 'millida'
-      ? t('Аккаунт Millida')
+      ? t('Аккаунт TurtleClient')
       : k === 'offline'
         ? t('Офлайн-ник')
         : t('Гость')

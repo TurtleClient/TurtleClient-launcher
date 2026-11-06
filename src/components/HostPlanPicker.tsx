@@ -210,7 +210,7 @@ export function HostPlanPicker({
     // подтверждения (аудит 22.09.2026, docs/audit-2026-09-22/hosting-settings.md).
     if (
       !isFree &&
-      !(await uiConfirm(t('{price} в месяц спишем с кошелька Millida.', { price: hostingPlanPrice(p.code) ?? '' }), {
+      !(await uiConfirm(t('{price} в месяц спишем с кошелька TurtleClient.', { price: hostingPlanPrice(p.code) ?? '' }), {
         title: t('Тариф «{name}»', { name: p.name }),
         confirmLabel: t('Оплатить {price}', { price: hostingPlanPrice(p.code) ?? '' }),
         danger: false,
@@ -468,7 +468,7 @@ export function HostPlanPicker({
         <div className="plan-wallet">
           <span>
             <Icon id="i-wallet" />
-            {t('Баланс Millida:')} <b>{balanceText() ?? '—'}</b>
+            {t('Баланс TurtleClient:')} <b>{balanceText() ?? '—'}</b>
           </span>
           <button className="btn sm ghost" onClick={() => openTopup()}>
             {t('Пополнить')}

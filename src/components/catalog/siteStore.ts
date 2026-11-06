@@ -57,7 +57,7 @@ export interface SiteState {
   slow: boolean
   /** Полка «Сборки на русском» над лентой «Рекомендуемых» (без поиска и фильтров). */
   ruShelf: SiteCard[]
-  /** Сколько всего переводов Millida — число на кнопке и в фильтре. */
+  /** Сколько всего переводов TurtleClient — число на кнопке и в фильтре. */
   ruTotal: number
   setSection: (s: SiteSlug) => void
   patch: (p: Partial<Pick<SiteState, 'version' | 'loader' | 'category' | 'q' | 'sort' | 'access' | 'use' | 'price' | 'side'>>) => void
@@ -244,7 +244,7 @@ function createSiteStore(linked: boolean): SiteStore {
       }
       const searching = q.length >= 2
       // Хвосты Modrinth и CurseForge — только при поиске, в фоне; без поиска Modrinth
-      // догружается сам, когда лента Millida кончилась (mrMore).
+      // догружается сам, когда лента TurtleClient кончилась (mrMore).
       const tails = !more && searching && (mrq || cfq)
         ? Promise.all([
             mrq ? inTime(loadMrPage(mrq, st, q, 0)).catch(() => null) : Promise.resolve(null),
@@ -342,7 +342,7 @@ function createSiteStore(linked: boolean): SiteStore {
         const before = get().items
         const shelf = get().ruShelf
         const items = more ? before.concat(got.filter((i) => !before.some((x) => x.slug === i.slug) && !shelf.some((x) => x.slug === i.slug))) : got
-        // Лента Millida кончится — Modrinth догрузится первой страницей по «Показать ещё» (mrMore).
+        // Лента TurtleClient кончится — Modrinth догрузится первой страницей по «Показать ещё» (mrMore).
         const lazyTail = !more && !searching && !!mrq ? { ...MR_EMPTY, mrMore: true } : MR_EMPTY
         const keepTail = more || (stale === false && get().mr.length && searching)
         set({
@@ -470,7 +470,7 @@ function ruMatches(p: MillidaPack, st: Pick<SiteState, 'version' | 'loader' | 'c
   return (!st.version || p.game === st.version) && (!st.loader || p.loader === st.loader) && (!needle || (p.title + ' ' + p.summary).toLowerCase().includes(needle))
 }
 
-/** Фильтр «На русском»: все переводы Millida, популярные первыми. */
+/** Фильтр «На русском»: все переводы TurtleClient, популярные первыми. */
 function ruOnly(ru: MillidaPack[], st: Pick<SiteState, 'version' | 'loader' | 'category'> & Partial<Pick<SiteState, 'use' | 'price'>>, q: string): SiteCard[] {
   return ru
     .filter((p) => ruMatches(p, st, q))

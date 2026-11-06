@@ -1,4 +1,4 @@
-// CustomSkinLoader skin mod: puts its jar into mods/ of the modpack (from GitHub, by sha256), so the skin from the Millida wardrobe is visible in the game.
+// CustomSkinLoader skin mod: puts its jar into mods/ of the modpack (from GitHub, by sha256), so the skin from the TurtleClient wardrobe is visible in the game.
 // If the modpack already has another skin mod or the player refused it, the second one is not installed. The refusal is remembered in the file .millida-skip.
 // The player's wardrobe lives in the launcher data folder. Only the selected PNGs are copied into the modpack folder.
 use crate::engine::*;
@@ -8,11 +8,11 @@ pub(crate) const CSL_LATEST: &str = "https://api.github.com/repos/xfl03/MCCustom
 const CSL_JAR: &str = "CustomSkinLoader.jar";
 const CSL_DISABLED: &str = "CustomSkinLoader.jar.disabled";
 const CSL_OPTOUT: &str = ".millida-skip";
-/// The player's own "no skin mod in this build" for the Millida mod. Kept apart
+/// The player's own "no skin mod in this build" for the TurtleClient mod. Kept apart
 /// from CSL_OPTOUT on purpose: that marker was also written by the launcher on
 /// its own (a crashed CustomSkinLoader, or its copy found missing after the
-/// Millida mod had replaced it), so builds carry it without the player ever
-/// refusing the Millida mod.
+/// TurtleClient mod had replaced it), so builds carry it without the player ever
+/// refusing the TurtleClient mod.
 const MILLIDA_OPTOUT: &str = ".millida-mod-skip";
 
 pub(crate) fn is_skin_mod_file(name: &str) -> bool {
@@ -25,7 +25,7 @@ pub(crate) fn is_skin_mod_file(name: &str) -> bool {
 /// Only a texture *source* belongs here. Mods that merely render an existing
 /// skin differently — Entity Texture Features and Entity Model Features, which
 /// Fabulously Optimized and most optimisation packs ship — fetch nothing, so
-/// listing them left every such build without the Millida skin and with no
+/// listing them left every such build without the TurtleClient skin and with no
 /// mod to load it.
 const SKIN_OWNING_MODS: [&str; 5] = [
     "customskinloader",
@@ -130,7 +130,7 @@ fn place_local_skin(build_dir: &std::path::Path, nick: &str) {
 fn csl_loadlist(csl_root: Option<&str>, licensed: bool, slim: bool) -> Vec<Value> {
     let mut list = Vec::new();
     if let Some(root) = csl_root {
-        list.push(serde_json::json!({ "name": "Millida", "type": "CustomSkinAPI", "root": root }));
+        list.push(serde_json::json!({ "name": "TurtleClient", "type": "CustomSkinAPI", "root": root }));
     }
     list.push(serde_json::json!({ "name": "GameProfile", "type": "GameProfile" }));
     list.push(serde_json::json!({
@@ -198,7 +198,7 @@ fn absent_action(switch_on: bool, disabled_copy: bool, installed_before: bool) -
 
 /// Modded profiles only: vanilla has nowhere to load a mod from.
 /// `licensed` means the launch runs on a Mojang account: only then may Mojang
-/// answer for this nickname — for a Millida or offline account the same name
+/// answer for this nickname — for a TurtleClient or offline account the same name
 /// belongs to a stranger there, and the game would show that stranger's skin.
 /// Returns the skin mods of other launchers it turned off on the way.
 pub async fn ensure_custom_skin_loader(
@@ -358,7 +358,7 @@ fn skin_mod_on_in(dir: &std::path::Path) -> bool {
         && !dir.join("CustomSkinLoader").join(CSL_OPTOUT).exists()
 }
 
-/// The build's skin switch as far as the Millida mod is concerned: only a
+/// The build's skin switch as far as the TurtleClient mod is concerned: only a
 /// refusal the player made through the launcher turns it off.
 pub(crate) fn millida_mod_on(profile: &str) -> bool {
     millida_mod_on_in(&profile_dir(profile))
@@ -461,7 +461,7 @@ pub fn in_game_skin_blocker(loader: &str, online: bool, want_skin: bool) -> Opti
     }
     Some(
         "Скин в этой игре виден не будет: ванильная сборка берёт его только из аккаунта. \
-         Войди аккаунтом Millida или лицензией — либо играй на сборке с модами.",
+         Войди аккаунтом TurtleClient или лицензией — либо играй на сборке с модами.",
     )
 }
 
@@ -507,7 +507,7 @@ mod tests {
         assert!(
             skin_owning_mod(&mods).is_none(),
             "мод, который только рисует скин, не должен запрещать установку загрузчика скинов: \
-             так Fabulously Optimized и все сборки с Entity Texture Features остались без скина Millida"
+             так Fabulously Optimized и все сборки с Entity Texture Features остались без скина TurtleClient"
         );
         for f in owning {
             std::fs::write(mods.join(f), b"x").unwrap();
@@ -559,15 +559,15 @@ mod tests {
     }
 
     /// account   | licensed | expected order
-    /// Millida   | no       | Millida, GameProfile, Local — Mojang answers by nickname
+    /// TurtleClient   | no       | TurtleClient, GameProfile, Local — Mojang answers by nickname
     /// offline   | no       | GameProfile, Local — nothing else knows this player
     /// Mojang    | yes      | GameProfile, Local, Mojang — the licence is the player's own
     #[test]
     fn loadlist_order_puts_account_first_and_mojang_only_for_a_licence() {
         assert_eq!(
             names(&csl_loadlist(Some("https://api/yggdrasil/csl/"), false, false)),
-            ["Millida", "GameProfile", "LocalSkin"],
-            "аккаунт Millida обязан опрашиваться раньше локальной копии, иначе в игре остаётся скин с прошлого «Применить»"
+            ["TurtleClient", "GameProfile", "LocalSkin"],
+            "аккаунт TurtleClient обязан опрашиваться раньше локальной копии, иначе в игре остаётся скин с прошлого «Применить»"
         );
         assert_eq!(
             names(&csl_loadlist(None, false, false)),
@@ -650,7 +650,7 @@ mod tests {
     fn the_mods_list_opt_out_covers_the_millida_mod() {
         let cases: [(&str, bool, &str); 5] = [
             ("CustomSkinLoader.jar", true, "the copy of CustomSkinLoader the launcher adds"),
-            ("millida-mod-fabric-1.21.1-0.4.2.jar", true, "17.10: the Millida mod switched off in the list came back on every launch and broke a custom eye-animation skin mod"),
+            ("millida-mod-fabric-1.21.1-0.4.2.jar", true, "17.10: the TurtleClient mod switched off in the list came back on every launch and broke a custom eye-animation skin mod"),
             ("millida-mod-forge-1.20.1-0.4.2.jar", true, "every loader variant of our mod is the same opt-out"),
             ("CustomSkinLoader_Fabric-14.20.jar", false, "a skin mod the build brought itself is the player's own, not ours to track"),
             ("sodium-fabric-0.6.0.jar", false, "an ordinary mod switched off says nothing about skins"),
@@ -660,7 +660,7 @@ mod tests {
         }
     }
 
-    /// build folder state -> whether the launcher may put its skin mod (the Millida mod included) into it
+    /// build folder state -> whether the launcher may put its skin mod (the TurtleClient mod included) into it
     #[test]
     fn the_build_skin_switch_is_read_from_the_settings_and_the_marker() {
         let root = std::env::temp_dir().join(format!("millida-build-skin-switch-{}", std::process::id()));
@@ -668,7 +668,7 @@ mod tests {
         let cases: [(&str, Option<&str>, bool, bool, &str); 5] = [
             ("fresh", None, false, true, "an untouched build gets the mod by itself"),
             ("auto", Some(r#"{"skinMod":"auto"}"#), false, true, "switched back on in the build settings"),
-            ("off", Some(r#"{"skinMod":"off"}"#), false, false, "17.10: switched off in the build settings, yet the Millida mod was downloaded again"),
+            ("off", Some(r#"{"skinMod":"off"}"#), false, false, "17.10: switched off in the build settings, yet the TurtleClient mod was downloaded again"),
             ("marker", Some(r#"{"name":"x"}"#), true, false, "settings rewritten by an older build: the marker alone keeps the opt-out"),
             ("broken", Some("{"), true, false, "an unreadable settings file must not undo the marker"),
         ];
@@ -686,7 +686,7 @@ mod tests {
         let _ = std::fs::remove_dir_all(&root);
     }
 
-    /// build folder state -> whether the Millida mod is still placed into the build
+    /// build folder state -> whether the TurtleClient mod is still placed into the build
     #[test]
     fn only_the_players_refusal_keeps_the_millida_mod_out() {
         let root = std::env::temp_dir().join(format!("millida-mod-switch-{}", std::process::id()));
@@ -694,11 +694,11 @@ mod tests {
         type Case = (&'static str, Option<&'static str>, Option<&'static str>, Option<&'static str>, bool, &'static str);
         let cases: [Case; 6] = [
             ("fresh", None, None, None, true, "an untouched build gets the mod"),
-            ("csl-removed", Some(r#"{"skinMod":"off","skinModInstalled":false}"#), Some("removed"), None, true, "18.10: the launcher wrote this itself when the Millida mod had replaced its CustomSkinLoader copy; after 2.0.232 such builds lost Millida skins on every server"),
-            ("csl-crash", Some(r#"{"skinMod":"off"}"#), Some("crash"), None, true, "CustomSkinLoader crashing the game says nothing about the Millida mod"),
+            ("csl-removed", Some(r#"{"skinMod":"off","skinModInstalled":false}"#), Some("removed"), None, true, "18.10: the launcher wrote this itself when the TurtleClient mod had replaced its CustomSkinLoader copy; after 2.0.232 such builds lost TurtleClient skins on every server"),
+            ("csl-crash", Some(r#"{"skinMod":"off"}"#), Some("crash"), None, true, "CustomSkinLoader crashing the game says nothing about the TurtleClient mod"),
             ("csl-off-legacy", Some(r#"{"skinMod":"off"}"#), Some("off"), None, true, "an old switch that only ever controlled CustomSkinLoader"),
             ("player-off", Some(r#"{"skinMod":"off"}"#), Some("off"), Some("off"), false, "17.10: switched off by the player in the build settings or the mods list stays off"),
-            ("player-removed", None, None, Some("removed"), false, "the player deleted the Millida jar from the mods list, even if an older build rewrote the settings"),
+            ("player-removed", None, None, Some("removed"), false, "the player deleted the TurtleClient jar from the mods list, even if an older build rewrote the settings"),
         ];
         for (name, settings, csl_marker, mod_marker, want, why) in cases {
             let dir = root.join(name);

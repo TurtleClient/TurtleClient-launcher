@@ -179,7 +179,7 @@ async fn from_cf_manifest(progress: Progress<'_>, ex: &Path, name_hint: &str) ->
     Ok(prof)
 }
 
-/// Что известно о сборке заранее, без её файлов: карточка каталога Millida
+/// Что известно о сборке заранее, без её файлов: карточка каталога TurtleClient
 /// называет версию игры и загрузчик. Готовая сборка каталога — это просто папка
 /// игры в zip, и по одним модам версию не всегда видно.
 #[derive(Clone, Default)]
@@ -244,7 +244,7 @@ pub async fn import_pack_path(app: AppHandle, picked: std::path::PathBuf) -> Res
 }
 
 /// Архив сборки, уже лежащий на диске: выбранный в проводнике или скачанный
-/// лаунчером из каталога Millida. `work` — имя папки распаковки: две установки
+/// лаунчером из каталога TurtleClient. `work` — имя папки распаковки: две установки
 /// разных сборок не должны делить одну.
 pub(crate) async fn import_pack_archive(
     app: &AppHandle,

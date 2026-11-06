@@ -3,7 +3,7 @@
 //! It never refreshes the launcher session: refresh tokens rotate, and a
 //! refresh from a second process would leave the launcher holding a spent one.
 
-use millida_launcher_lib::engine::{millida_api, millida_token};
+use turtleclient_launcher_lib::engine::{millida_api, millida_token};
 use std::io::Write;
 use std::path::Path;
 

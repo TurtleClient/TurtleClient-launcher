@@ -157,7 +157,7 @@ const steps: Array<[string, Settings, PackCard, PackLaunchStep]> = [
     'каталог не ответил — играем в установленную и говорим почему, а не молчим и не блокируем игру',
     oneblock,
     { error: new Error('error sending request for url') },
-    { kind: 'launch-unchecked', reason: 'Нет связи с Millida — проверь интернет и повтори' },
+    { kind: 'launch-unchecked', reason: 'Нет связи с TurtleClient — проверь интернет и повтори' },
   ],
   [
     'своя сборка без каталога — проверка не нужна, в сеть не идём',

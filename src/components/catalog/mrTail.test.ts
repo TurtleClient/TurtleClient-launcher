@@ -39,7 +39,7 @@ const none = () => undefined
 describe('раздел каталога → поиск Modrinth', () => {
   const cases: [SiteSlug, string | null, { type: string; category: string | null } | null, string][] = [
     ['modpacks', null, { type: 'modpack', category: null }, 'сборки — главная жалоба: без хвоста их осталась тысяча'],
-    ['mods', null, { type: 'mod', category: null }, 'модов в каталоге Millida меньше семисот'],
+    ['mods', null, { type: 'mod', category: null }, 'модов в каталоге TurtleClient меньше семисот'],
     ['texture-packs', null, { type: 'resourcepack', category: null }, 'ресурс-паки на Modrinth — resourcepack'],
     ['shaders', null, { type: 'shader', category: null }, 'шейдеры'],
     ['data-packs', null, { type: 'datapack', category: null }, 'дата-паки'],
@@ -65,7 +65,7 @@ describe('ключ названия для поиска дублей', () => {
   const cases: [string, string, string][] = [
     ['Sodium — скачать мод на Fabric', 'sodium', 'хвост «скачать мод» сайта не мешает узнать Sodium'],
     ['Battle Towers — дата-пак для Minecraft', 'battletowers', 'хвост «— дата-пак для Minecraft»'],
-    ['Immortal 3.0.1', 'immortal', 'номер версии в названии сборки Millida'],
+    ['Immortal 3.0.1', 'immortal', 'номер версии в названии сборки TurtleClient'],
     ["YUNG's Better Witch Huts для Minecraft", 'yungsbetterwitchhuts', 'апостроф и «для Minecraft»'],
     ['Create: Above and Beyond', 'createaboveandbeyond', 'двоеточие и пробелы'],
   ]
@@ -94,9 +94,9 @@ describe('хвост Modrinth: дубли и когда он виден', () => 
   ]
 
   const cases: [string, number, number, string[]][] = [
-    ['страницы Millida не кончились — хвоста нет, платные и наши остаются первыми', 1, 3, []],
-    ['последняя страница Millida — хвост без дублей', 3, 3, ['lithium']],
-    ['поиск без находок Millida (pages=0) — сразу Modrinth', 1, 0, ['lithium']],
+    ['страницы TurtleClient не кончились — хвоста нет, платные и наши остаются первыми', 1, 3, []],
+    ['последняя страница TurtleClient — хвост без дублей', 3, 3, ['lithium']],
+    ['поиск без находок TurtleClient (pages=0) — сразу Modrinth', 1, 0, ['lithium']],
     ['до первого ответа (page=0) ничего не показываем', 0, 0, []],
   ]
   for (const [why, page, pages, want] of cases)
@@ -116,7 +116,7 @@ describe('хвост Modrinth: дубли и когда он виден', () => 
 
   it('поиск показывает Modrinth сразу: зеркало могло не знать мод под эту версию и загрузчик', () => {
     const got = mrTail(items, pool, 1, 3, resolved, true).map((c) => c.slug)
-    expect(got, 'searching for a mod by name must not hide Modrinth behind unloaded Millida pages').toEqual(['lithium'])
+    expect(got, 'searching for a mod by name must not hide Modrinth behind unloaded TurtleClient pages').toEqual(['lithium'])
     expect(mrTail(items, pool, 0, 0, resolved, true), 'nothing before the first answer, even while searching').toEqual([])
   })
 
@@ -126,12 +126,12 @@ describe('хвост Modrinth: дубли и когда он виден', () => 
   })
 })
 
-describe('подгрузка: сначала Millida, потом Modrinth', () => {
+describe('подгрузка: сначала TurtleClient, потом Modrinth', () => {
   const cases: [{ page: number; pages: number; mrMore: boolean }, ReturnType<typeof nextLoad>, string][] = [
-    [{ page: 1, pages: 5, mrMore: true }, 'millida', 'пока есть страницы Millida, Modrinth ждёт'],
-    [{ page: 5, pages: 5, mrMore: true }, 'modrinth', 'Millida кончилась — дальше страницы Modrinth'],
+    [{ page: 1, pages: 5, mrMore: true }, 'millida', 'пока есть страницы TurtleClient, Modrinth ждёт'],
+    [{ page: 5, pages: 5, mrMore: true }, 'modrinth', 'TurtleClient кончилась — дальше страницы Modrinth'],
     [{ page: 5, pages: 5, mrMore: false }, null, 'кончились оба — кнопки «Показать ещё» нет'],
-    [{ page: 1, pages: 0, mrMore: true }, 'modrinth', 'поиск без находок Millida листает Modrinth'],
+    [{ page: 1, pages: 0, mrMore: true }, 'modrinth', 'поиск без находок TurtleClient листает Modrinth'],
   ]
   for (const [st, want, why] of cases)
     it(why, () => {
@@ -171,14 +171,14 @@ describe('находка Modrinth → строка ленты', () => {
   })
 })
 
-describe('хвост CurseForge: без дублей Millida и Modrinth', () => {
+describe('хвост CurseForge: без дублей TurtleClient и Modrinth', () => {
   const items = [site('sodium-dlya-minecraft', 'Sodium — скачать мод на Fabric')]
   const cf = (slug: string, title: string, id: number): SiteCard => cardFromMrHit(hit(slug, title, { pid: 'cf:' + id, cfid: id, author: 'CurseForge' }), 'mods')!
   const mrShown = [mr('lithium', 'Lithium')]
 
   const cases: [string, SiteCard[], number, number, boolean, string[]][] = [
-    ['дубль Millida по названию и дубль Modrinth по адресу сняты, новое осталось', [cf('sodium', 'Sodium', 1), cf('lithium', 'Lithium', 2), cf('jei', 'Just Enough Items (JEI)', 3)], 1, 1, true, ['jei']],
-    ['при просмотре без поиска CurseForge ждёт конца страниц Millida', [cf('jei', 'JEI', 3)], 1, 3, false, []],
+    ['дубль TurtleClient по названию и дубль Modrinth по адресу сняты, новое осталось', [cf('sodium', 'Sodium', 1), cf('lithium', 'Lithium', 2), cf('jei', 'Just Enough Items (JEI)', 3)], 1, 1, true, ['jei']],
+    ['при просмотре без поиска CurseForge ждёт конца страниц TurtleClient', [cf('jei', 'JEI', 3)], 1, 3, false, []],
     ['при поиске виден сразу', [cf('jei', 'JEI', 3)], 1, 3, true, ['jei']],
     ['до первого ответа ничего', [cf('jei', 'JEI', 3)], 0, 0, true, []],
   ]

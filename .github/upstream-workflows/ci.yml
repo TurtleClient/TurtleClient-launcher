@@ -1,0 +1,185 @@
+# Public CI: GitHub-hosted runners only, no configurable secrets.
+# Must be green in any fork right after cloning.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-public-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: 1
+
+jobs:
+  frontend:
+    name: Frontend
+    runs-on: ubuntu-latest
+    # Skipped only in the private development repository, which runs its own CI
+    # on a self-hosted runner; GitHub-hosted minutes are billed for private repos.
+    # Forks do not match this condition, so the workflow runs there as usual.
+    if: github.repository != 'millida/millida-launcher'
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
+        with:
+          bun-version: "1.4.0"
+
+      - run: bun install --frozen-lockfile
+
+      - name: Typecheck
+        run: bun run typecheck
+
+      - name: Tests
+        run: bun run test
+
+      # Built without MILLIDA_MS_CLIENT_ID, which also proves the fallback path works.
+      - name: Build web
+        run: bun run build:web
+
+  rust:
+    name: Rust (${{ matrix.label }})
+    runs-on: ${{ matrix.os }}
+    # Skipped only in the private development repository, which runs its own CI
+    # on a self-hosted runner; GitHub-hosted minutes are billed for private repos.
+    # Forks do not match this condition, so the workflow runs there as usual.
+    if: github.repository != 'millida/millida-launcher'
+    strategy:
+      fail-fast: false
+      # Windows stays in the matrix: src-tauri has cfg(windows) branches that a
+      # Linux clippy never compiles. Jobs run in parallel, so the wall clock is
+      # the slowest job rather than the sum.
+      matrix:
+        include:
+          - label: linux
+            os: ubuntu-latest
+          - label: windows
+            os: windows-latest
+          # cfg(target_arch = "aarch64") branches (LWJGL natives, VulkanMod) are
+          # compiled and tested only here. Advisory until the arm64 release is
+          # declared required.
+          - label: linux-arm64
+            os: ubuntu-24.04-arm
+            optional: true
+    continue-on-error: ${{ matrix.optional == true }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Linux dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libwebkit2gtk-4.1-dev \
+            libappindicator3-dev \
+            librsvg2-dev \
+            patchelf \
+            libxdo-dev \
+            libasound2-dev \
+            libssl-dev \
+            build-essential \
+            file \
+            wget
+
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
+        with:
+          bun-version: "1.4.0"
+
+      - run: bun install --frozen-lockfile
+
+      # tauri::generate_context! needs a built dist, otherwise even clippy fails.
+      - name: Build web assets
+        run: bun run build:web
+
+      # The hosted image ships rustup under /usr/local/rustup, and updating that
+      # toolchain in place fails with EXDEV: rustup renames component directories
+      # into its own tmp dir, which sits on a different mount there. Installing
+      # into the user home keeps the whole operation on one filesystem.
+      - name: Keep rustup in the user home
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          echo "RUSTUP_HOME=$HOME/.rustup" >> "$GITHUB_ENV"
+          echo "CARGO_HOME=$HOME/.cargo" >> "$GITHUB_ENV"
+          echo "$HOME/.cargo/bin" >> "$GITHUB_PATH"
+
+      - uses: dtolnay/rust-toolchain@686976e191b89faba57d3206551f0f330d8cb249 # stable
+        with:
+          components: clippy
+
+      # Restores only: three debug caches of over a gigabyte each pushed the release
+      # caches out of the 10 GB repository limit, and nothing waits on this CI.
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2
+        with:
+          workspaces: src-tauri -> target
+          key: ${{ matrix.os }}
+          save-if: false
+
+      - name: Clippy
+        working-directory: src-tauri
+        run: cargo clippy --all-targets -- -D warnings
+
+      - name: Tests
+        working-directory: src-tauri
+        run: cargo test
+
+      - uses: taiki-e/install-action@86f7a0ffb25f40114606501a311ebcfaf882ea32 # v2
+        if: runner.os == 'Linux'
+        with:
+          tool: cargo-deny
+
+      - name: License check
+        if: runner.os == 'Linux'
+        run: cargo deny --manifest-path src-tauri/Cargo.toml --config deny.toml check licenses
+
+  audit:
+    name: Audit
+    runs-on: ubuntu-latest
+    # Skipped only in the private development repository, which runs its own CI
+    # on a self-hosted runner; GitHub-hosted minutes are billed for private repos.
+    # Forks do not match this condition, so the workflow runs there as usual.
+    if: github.repository != 'millida/millida-launcher'
+    # Never blocks a merge: advisories in transitive dependencies arrive on their own.
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
+        with:
+          bun-version: "1.4.0"
+
+      - run: bun install --frozen-lockfile
+
+      - name: Bun audit
+        run: bun audit
+
+      # The hosted image ships rustup under /usr/local/rustup, and updating that
+      # toolchain in place fails with EXDEV: rustup renames component directories
+      # into its own tmp dir, which sits on a different mount there. Installing
+      # into the user home keeps the whole operation on one filesystem.
+      - name: Keep rustup in the user home
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          echo "RUSTUP_HOME=$HOME/.rustup" >> "$GITHUB_ENV"
+          echo "CARGO_HOME=$HOME/.cargo" >> "$GITHUB_ENV"
+          echo "$HOME/.cargo/bin" >> "$GITHUB_PATH"
+
+      - uses: dtolnay/rust-toolchain@686976e191b89faba57d3206551f0f330d8cb249 # stable
+
+      - uses: taiki-e/install-action@86f7a0ffb25f40114606501a311ebcfaf882ea32 # v2
+        with:
+          tool: cargo-audit
+
+      - name: Cargo audit
+        working-directory: src-tauri
+        run: cargo audit

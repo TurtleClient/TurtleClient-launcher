@@ -24,20 +24,20 @@ test('предложение для манифеста: то, что ядро с
 
 test('патч только на exe: другие установленные файлы должны совпасть, шум NSIS не в счёт', () => {
   const files = (extra = {}) => ({
-    'millida-launcher.exe': 'e1',
+    'turtleclient-launcher.exe': 'e1',
     'WebView2Loader.dll': 'dll1',
     'uninstall.exe': 'u-' + Math.random(),
     '$PLUGINSDIR/System.dll': 'p',
     '[NSIS].nsi': 'n',
     ...extra,
   })
-  const a = companions(files(), 'millida-launcher.exe')
-  const b = companions(files({ 'millida-launcher.exe': 'e2' }), 'millida-launcher.exe')
+  const a = companions(files(), 'turtleclient-launcher.exe')
+  const b = companions(files({ 'turtleclient-launcher.exe': 'e2' }), 'turtleclient-launcher.exe')
   expect(Object.keys(a)).toEqual(['WebView2Loader.dll'])
   expect(sameCompanions(a, b)).toBe(true)
-  const changed = companions(files({ 'WebView2Loader.dll': 'dll2' }), 'millida-launcher.exe')
+  const changed = companions(files({ 'WebView2Loader.dll': 'dll2' }), 'turtleclient-launcher.exe')
   expect(sameCompanions(a, changed), 'изменилась DLL — нужен установщик').toBe(false)
-  const added = companions(files({ 'resources/new.bin': 'x' }), 'millida-launcher.exe')
+  const added = companions(files({ 'resources/new.bin': 'x' }), 'turtleclient-launcher.exe')
   expect(sameCompanions(a, added), 'появился новый файл — нужен установщик').toBe(false)
 })
 

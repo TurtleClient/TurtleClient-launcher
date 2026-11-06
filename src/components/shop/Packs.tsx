@@ -118,7 +118,7 @@ function ChestInside() {
 }
 
 /**
- * Millida PLUS как бандл в Supercell (06.10.2026): золотая рамка с бликом,
+ * TurtleClient PLUS как бандл в Supercell (06.10.2026): золотая рамка с бликом,
  * лента сверху; шапка — знак, переключатель PLUS / Diamond с ценами и
  * таблички ника «без PLUS / с PLUS»; плитки — горка ◆2 100, сундуки пропуска
  * по уровням с «что внутри», −10% с зачёркнутой ценой, осколки ×1,5,
@@ -138,7 +138,7 @@ function PlusBundle({ tile }: { tile: PlusTile }) {
     <div className={'pb pb2' + (dia ? ' is-diamond' : '')} ref={paused} data-kind="plus_offer" data-id="plus" data-tier={tier}>
       <span className="pb-ribbon">{dia ? t('Всё сразу — в день покупки') : t('Выгоднее, чем просто рубины')}</span>
       <div className="pb-top">
-        <button className="pb-head" aria-label={'Millida ' + tier} data-track="plus_tile_art" onClick={buy}>
+        <button className="pb-head" aria-label={'TurtleClient ' + tier} data-track="plus_tile_art" onClick={buy}>
           <PlusMark tier={tier} height={dia ? 28 : 38} shine />
         </button>
         {tile.sub || !tile.prices ? null : (

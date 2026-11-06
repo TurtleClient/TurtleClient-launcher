@@ -27,9 +27,9 @@ export function BuildIcon({ icon, size = 72, name }: { icon?: string | null; siz
   )
 }
 
-/** Только объёмные значки Modrinth App: старые блоки Millida убраны (владелец 10.10.2026: «тут старое»). */
+/** Только объёмные значки Modrinth App: старые блоки TurtleClient убраны (владелец 10.10.2026: «тут старое»). */
 const BLOCKS = MR_SYMBOLS.map(mrSymbol)
-/** Яркие градиенты Modrinth, потом глубокие цвета Millida. */
+/** Яркие градиенты Modrinth, потом глубокие цвета TurtleClient. */
 const BGS: { id: string; css: string }[] = [
   ...MR_BGS.map((g) => ({ id: g.id, css: 'linear-gradient(180deg, ' + g.top + ', ' + g.bottom + ')' })),
   // Сплошной цвет — тоже «картинкой»: фон плиток рисует слой --px-img пиксельной рамки.

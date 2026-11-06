@@ -321,7 +321,7 @@ export function OverlayChat({
       <aside className="ovc-rail">
         <div className="ovc-brand">
           <Icon id="i-msg" />
-          <b>{t('Чат Millida')}</b>
+          <b>{t('Чат TurtleClient')}</b>
           {unread ? <span className="fr-unread">{unread > 9 ? '9+' : unread}</span> : null}
         </div>
         <label className="ovc-search">

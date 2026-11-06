@@ -3,7 +3,7 @@
 //! The port and key go to ~/.millida-dev-media.json, which the mod's Fabric
 //! run configs read; the file is removed on Ctrl+C.
 
-use millida_launcher_lib::engine::MediaLink;
+use turtleclient_launcher_lib::engine::MediaLink;
 use std::io::Write;
 use std::path::{Path, PathBuf};
 

@@ -161,8 +161,8 @@ export function claimReward(code: string): Promise<RewardItem> {
   return api<RewardItem>('/launcher/rewards/' + encodeURIComponent(code) + '/claim', { method: 'POST' })
 }
 
-/// Каталог плащей Millida. Свои плащи грузить больше нельзя — плащ можно только
-/// получить: либо он есть на лицензии Mojang, либо открыт в каталоге Millida.
+/// Каталог плащей TurtleClient. Свои плащи грузить больше нельзя — плащ можно только
+/// получить: либо он есть на лицензии Mojang, либо открыт в каталоге TurtleClient.
 /// Закрытые плащи каталог тоже отдаёт (unlocked=false) — их видно затемнёнными
 /// вместе с условием, иначе непонятно, ради чего играть.
 export interface CapeCatalogItem {
@@ -191,7 +191,7 @@ export interface MojangCape {
   url: string
 }
 
-/// Открыт без входа: плащи Mojang видны и тем, у кого ещё нет аккаунта Millida.
+/// Открыт без входа: плащи Mojang видны и тем, у кого ещё нет аккаунта TurtleClient.
 export function loadMojangCapes(): Promise<{ items: MojangCape[] }> {
   return api<{ items: MojangCape[] }>('/launcher/wardrobe/capes/mojang')
 }

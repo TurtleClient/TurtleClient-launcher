@@ -25,7 +25,7 @@ fn cf_id(project_id: &str) -> Option<u32> {
     project_id.strip_prefix("cf:").and_then(|s| s.parse().ok())
 }
 
-/// A mod put into the build from the Millida catalogue. Its files are resolved
+/// A mod put into the build from the TurtleClient catalogue. Its files are resolved
 /// by our catalogue API, keyed by catalogue file id, not by a Modrinth project:
 /// sending its id to the Modrinth version endpoint is the «millida:cosmetica»
 /// 404 the crash doctor used to show. Such a mod is updated by reinstalling it
@@ -59,7 +59,7 @@ fn cf_channel(release_type: u64) -> &'static str {
 /// Files of `project_id` the build can load, newest first.
 async fn candidates(ctx: &Ctx, project_id: &str, current: &str) -> Result<Vec<Candidate>, String> {
     if is_catalog_project(project_id) {
-        return Err("Мод из каталога Millida так не обновить — переустанови его со страницы в каталоге".into());
+        return Err("Мод из каталога TurtleClient так не обновить — переустанови его со страницы в каталоге".into());
     }
     if let Some(mod_id) = cf_id(project_id) {
         let lt = if ctx.kind == "mod" { cf_loader_type(&ctx.loader_id) } else { 0 };
@@ -360,7 +360,7 @@ mod tests {
     #[test]
     fn catalogue_mods_are_not_resolved_through_modrinth() {
         let cases: [(&str, bool, &str); 5] = [
-            ("millida:cosmetica", true, "мод из каталога Millida — версии резолвит наш API"),
+            ("millida:cosmetica", true, "мод из каталога TurtleClient — версии резолвит наш API"),
             ("AANobbMI", false, "id Modrinth"),
             ("cf:238222", false, "CurseForge резолвится своей веткой, а не как каталог"),
             ("sodium", false, "slug Modrinth"),

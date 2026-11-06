@@ -1,5 +1,5 @@
-// Requests to the Millida API (api.millida.net/v2) and the Millida account session: login, token refresh, file upload.
-// The Millida token goes into the Authorization header only for api.millida.net. Microsoft and Ely.by tokens never get here.
+// Requests to the TurtleClient API (api.millida.net/v2) and the TurtleClient account session: login, token refresh, file upload.
+// The TurtleClient token goes into the Authorization header only for api.millida.net. Microsoft and Ely.by tokens never get here.
 use crate::engine::*;
 use serde_json::Value;
 
@@ -39,6 +39,11 @@ fn is_dot_segment(segment: &str) -> bool {
 /// bearer token for endpoints outside the launcher API.
 // The request path is checked: it must stay inside /v2/ on the same server, no .. and no swapped host.
 fn api_url(path: &str) -> Result<url::Url, String> {
+    let _ = parse_api_url(path)?;
+    Err("TurtleClient online services are not configured".into())
+}
+
+fn parse_api_url(path: &str) -> Result<url::Url, String> {
     if !path.starts_with('/') || path.contains(['\r', '\n', '\0']) {
         return Err("bad path".into());
     }
@@ -253,7 +258,7 @@ pub async fn millida_api_in(
             "PUT" => c.put(url),
             _ => c.delete(url),
         };
-        // The Millida account token is added to the header. The address above is always api.millida.net.
+        // The TurtleClient account token is added to the header. The address above is always api.millida.net.
         if let Some(t) = token.as_ref() {
             req = req.header("Authorization", format!("Bearer {}", t));
         }
@@ -419,7 +424,7 @@ fn keep_pair(access: &str, refresh: &str) {
     match save_pair(access, refresh) {
         Ok(()) => set_unsaved_pair(None),
         Err(e) => {
-            eprintln!("[auth] новая сессия Millida не записана на диск, держим её в памяти до следующей попытки: {e}");
+            eprintln!("[auth] новая сессия TurtleClient не записана на диск, держим её в памяти до следующей попытки: {e}");
             set_unsaved_pair(Some((access.to_string(), refresh.to_string())));
         }
     }
@@ -429,7 +434,7 @@ fn keep_pair(access: &str, refresh: &str) {
 /// (POST /launcher/mod-session). Полный токен аккаунта в окружение игры не
 /// уходит: его прочитал бы любой мод сборки (аудит 24.09.2026). Ручка не
 /// ответила — мод работает без входа (каталог и косметика на игроках видны и так).
-// A separate narrow token for the Millida mod in the game (cosmetics only, 12 hours). The full account token is not passed to the game.
+// A separate narrow token for the TurtleClient mod in the game (cosmetics only, 12 hours). The full account token is not passed to the game.
 pub async fn mod_session_token() -> Option<String> {
     millida_token()?;
     let call = millida_api_auth("/launcher/mod-session".into(), "POST".into(), None);
@@ -524,7 +529,7 @@ async fn refresh_session(used: Option<String>) -> Refreshed {
         Err(e) => match verdict_for(&e) {
             RefreshVerdict::SessionOver => {
                 if let Err(e) = millida_forget_session() {
-                    eprintln!("[auth] не удалось очистить мёртвую сессию Millida: {e}");
+                    eprintln!("[auth] не удалось очистить мёртвую сессию TurtleClient: {e}");
                 }
                 set_refresh_cooldown(false);
                 Refreshed::Dead
@@ -560,7 +565,7 @@ pub(crate) async fn refresh_millida_if_expiring(window: std::time::Duration) {
     let _ = refresh_session(Some(token)).await;
 }
 
-/// The only way the launcher talks to the Millida API as the signed-in user:
+/// The only way the launcher talks to the TurtleClient API as the signed-in user:
 /// the token is read from the vault here and never leaves the core.
 pub async fn millida_api_auth(path: String, method: String, body: Option<Value>) -> Result<Value, String> {
     millida_api_auth_in(path, method, body, None, None).await
@@ -983,6 +988,11 @@ pub async fn millida_login_poll(device_code: String) -> Result<Value, String> {
 #[cfg(test)]
 mod tests {
     #[test]
+    fn fork_requests_stop_before_sending_credentials() {
+        assert!(super::api_url("/users/me").unwrap_err().contains("not configured"));
+    }
+
+    #[test]
     fn raw_upload_only_reaches_the_hosting_upload_routes() {
         assert!(upload_route_allowed("/hosting/servers/abc-1/files/upload?path=%2Fworld.zip&offset=0", "POST"));
         assert!(upload_route_allowed("/hosting/servers/abc-1/resource-pack?name=a.zip", "PUT"));
@@ -996,7 +1006,7 @@ mod tests {
     }
 
     use super::{
-        api_url, etag_key, insufficient_funds_detail, lang_header, login_poll_answer, market_header, refresh_on_cooldown, remember_in, repeatable, webview_path_allowed, set_refresh_cooldown,
+        parse_api_url as api_url, etag_key, insufficient_funds_detail, lang_header, login_poll_answer, market_header, refresh_on_cooldown, remember_in, repeatable, webview_path_allowed, set_refresh_cooldown,
         upload_route_allowed, verdict_for, without_refresh_token, RefreshVerdict, Refreshed, Tagged, ETAG_CACHE_BUDGET, MILLIDA_API,
     };
     use std::collections::BTreeMap;

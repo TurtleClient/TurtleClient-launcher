@@ -17,8 +17,8 @@ import { plural } from '../../lib/format'
 export { plural }
 
 /*
- * Каталог Millida в лаунчере = каталог millida.net (приказ владельца
- * 24.09.2026, 15:25: «всё просто возьми из каталога Millida»).
+ * Каталог TurtleClient в лаунчере = каталог millida.net (приказ владельца
+ * 24.09.2026, 15:25: «всё просто возьми из каталога TurtleClient»).
  *
  * Данные — ровно те же адреса, что рисуют сайт: `/v2/catalog/listing`,
  * `/v2/catalog/facets`, `/v2/catalog/sections` (соседи `/catalog/packs`,
@@ -162,7 +162,7 @@ export interface SiteCard {
   exclusive?: boolean
   /** Перевод на русский от студии (сборка студии, не её собственная): метка «На русском». */
   ru?: boolean
-  /** Кто перевёл — команда студии («Arcania Labs»), не Millida. */
+  /** Кто перевёл — команда студии («Arcania Labs»), не TurtleClient. */
   ruBy?: string
   partner?: { slug: string; name: string } | null
   versions: string[]

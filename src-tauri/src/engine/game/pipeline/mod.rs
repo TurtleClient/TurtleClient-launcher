@@ -111,12 +111,12 @@ async fn skin_server(app: AppHandle, who: Node<Arc<Who>>, started: Option<SkinJo
             Ok(Arc::new(Skin { auth, agent: Some(agent), prefetched: Some(prefetched), held: Some(Arc::new(jar)) }))
         }
         Ygg::NoReply(e) => {
-            warn(&app, &format!("Сервер скинов Millida не ответил ({}) — запускаем в офлайн-режиме", e));
+            warn(&app, &format!("Сервер скинов TurtleClient не ответил ({}) — запускаем в офлайн-режиме", e));
             auth = offline_keeping_uuid(&auth);
             Ok(none(auth))
         }
         Ygg::NoAgent(e) => {
-            warn(&app, &format!("Скины Millida недоступны ({}) — запускаем в офлайн-режиме", e));
+            warn(&app, &format!("Скины TurtleClient недоступны ({}) — запускаем в офлайн-режиме", e));
             auth = offline_keeping_uuid(&auth);
             Ok(none(auth))
         }
@@ -203,7 +203,7 @@ async fn mods_step(
                     out.own_mod_jar = jar;
                 }
                 Ok(None) => {}
-                Err(e) => warn(&app, &format!("Мод Millida не поставлен: {}", e)),
+                Err(e) => warn(&app, &format!("Мод TurtleClient не поставлен: {}", e)),
             }
         }
         OwnMod::Remove => remove_millida_mod(&profile),
@@ -217,7 +217,7 @@ async fn mods_step(
                 Ok(off) if !off.is_empty() => warn(
                     &app,
                     &format!(
-                        "Выключили мод скинов другого лаунчера ({}) — он показывал скин с его сервера. Теперь скин берётся из Millida",
+                        "Выключили мод скинов другого лаунчера ({}) — он показывал скин с его сервера. Теперь скин берётся из TurtleClient",
                         off.join(", ")
                     ),
                 ),
@@ -634,7 +634,7 @@ pub(crate) async fn launch(app: AppHandle, ask: LaunchAsk, perf: LaunchPerf) -> 
     let (java, auth, agent, prefetched) = match runtime {
         Ok(java) => (java, skin.auth.clone(), skin.agent.as_deref(), skin.prefetched.as_deref()),
         Err(e) => {
-            warn(&app, &format!("Скины Millida недоступны ({}) — запускаем в офлайн-режиме", e));
+            warn(&app, &format!("Скины TurtleClient недоступны ({}) — запускаем в офлайн-режиме", e));
             (ready.java.clone(), offline_keeping_uuid(&skin.auth), None, None)
         }
     };
@@ -660,7 +660,7 @@ pub(crate) async fn launch(app: AppHandle, ask: LaunchAsk, perf: LaunchPerf) -> 
         platform: &platform,
     });
     // Токен для мода — узкий, из /launcher/mod-session; нет его — мод без входа.
-    // Millida mod token: short, separate from the Microsoft account token, taken from the Millida API (/launcher/mod-session).
+    // TurtleClient mod token: short, separate from the Microsoft account token, taken from the TurtleClient API (/launcher/mod-session).
     let mod_token = if mods.own_mod { pre.mod_token().await } else { None };
     check_cancel()?;
     let party = mod_token.as_ref().and_then(|_| crate::engine::party_voice::bound_party());

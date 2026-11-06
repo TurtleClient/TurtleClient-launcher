@@ -461,7 +461,7 @@ export function useShop(on: boolean) {
     })
     // Два тарифа бок о бок (владелец 06.10.2026): PLUS — награды по дням, Diamond — те же сразу.
     // Знак у ника в игре (мод, BadgeMark) — под тарифами (владелец 06.10.2026).
-    openSheet({ kind: 'plus', name: 'Millida PLUS', confirm: null, art: null, choices: [choice('PLUS'), choice('DIAMOND')], extra: <StatusCompare row />, run: async () => null })
+    openSheet({ kind: 'plus', name: 'TurtleClient PLUS', confirm: null, art: null, choices: [choice('PLUS'), choice('DIAMOND')], extra: <StatusCompare row />, run: async () => null })
   }
   // Настройки → «Тема лаунчера» → закрытый PLUS / Diamond: окно покупки здесь.
   const wantPlus = usePremiumTheme((st) => st.wantPlus)

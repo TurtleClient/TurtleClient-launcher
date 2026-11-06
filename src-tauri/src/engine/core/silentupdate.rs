@@ -6,7 +6,7 @@
 //  - the tray: the update is on disk and verified, no game runs, nothing downloads or installs, and that has lasted ten
 //    minutes. It is installed silently and the new copy comes back to the tray without a window;
 //  - the start: the launcher is starting, its window has not been shown, and an update is waiting on disk. Seconds of
-//    work now beat living on an old version. Not when the player started the launcher to play (a millida:// link or a
+//    work now beat living on an old version. Not when the player started the launcher to play (a turtleclient:// link or a
 //    `--launch <build>`): those wait for nobody.
 // Both stop after two tries at the same version, so an installer that cannot replace the exe (antivirus, a foreign
 // folder) does not loop on every start. A patch that did not go in is remembered here, for every caller: the next
@@ -135,7 +135,7 @@ pub struct StartFacts {
     /// The system started the launcher at login.
     pub by_os: bool,
     pub macos: bool,
-    /// The player came to play: a millida:// link or a `--launch`/`--repair` flag.
+    /// The player came to play: a turtleclient:// link or a `--launch`/`--repair` flag.
     pub for_game: bool,
     /// This copy was just started by an update: its window is meant to show.
     pub just_updated: bool,
@@ -245,7 +245,7 @@ mod tests {
         let plain = StartFacts::default();
         assert_eq!(start_install(plain), Some(Restart::Show), "a double click: the window comes back after the update");
         assert_eq!(start_install(StartFacts { by_os: true, ..plain }), Some(Restart::Tray), "at login: back to the tray, no window");
-        assert_eq!(start_install(StartFacts { for_game: true, ..plain }), None, "a millida:// link or --launch waits for nobody");
+        assert_eq!(start_install(StartFacts { for_game: true, ..plain }), None, "a turtleclient:// link or --launch waits for nobody");
         assert_eq!(start_install(StartFacts { for_game: true, by_os: true, ..plain }), None);
         assert_eq!(start_install(StartFacts { just_updated: true, ..plain }), None, "the copy an update just started keeps its window");
         assert_eq!(start_install(StartFacts { tries: MAX_TRIES, ..plain }), None, "two tries and no more");
@@ -258,17 +258,17 @@ mod tests {
     #[test]
     fn only_in_place_replacements_are_quiet() {
         let exe = |p: &str| Some(Path::new(p).to_path_buf());
-        let setup = Path::new("Millida-Launcher_2.0.9_x64-setup.exe");
+        let setup = Path::new("TurtleClient-Launcher_2.0.9_x64-setup.exe");
         assert!(can_replace_quietly_in("windows", setup, None, false));
         assert!(can_replace_quietly_in("windows", Path::new("millida-launcher-2.0.9.delta.exe"), None, false));
-        let bundle = exe("/Applications/Millida.app/Contents/MacOS/millida-launcher");
-        assert!(can_replace_quietly_in("macos", Path::new("Millida.app.tar.gz"), bundle.as_deref(), false));
-        let translocated = exe("/private/var/folders/x/AppTranslocation/ABC/d/Millida.app/Contents/MacOS/millida-launcher");
-        assert!(!can_replace_quietly_in("macos", Path::new("Millida.app.tar.gz"), translocated.as_deref(), false), "Gatekeeper's throwaway copy");
-        assert!(!can_replace_quietly_in("macos", Path::new("Millida.app.tar.gz"), exe("/tmp/millida-launcher").as_deref(), false), "not run from a bundle");
-        assert!(can_replace_quietly_in("linux", Path::new("Millida-Launcher.AppImage"), None, true));
-        assert!(!can_replace_quietly_in("linux", Path::new("Millida-Launcher.AppImage"), None, false), "not run as an AppImage");
-        assert!(!can_replace_quietly_in("linux", Path::new("Millida-Launcher_2.0.9_amd64.deb"), None, true), "a package needs the package manager");
+        let bundle = exe("/Applications/TurtleClient.app/Contents/MacOS/millida-launcher");
+        assert!(can_replace_quietly_in("macos", Path::new("TurtleClient.app.tar.gz"), bundle.as_deref(), false));
+        let translocated = exe("/private/var/folders/x/AppTranslocation/ABC/d/TurtleClient.app/Contents/MacOS/millida-launcher");
+        assert!(!can_replace_quietly_in("macos", Path::new("TurtleClient.app.tar.gz"), translocated.as_deref(), false), "Gatekeeper's throwaway copy");
+        assert!(!can_replace_quietly_in("macos", Path::new("TurtleClient.app.tar.gz"), exe("/tmp/millida-launcher").as_deref(), false), "not run from a bundle");
+        assert!(can_replace_quietly_in("linux", Path::new("TurtleClient-Launcher.AppImage"), None, true));
+        assert!(!can_replace_quietly_in("linux", Path::new("TurtleClient-Launcher.AppImage"), None, false), "not run as an AppImage");
+        assert!(!can_replace_quietly_in("linux", Path::new("TurtleClient-Launcher_2.0.9_amd64.deb"), None, true), "a package needs the package manager");
     }
 
     /// The notes live per version: the counters of an old version never block a new one.

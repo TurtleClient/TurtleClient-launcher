@@ -51,7 +51,7 @@ mod tests {
             ("http://localhost:8080/", false),
             ("https://tauri.localhost.evil.example/", false),
             ("file:///etc/passwd", false),
-            ("millida://join?x=1", false),
+            ("turtleclient://join?x=1", false),
         ];
         for (u, ok) in cases {
             let parsed = url::Url::parse(u).unwrap();

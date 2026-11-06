@@ -33,7 +33,7 @@ describe('install by code window', () => {
       field: true,
     },
     {
-      name: 'millida://pack link',
+      name: 'turtleclient://pack link',
       why: 'a link from a friend opens the window with the code already filled in',
       open: () => usePackCode.getState().show('AB23-CD45'),
       field: true,

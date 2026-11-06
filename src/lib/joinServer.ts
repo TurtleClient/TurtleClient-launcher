@@ -77,7 +77,7 @@ async function licenseGate(licensed: boolean): Promise<boolean> {
     : acc
       ? acc.kind === 'offline'
         ? t('офлайн-ник')
-        : t('аккаунт Millida')
+        : t('аккаунт TurtleClient')
       : t('вход без аккаунта')
   return uiConfirm(
     t('Этот сервер пускает только по лицензии Minecraft, а сейчас активен {who}. Сервер ответит «Не удалось проверить имя пользователя». {fix} — или зайти всё равно?', {
@@ -173,7 +173,7 @@ export async function buildForServer(join: JoinIntent, wanted: string[]): Promis
 }
 
 /**
- * Своя сборка под Millida SMP — «Millida PvP 26.2»: ровно та версия, что у
+ * Своя сборка под TurtleClient SMP — «TurtleClient PvP 26.2»: ровно та версия, что у
  * сервера (Paper 26.2, без перевода версий — честная регистрация ударов),
  * Fabric, Буст FPS и наш мод, без модов игрока. Чего нет — ставит сама.
  */
@@ -206,7 +206,7 @@ export async function quickJoin(ip: string, name: string, licensed?: boolean, ve
   if (own === SKIP_JOIN) return
   let wanted = versions && versions.length ? serverVersions(versions) : versionsForAddr(ip)
   if (!wanted.length && !own) wanted = await versionsFromPing(ip)
-  // Millida SMP — тир-лист: только своя чистая сборка «Millida PvP 26.2».
+  // TurtleClient SMP — тир-лист: только своя чистая сборка «TurtleClient PvP 26.2».
   // Владелец 12.10.2026: поиск пати зашёл туда его сборкой с Essential и
   // Meteor — «чистой» она считалась лишь потому, что на Fabric.
   const prof = own

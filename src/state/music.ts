@@ -60,7 +60,7 @@ const JUNKALA = 'https://opengameart.org/content/5-chiptunes-action'
 const ZANE = 'https://opengameart.org/content/starlight-city-loop-included'
 
 /**
- * Радио Millida: чиптюн 115–160 BPM, мажор, громкость выровнена до −18 LUFS.
+ * Радио TurtleClient: чиптюн 115–160 BPM, мажор, громкость выровнена до −18 LUFS.
  * Первым всегда идёт «Starlight City» — с него радио начинает, когда игрок
  * его включил (само оно не стартует). Откуда треки и почему они — docs/MUSIC.md.
  */
@@ -98,7 +98,7 @@ interface MusicState {
   level: number
   muted: boolean
   tracks: Track[]
-  /** Встроенное радио Millida в плейлисте. Выключено — играют только свои треки. */
+  /** Встроенное радио TurtleClient в плейлисте. Выключено — играют только свои треки. */
   radio: boolean
   own: Track[]
   links: MusicLink[]
@@ -307,7 +307,7 @@ function rebuild(radio: boolean, own: Track[], links: MusicLink[] = useMusic.get
 }
 
 const emptyHint = () =>
-  useMusic.getState().loaded ? t('Нет треков: включи радио Millida или добавь свою музыку') : t('Радио ещё загружается')
+  useMusic.getState().loaded ? t('Нет треков: включи радио TurtleClient или добавь свою музыку') : t('Радио ещё загружается')
 
 function autoPause(fadeMs: number) {
   if (!useMusic.getState().playing) return
@@ -497,7 +497,7 @@ export const useMusic = create<MusicState>((set, get) => ({
 const errText = (e: unknown) => (e instanceof Error ? e.message : String(e))
 
 // Каждый запуск открывается одной и той же темой (как меню Brawl Stars):
-// повтор первых секунд и делает её «звуком Millida». Дальше — по кругу.
+// повтор первых секунд и делает её «звуком TurtleClient». Дальше — по кругу.
 function pickStart(list: Track[]) {
   if (started || !list.length) return
   started = true

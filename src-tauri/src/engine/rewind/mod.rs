@@ -1,4 +1,4 @@
-// "Clips": keeps the last seconds of the game window in memory and writes them to mp4 in "Videos\Millida Clips" on a hotkey.
+// "Clips": keeps the last seconds of the game window in memory and writes them to mp4 in "Videos\TurtleClient Clips" on a hotkey.
 // Off by default, the microphone is off too. Recording runs only while the game runs, and only of that game's window.
 // Video and sound do not go to the network. They are written to disk only when you press the key.
 //! Rewind: the last seconds of a running game, kept encoded in memory and
@@ -326,7 +326,7 @@ pub fn save_now(app: &AppHandle) {
         let saved = match outcome {
             Ok(path) => {
                 if let Some(notices) = &session.notices {
-                    notices.post(NOTICE_KIND, "Клип сохранён", &format!("Последние {} с · Millida Clips", session.seconds), true);
+                    notices.post(NOTICE_KIND, "Клип сохранён", &format!("Последние {} с · TurtleClient Clips", session.seconds), true);
                 }
                 ClipSaved {
                     ok: true,
@@ -359,7 +359,7 @@ pub fn clip_path(name: &str) -> Result<std::path::PathBuf, String> {
 
 pub fn open_folder() -> Result<(), String> {
     let folder = clips::folder();
-    // The Millida Clips folder inside the system "Videos" folder.
+    // The TurtleClient Clips folder inside the system "Videos" folder.
     std::fs::create_dir_all(&folder).map_err(|e| format!("Не удалось создать папку клипов: {}", e))?;
     crate::engine::open_path(&folder.to_string_lossy());
     Ok(())

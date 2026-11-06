@@ -119,7 +119,7 @@ function installer(serverId: string, pack: Pack): (() => Promise<Profile>) | nul
 }
 
 /**
- * A server on Millida hosting can publish the pack its players need. Joining
+ * A server on TurtleClient hosting can publish the pack its players need. Joining
  * goes through the build made from that pack: missing — it is offered for
  * install; behind the server's revision — the difference is shown and the
  * update runs only on the player's yes. Returns the build to join with, null

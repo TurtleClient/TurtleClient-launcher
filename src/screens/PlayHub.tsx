@@ -235,7 +235,7 @@ function ModePage({
 }
 
 /**
- * «Серверы» в каталоге — мониторинг Millida целиком (владелец 24.09.2026, 18:29), с 10.10.2026
+ * «Серверы» в каталоге — мониторинг TurtleClient целиком (владелец 24.09.2026, 18:29), с 10.10.2026
  * витриной, а не таблицей («покрасивее сделай»): сверху — сколько людей играют и режимы
  * чипами (выживание, анархия, мини-игры…), сортировка; ниже — карточки серверов: баннер,
  * значок, название, онлайн, одна строка о сервере, версии, лицензия, адрес с копированием
@@ -436,7 +436,7 @@ export function PlayHub({ on }: { on?: boolean }) {
     return () => setBare(false)
   }, [on, openCat])
   useEffect(() => {
-    // «Каталог Millida» — вкладка переключателя, а не подстраница: наверху
+    // «Каталог TurtleClient» — вкладка переключателя, а не подстраница: наверху
     // остаётся «Лобби» (владелец 24.09.2026, 16:52).
     if (on === false || !(openCat || pageId || pvpOpen)) {
       setBack(null)
@@ -472,7 +472,7 @@ export function PlayHub({ on }: { on?: boolean }) {
     return [...listed.filter(isArcania), ...listed.filter((p) => !isArcania(p))]
   }, [premium, packs, arc2])
 
-  // Наши сборки каталога Millida целиком плюс реальный каталог Modrinth.
+  // Наши сборки каталога TurtleClient целиком плюс реальный каталог Modrinth.
   const catalogPacks = useMemo<HubPack[]>(() => {
     const ours = (packs || [])
       .filter((c) => !c.accessRequired)
@@ -529,7 +529,7 @@ export function PlayHub({ on }: { on?: boolean }) {
   const hubTarget = useLobby((s) => s.hubTarget)
   useEffect(() => {
     if (!hubTarget) return
-    // PvP-арена: из лобби, топа и баннера Millida SMP (11.10.2026).
+    // PvP-арена: из лобби, топа и баннера TurtleClient SMP (11.10.2026).
     if (hubTarget.pvp) {
       track('pvp_client_open', { source: 'target' })
       useLobby.setState({ hubTarget: null })
@@ -644,7 +644,7 @@ export function PlayHub({ on }: { on?: boolean }) {
 
   // Онлайн OneBlock — для карточки «Для тебя» (сейчас скрыта до релиза).
   const obOnline = ownOnline
-  // «Для тебя»: Arcania — вторая карточка, бесплатные сборки Millida от
+  // «Для тебя»: Arcania — вторая карточка, бесплатные сборки TurtleClient от
   // самых популярных — в ротацию.
   const arcaniaPack = premiumPacks.find((p) => (p.slug || p.id) === (arc2 ? ARCANIA2_SLUG : ARCANIA_SLUG)) || premiumPacks.find(isArcania) || premiumPacks[0] || null
   const lastBuild = (current && current.kind === 'build' ? mine.find((p) => p.name === current.name) : null) || mine[0] || null
@@ -655,7 +655,7 @@ export function PlayHub({ on }: { on?: boolean }) {
   const freeOurs = catalogPacks
     .filter((p) => p.origin === 'millida')
     .sort((a, b) => (b.downloads || 0) - (a.downloads || 0))
-  // Лента «Рекомендуем» в четыре ряда: сначала сборки Millida, дальше Modrinth.
+  // Лента «Рекомендуем» в четыре ряда: сначала сборки TurtleClient, дальше Modrinth.
   const forYouPacks = [...freeOurs, ...catalogPacks.filter((p) => p.origin !== 'millida')]
 
   // «Сборки»: одна строка самых популярных (6 на 1200, 4 на 900 — лишние
@@ -766,7 +766,7 @@ export function PlayHub({ on }: { on?: boolean }) {
     if (p) openPack(p)
     return !!p
   }
-  // Переключатель «Во что играем | Каталог Millida» (владелец 24.09.2026,
+  // Переключатель «Во что играем | Каталог TurtleClient» (владелец 24.09.2026,
   // 16:20): во второй вкладке — весь каталог как на millida.net.
   if (all)
     return wrap(
@@ -900,7 +900,7 @@ export function PlayHub({ on }: { on?: boolean }) {
           }}
         />,
       )}
-      {/* Под режимами — вся лента серверов Millida (владелец 24.09.2026, 18:29). */}
+      {/* Под режимами — вся лента серверов TurtleClient (владелец 24.09.2026, 18:29). */}
       {head(
         'servers',
         t('Серверы'),

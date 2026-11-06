@@ -379,7 +379,7 @@ export async function milliDemoAnswer(path: string, init?: RequestInit): Promise
   }
   if (/\/install$/.test(path)) {
     await wait(600)
-    return { code: 'MILLI7', url: 'https://millida.net/p/MILLI7', deeplink: 'millida://pack/MILLI7', files: 13, mcVersion: '1.20.1', loader: 'fabric', skipped: [] }
+    return { code: 'MILLI7', url: 'https://millida.net/p/MILLI7', deeplink: 'turtleclient://pack/MILLI7', files: 13, mcVersion: '1.20.1', loader: 'fabric', skipped: [] }
   }
   if (/\/server$/.test(path)) throw new Error('http 403 milli_plus')
   throw new Error('http 404')

@@ -1,6 +1,6 @@
-// Party voice: the launcher gets a ticket from api.millida.net and connects over UDP to the Millida voice relay (domains millida.host and millida.net).
-// The microphone opens only after you join a party. Sound goes to the Millida relay inside the ticket session. Nothing is injected into Minecraft.
-//! Party voice in the lobby over the Millida voice relay, the same room the
+// Party voice: the launcher gets a ticket from api.millida.net and connects over UDP to the TurtleClient voice relay (domains millida.host and millida.net).
+// The microphone opens only after you join a party. Sound goes to the TurtleClient relay inside the ticket session. Nothing is injected into Minecraft.
+//! Party voice in the lobby over the TurtleClient voice relay, the same room the
 //! game's mod joins under the same player id. The webview names only a party
 //! and its members; the ticket, the secret and the relay address stay here.
 
@@ -217,7 +217,7 @@ fn iso_millis(s: &str) -> Option<i64> {
 }
 
 /// Relay hosts the client will talk to; the ticket answer names one of them.
-// We accept a voice relay only from Millida domains, so a server answer cannot point the sound at a foreign address. Below is a check that the address is not on a local network.
+// We accept a voice relay only from TurtleClient domains, so a server answer cannot point the sound at a foreign address. Below is a check that the address is not on a local network.
 const RELAY_DOMAINS: [&str; 2] = ["millida.host", "millida.net"];
 
 fn relay_host_allowed(host: &str) -> bool {
@@ -365,7 +365,7 @@ pub async fn join(app: AppHandle, party: String, members: Vec<String>, audio: Au
         let client = VoiceClient::start(config, events)?;
         match rx.recv_timeout(CONNECT_WAIT) {
             Ok(()) => Ok(client),
-            Err(_) => Err("Сервер голоса Millida не ответил за 8 секунд".into()),
+            Err(_) => Err("Сервер голоса TurtleClient не ответил за 8 секунд".into()),
         }
     })
     .await
@@ -467,7 +467,7 @@ mod tests {
         let cases = [
             ("voice.millida.host", true, "the production relay"),
             ("millida.host", true, "the apex itself"),
-            ("VOICE.Millida.NET.", true, "case and a trailing dot change nothing"),
+            ("VOICE.TurtleClient.NET.", true, "case and a trailing dot change nothing"),
             ("millida.host.evil.com", false, "our name as a prefix of someone else's domain"),
             ("evilmillida.host", false, "a suffix without the dot boundary"),
             ("localhost", false, "anything outside our domains"),

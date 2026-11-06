@@ -67,7 +67,7 @@ export const TOUR_STEPS: TourStep[] = [
     },
     get text() {
 
-      return t('Загрузить свой скин, надеть плащ и косметику. Работает на серверах с аккаунтом Millida.')
+      return t('Загрузить свой скин, надеть плащ и косметику. Работает на серверах с аккаунтом TurtleClient.')
 
     },
     screen: 'play',

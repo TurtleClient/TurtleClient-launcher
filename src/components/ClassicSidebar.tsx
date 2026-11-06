@@ -74,7 +74,7 @@ export function ClassicSidebar({ onNav }: { onNav: (s: ScreenId) => void }) {
   useAccounts()
   const acc = getAccount()
   const gameName = useGameNick((s) => s.name)
-  // The Millida game profile has its own name, and that is what the server sees.
+  // The TurtleClient game profile has its own name, and that is what the server sees.
   const inGameNick = acc && isMillidaKind(acc.kind) && gameName ? gameName : acc ? acc.nick : ''
   const otherAccountNick = acc && inGameNick !== acc.nick ? acc.nick : ''
   const chipRef = useRef<HTMLDivElement>(null)

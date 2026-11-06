@@ -257,13 +257,13 @@ export function NewBuildModal() {
           </div>
         ) : null}
         {vanillaAsk ? (
-          // Vanilla без Millida (владелец 24.09.2026, 19:42): предупреждаем сразу.
+          // Vanilla без TurtleClient (владелец 24.09.2026, 19:42): предупреждаем сразу.
           <div className="nb2-ask" role="alertdialog" aria-label={t('Внимание')}>
             <div className="nb2-ask-box">
               <Icon id="i-alert" />
               <b>{t('Внимание')}</b>
               <ul>
-                <li>{t('Не будет косметики Millida')}</li>
+                <li>{t('Не будет косметики TurtleClient')}</li>
                 <li>{t('Не будет оптимизации и буста FPS')}</li>
                 <li>{t('Не поставить моды')}</li>
               </ul>

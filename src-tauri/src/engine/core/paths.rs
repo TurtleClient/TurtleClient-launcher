@@ -1,4 +1,4 @@
-// Where the launcher data lives: net.millida.launcher in the user data folder, the game root (inside it by default), moving the root, clearing the cache.
+// Where the launcher data lives: dev.turtleclient.launcher in the user data folder, the game root (inside it by default), moving the root, clearing the cache.
 // Only the cache (tmp and natives) and, once the new root is in use, the originals copied there are deleted.
 use std::path::PathBuf;
 
@@ -9,7 +9,7 @@ pub fn is_flatpak() -> bool {
 }
 
 pub fn data_dir() -> PathBuf {
-    dirs::data_dir().unwrap_or_else(|| PathBuf::from(".")).join("net.millida.launcher")
+    dirs::data_dir().unwrap_or_else(|| PathBuf::from(".")).join("dev.turtleclient.launcher")
 }
 
 fn configured_root() -> Option<PathBuf> {
@@ -128,7 +128,7 @@ pub fn move_game_data(from: &std::path::Path, to: &std::path::Path) -> Result<Mo
 /// the launcher then makes its own folder there instead of refusing.
 pub fn game_root_from_pick(picked: PathBuf) -> PathBuf {
     if picked.parent().is_none() && picked.has_root() {
-        picked.join("Millida")
+        picked.join("TurtleClient")
     } else {
         picked
     }
@@ -424,12 +424,12 @@ mod tests {
     fn a_whole_drive_becomes_a_folder_on_it() {
         let cases: Vec<(PathBuf, PathBuf, &str)> = if cfg!(windows) {
             vec![
-                (PathBuf::from(r"D:\"), PathBuf::from(r"D:\Millida"), "корень диска"),
+                (PathBuf::from(r"D:\"), PathBuf::from(r"D:\TurtleClient"), "корень диска"),
                 (PathBuf::from(r"D:\Games"), PathBuf::from(r"D:\Games"), "своя папка не меняется"),
             ]
         } else {
             vec![
-                (PathBuf::from("/"), PathBuf::from("/Millida"), "корень файловой системы"),
+                (PathBuf::from("/"), PathBuf::from("/TurtleClient"), "корень файловой системы"),
                 (PathBuf::from("/home/me/Games"), PathBuf::from("/home/me/Games"), "своя папка не меняется"),
             ]
         };
@@ -481,7 +481,7 @@ mod root_tests {
         assert!(game_root_candidate_ok(std::path::Path::new("relative/dir")).is_err());
         if let Some(h) = dirs::home_dir() {
             assert!(game_root_candidate_ok(&h).is_err());
-            assert!(game_root_candidate_ok(&h.join("Games").join("Millida")).is_ok());
+            assert!(game_root_candidate_ok(&h.join("Games").join("TurtleClient")).is_ok());
         }
         assert!(game_root_candidate_ok(&data_dir()).is_err());
         #[cfg(unix)]

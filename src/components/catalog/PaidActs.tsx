@@ -19,7 +19,7 @@ import { balanceText, useMoney } from '../../lib/useMoney'
 import { formatMoney } from '../../lib/money'
 
 /*
- * Кнопки платного и собственного материала каталога Millida в строке ленты:
+ * Кнопки платного и собственного материала каталога TurtleClient в строке ленты:
  * «Купить» / «Подписаться» до доступа, «В сборку» / «Установить» после.
  * Окно покупки одно на каталог (`BuyModal`).
  */
@@ -74,7 +74,7 @@ export function BuyBar({ card, extra, onOwned }: { card: SiteCard; extra?: React
   )
 }
 
-/** Своя вещь Millida без источника на Modrinth: ставится файлом каталога. */
+/** Своя вещь TurtleClient без источника на Modrinth: ставится файлом каталога. */
 export function NativeBar({ card, sec, extra }: { card: SiteCard; sec: SiteSection; extra?: ReactNode }) {
   const t = useT()
   const scoped = useMods((s) => s.targetBuild)
@@ -134,7 +134,7 @@ export function BuyModal() {
     : sub
       ? t('Подписка «{name}»', { name: d.title })
       : t('Купить «{name}»', { name: d.title })
-  const line = funds ? t('Пополни кошелёк и вернись') : d.repriced ? t('Цена изменилась') : sub ? t('Оплата на следующем шаге') : t('Спишем с кошелька Millida')
+  const line = funds ? t('Пополни кошелёк и вернись') : d.repriced ? t('Цена изменилась') : sub ? t('Оплата на следующем шаге') : t('Спишем с кошелька TurtleClient')
   const cta = funds ? t('Пополнить') : sub ? t('Оформить') : t('Купить')
   return createPortal(
     <div className="modal-bg open vis cat-buy-bg" {...backdropClose(closeBuy)}>

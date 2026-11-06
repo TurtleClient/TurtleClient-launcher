@@ -127,10 +127,10 @@ export function AccountMenu({
                 onClick={async (e) => {
                   e.stopPropagation()
                   // Убрать аккаунт = выйти из него (правка владельца 23.09.2026:
-                  // отдельной «Выйти из Millida» больше нет).
+                  // отдельной «Выйти из TurtleClient» больше нет).
                   if (await uiConfirm(t('Выйти из аккаунта «{nick}»?', { nick: a.nick }), { confirmLabel: t('Выйти') })) {
                     remove(a.id)
-                    // Без аккаунта Millida лаунчер не работает (владелец 27.10.2026):
+                    // Без аккаунта TurtleClient лаунчер не работает (владелец 27.10.2026):
                     // вышел из него — на экран входа, игровые аккаунты остаются в списке.
                     if (!getMillidaAccount()) signOut()
                   }
@@ -153,7 +153,7 @@ export function AccountMenu({
           }}
         >
           <Icon id="i-crown" />
-          Millida Plus
+          TurtleClient Plus
         </button>
         <button
           id="accAddBtn"

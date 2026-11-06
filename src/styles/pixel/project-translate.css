@@ -203,7 +203,7 @@
 }
 #pjModal .pjt-peek-b:hover { color: var(--m-fg); }
 
-/* ---------- Знак «Перевод Millida» у переключателя ---------- */
+/* ---------- Знак «Перевод TurtleClient» у переключателя ---------- */
 #pjModal .pjt-mark {
   display: inline-flex;
   align-items: center;

@@ -25,7 +25,7 @@ export type Locale =
 
 export type Market = 'RU' | 'CIS' | 'INTL'
 
-/// Things that exist only on the Russian market: Millida Trade (server donation
+/// Things that exist only on the Russian market: TurtleClient Trade (server donation
 /// shops), the player market of millida.net, promos of partner servers that play
 /// in Russian, and Russian-language content such as translated packs and the
 /// Telegram channel. Paid packs (subscriptions, purchases, access keys) are sold

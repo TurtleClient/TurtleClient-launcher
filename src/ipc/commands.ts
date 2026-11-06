@@ -390,7 +390,7 @@ export const cfInstallWorld = (modId: number, profile: string, force = false) =>
   invoke<WorldInstall>('cf_install_world', { modId, profile, force })
 
 /**
- * Файл каталога Millida (мод, пак, шейдер, дата-пак, карта) в сборку. Ссылку —
+ * Файл каталога TurtleClient (мод, пак, шейдер, дата-пак, карта) в сборку. Ссылку —
  * подписанную для платного — ядро берёт само: webview называет только сборку,
  * материал и id файла.
  */
@@ -528,7 +528,7 @@ export const importInstance = (path: string, name: string, version: string, load
 export const importPackFile = (path?: string) => invoke<Profile>('import_pack_file', { path: path || null })
 
 export const importDroppedPack = (id: number) => invoke<Profile>('import_dropped_pack', { id })
-/// Установка из каталога Millida. Вебвью называет материал и файл, адрес файла
+/// Установка из каталога TurtleClient. Вебвью называет материал и файл, адрес файла
 /// ядро узнаёт у API само (engine/content/millida.rs).
 export interface CatalogInstallReq {
   slug: string
@@ -592,7 +592,7 @@ export const installModpack = (slug: string) => invoke<Profile>('install_modpack
 export const installModpackVersion = (slug: string, versionId: string) =>
   invoke<Profile>('install_modpack_version', { slug, versionId })
 
-/** Готовая сборка каталога Millida: ставится только отсюда, файла в вебе нет. */
+/** Готовая сборка каталога TurtleClient: ставится только отсюда, файла в вебе нет. */
 export const installCatalogPack = (slug: string) => invoke<Profile>('install_catalog_pack', { slug })
 
 /** The core resolves pack, version and file from the build's settings: the webview names only the build. */
@@ -787,7 +787,7 @@ export const listWorlds = (profile: string) => invoke<WorldEntry[]>('list_worlds
 /** Desktop shortcut to the build or one of its worlds/servers; returns the file path. */
 export const createBuildShortcut = (profile: string, world: string | null = null, server: string | null = null) =>
   invoke<string>('create_build_shortcut', { profile, world, server })
-/** A millida://launch link carries a key only shortcuts made here hold. */
+/** A turtleclient://launch link carries a key only shortcuts made here hold. */
 export const shortcutTrusted = (key: string, profile: string, quickplay: string | null) =>
   invoke<boolean>('shortcut_trusted', { key, profile, quickplay })
 
@@ -846,7 +846,7 @@ export interface PackContents {
 /** What a Modrinth modpack holds, read before it is installed. */
 export const modpackContents = (slug: string, versionId: string | null = null) =>
   invoke<PackContents>('modpack_contents', { slug, versionId })
-/** What a Millida catalogue pack holds, from its archive's table of contents (needs a Millida sign-in). */
+/** What a TurtleClient catalogue pack holds, from its archive's table of contents (needs a TurtleClient sign-in). */
 export const catalogPackContents = (slug: string) => invoke<PackContents>('catalog_pack_contents', { slug })
 
 /** The .mrpack a hosting server's owner uploaded: the core downloads it from the API and keeps it only if sha512 and size match. */
@@ -897,7 +897,7 @@ export interface GfxPresetState {
   driver: DriverIssue | null
   /** Пресет поставлен для ноутбука на батарее: ступень ниже и 60 FPS. */
   battery: boolean
-  /** Поставлен из «Авто»: у мода Millida включена авто-дальность. */
+  /** Поставлен из «Авто»: у мода TurtleClient включена авто-дальность. */
   auto: boolean
   /** Игрок менял графику пресета в игре — ступень «Своя», лаунчер её не перезаписывает. */
   custom: boolean
@@ -1797,7 +1797,7 @@ export const setGameTelemetry = (on: boolean) => invoke<void>('set_game_telemetr
 export const pvpHudDefault = () => invoke<boolean>('pvp_hud_default')
 export const setPvpHudDefault = (on: boolean) => invoke<void>('set_pvp_hud_default', { on })
 
-/// Party voice over the Millida relay. Only the party and member ids cross the
+/// Party voice over the TurtleClient relay. Only the party and member ids cross the
 /// bridge; the ticket, secret and relay address stay in the core.
 /** Device labels, not webview ids: the core finds devices by name. */
 export interface PartyVoiceAudio {

@@ -50,7 +50,7 @@ export function StatusBadge({ status }: { status: string }) {
   )
 }
 
-/// Логотип сервера: своя иконка или блок Millida.
+/// Логотип сервера: своя иконка или блок TurtleClient.
 export function ServerIcon({ icon, size }: { icon?: string; size: number }) {
   const fallback = '/block-icons/Block32Millida.png'
   return (
@@ -68,7 +68,7 @@ export function ServerIcon({ icon, size }: { icon?: string; size: number }) {
   )
 }
 
-/// Баланс кошелька Millida компактной плашкой: кошелёк, сумма, «+» — пополнение.
+/// Баланс кошелька TurtleClient компактной плашкой: кошелёк, сумма, «+» — пополнение.
 export function BalancePill() {
   const t = useT()
   useMoney()
@@ -77,7 +77,7 @@ export function BalancePill() {
   return (
     <button
       className="hp-balance"
-      data-tip={t('Пополнить кошелёк Millida')}
+      data-tip={t('Пополнить кошелёк TurtleClient')}
       onClick={() => {
         track('store_open', { where: 'wallet_topup' })
         openTopup()

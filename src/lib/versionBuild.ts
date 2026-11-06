@@ -1,4 +1,4 @@
-// Creates a modpack for a game version: profile, loader, Millida mod, FPS mode. Mod versions are requested through our API (/launcher/mr).
+// Creates a modpack for a game version: profile, loader, TurtleClient mod, FPS mode. Mod versions are requested through our API (/launcher/mr).
 import { hasTauri } from '../ipc/tauri'
 import {
   createProfile,
@@ -193,7 +193,7 @@ async function applyFps(profile: string, on: boolean): Promise<void> {
   for (const file of st.mods) await toggleContent(profile, 'mod', file, on).catch(() => {})
 }
 
-/** Мод косметики Millida: запуск ставит его и сам, здесь — заранее, чтобы первый вход был со скином. */
+/** Мод косметики TurtleClient: запуск ставит его и сам, здесь — заранее, чтобы первый вход был со скином. */
 async function ensureCosmetics(profile: string): Promise<void> {
   const st = await millidaModState(profile)
   if (st.enabled && st.available && !st.installed) await millidaModInstall(profile)
@@ -239,7 +239,7 @@ async function prepareVersionBuild(version: string, build: string, wantFps: bool
   return name
 }
 
-export const pvpBuildName = (version: string) => 'Millida PvP ' + version
+export const pvpBuildName = (version: string) => 'TurtleClient PvP ' + version
 
 export const PVP_VERSIONS = ['1.8.9', '1.12.2', '1.20.1', '1.21.11'] as const
 

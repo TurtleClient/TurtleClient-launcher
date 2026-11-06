@@ -15,7 +15,7 @@ pub(super) const ROOT: &str = "/G";
 pub(super) enum Account {
     Offline,
     Microsoft,
-    Millida,
+    TurtleClient,
 }
 
 /// One reference launch.
@@ -89,7 +89,7 @@ pub(super) fn cases() -> Vec<Case> {
     vec![
         Case { java_major: 8, ..base("vanilla-1.7.10-offline", "1.7.10", "vanilla", None) },
         Case { java_major: 8, account: Account::Microsoft, nick: "Notch", ..base("vanilla-1.8.9-microsoft", "1.8.9", "vanilla", None) },
-        Case { java_major: 8, account: Account::Millida, nick: "BrainMcpe55", ..base("vanilla-1.12.2-millida", "1.12.2", "vanilla", None) },
+        Case { java_major: 8, account: Account::TurtleClient, nick: "BrainMcpe55", ..base("vanilla-1.12.2-millida", "1.12.2", "vanilla", None) },
         Case {
             java_major: 8,
             server: Some("mc.example.net:25570"),
@@ -98,7 +98,7 @@ pub(super) fn cases() -> Vec<Case> {
         },
         Case { platform: MAC, java_major: 17, account: Account::Microsoft, ..base("vanilla-1.20.1-macos-microsoft", "1.20.1", "vanilla", None) },
         Case {
-            account: Account::Millida,
+            account: Account::TurtleClient,
             world: Some("Новый мир"),
             settings: json!({"width": 1600, "height": 900}),
             ..base("vanilla-1.21.1-millida-world", "1.21.1", "vanilla", None)
@@ -113,7 +113,7 @@ pub(super) fn cases() -> Vec<Case> {
         },
         Case {
             java_major: 17,
-            account: Account::Millida,
+            account: Account::TurtleClient,
             own_mod: true,
             heap: auto(64, false),
             ..base("fabric-1.20.1-millida-mod", "1.20.1", "fabric", Some("fabric-1.20.1-0.19.5"))
@@ -133,7 +133,7 @@ pub(super) fn cases() -> Vec<Case> {
         Case { java_major: 17, heap: auto(12, false), ..base("quilt-1.20.1-offline", "1.20.1", "quilt", Some("quilt-1.20.1-0.29.2")) },
         Case {
             java_major: 25,
-            account: Account::Millida,
+            account: Account::TurtleClient,
             own_mod: true,
             telemetry: false,
             ..base("quilt-26.3-millida-mod-no-telemetry", "26.3", "quilt", Some("quilt-26.3-0.20.0-beta.9"))
@@ -154,7 +154,7 @@ pub(super) fn cases() -> Vec<Case> {
         },
         Case {
             java_major: 17,
-            account: Account::Millida,
+            account: Account::TurtleClient,
             own_mod: true,
             heap: HeapAsk { requested: 0, manual: 6144, auto_tune: false, mods: 200, shaders: false },
             settings: json!({"jvmArgs": "-XX:MaxGCPauseMillis=200 -Dfile.encoding=windows-1251", "autoTune": false, "ramMb": 6144}),
@@ -162,7 +162,7 @@ pub(super) fn cases() -> Vec<Case> {
         },
         Case { java_major: 17, heap: auto(80, false), ..base("neoforge-1.20.1-offline", "1.20.1", "neoforge", Some("neoforge-1.20.1-47.1.106")) },
         Case {
-            account: Account::Millida,
+            account: Account::TurtleClient,
             own_mod: true,
             party: Some("party-42"),
             heap: auto(260, true),
@@ -171,7 +171,7 @@ pub(super) fn cases() -> Vec<Case> {
         },
         Case {
             java_major: 17,
-            account: Account::Millida,
+            account: Account::TurtleClient,
             heap: HeapAsk { requested: 4096, manual: 0, auto_tune: true, mods: 300, shaders: false },
             settings: json!({"fpsBoost": true}),
             pack: Some(sample_pack()),
@@ -222,17 +222,17 @@ pub(super) fn auth_of(account: Account) -> Auth {
     match account {
         Account::Offline => Auth::default(),
         Account::Microsoft => Auth { token: "ms-token".into(), uuid: MS_UUID.into(), xuid: "2535428504476914".into(), yggdrasil: String::new() },
-        Account::Millida => Auth { token: "ygg-token".into(), uuid: MILLIDA_UUID.into(), xuid: String::new(), yggdrasil: millida_yggdrasil() },
+        Account::TurtleClient => Auth { token: "ygg-token".into(), uuid: MILLIDA_UUID.into(), xuid: String::new(), yggdrasil: millida_yggdrasil() },
     }
 }
 
 /// What the skin server gave: the agent and the description handed to it ahead of the game.
 pub(super) fn skin_args(account: Account) -> (Option<String>, Option<String>) {
-    if account != Account::Millida {
+    if account != Account::TurtleClient {
         return (None, None);
     }
     use base64::Engine as _;
-    let meta = json!({"meta": {"serverName": "Millida"}, "skinDomains": ["millida.net"]});
+    let meta = json!({"meta": {"serverName": "TurtleClient"}, "skinDomains": ["millida.net"]});
     (
         Some(format!("-javaagent:{}={}", AGENT_JAR, millida_yggdrasil())),
         Some(format!("-Dauthlibinjector.yggdrasil.prefetched={}", base64::engine::general_purpose::STANDARD.encode(meta.to_string()))),
@@ -394,7 +394,7 @@ fn render_plan(case: &Case) -> String {
     use super::pipeline::plan::*;
     let root = PathBuf::from(ROOT);
     let settings = &case.settings;
-    let yggdrasil = if case.account == Account::Millida { millida_yggdrasil() } else { String::new() };
+    let yggdrasil = if case.account == Account::TurtleClient { millida_yggdrasil() } else { String::new() };
     let pack = case.pack.as_ref().map(|p| (p.slug.as_str(), p.needs_token));
     let checks = super::launch_pre::plan(settings, pack, &yggdrasil, case.loader, true, &|_| false);
     let modded = matches!(case.loader, "fabric" | "quilt" | "forge" | "neoforge");
@@ -429,7 +429,7 @@ fn render_plan(case: &Case) -> String {
         loader: case.loader,
         needs_installer: installer,
         checks: &checks,
-        auth_pending: case.account == Account::Millida,
+        auth_pending: case.account == Account::TurtleClient,
         deps: case.pack.is_none() && modded,
         log4j,
         natives,

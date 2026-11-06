@@ -1,4 +1,4 @@
-// Installs a ready modpack from the Millida catalog: the card and the archive link come from api.millida.net, the archive is downloaded from garage.millida.net and unpacked into the modpack folder.
+// Installs a ready modpack from the TurtleClient catalog: the card and the archive link come from api.millida.net, the archive is downloaded from garage.millida.net and unpacked into the modpack folder.
 // Launcher service files are dropped from the foreign archive, except the launch description that the catalog check reads.
 use super::{pack_delta, pack_install};
 use crate::engine::*;
@@ -215,7 +215,7 @@ async fn fetch_pack(app: &AppHandle, job: &Job, slug: &str, review: bool, reuse:
         let answer = pack_review_candidate(slug).await?;
         view_from_candidate(slug, &answer)?
     } else {
-        // Request for the modpack card to api.millida.net. The Millida token is added if the user is logged in.
+        // Request for the modpack card to api.millida.net. The TurtleClient token is added if the user is logged in.
         millida_api(format!("/catalog/packs/{}", slug), "GET".into(), None, millida_token()).await?
     };
     let (file_id, size, sha512) = client_file(&view)?;
@@ -536,7 +536,7 @@ fn pack_identity(
 }
 
 /// A build started offline still knows whether our card opted it into the
-/// Millida mod.
+/// TurtleClient mod.
 fn remember_mod_opt_in(settings: &mut serde_json::Map<String, Value>, view: &Value) {
     if let Some(on) = pack_millida_mod_flag(view) {
         settings.insert(PACK_MILLIDA_MOD_KEY.into(), Value::Bool(on));
@@ -557,7 +557,7 @@ pub async fn update_catalog_pack(app: AppHandle, profile: String) -> Result<Prof
         .map(str::trim)
         .filter(|s| slug_ok(s))
         .map(String::from)
-        .ok_or("Эта сборка поставлена не из каталога Millida — обновлять её неоткуда")?;
+        .ok_or("Эта сборка поставлена не из каталога TurtleClient — обновлять её неоткуда")?;
     let job = Job::start(job_key_catalog_pack(&slug), profile.clone())?;
     let res = update_catalog_pack_job(&app, &job, &current, &slug).await;
     job.finish(&app, res)
@@ -935,7 +935,7 @@ mod tests {
     fn pack_archive_brings_no_launcher_service_files() {
         let cases: &[(&str, bool, &str)] = &[
             ("millida-pack-launch.json", true, "описание запуска в корне читает проверка каталога, а запускает его только сборка из каталога"),
-            ("Millida-Pack-Launch.json", false, "другое написание проверка не сверяет, а Windows всё равно откроет его как описание запуска"),
+            ("TurtleClient-Pack-Launch.json", false, "другое написание проверка не сверяет, а Windows всё равно откроет его как описание запуска"),
             ("config/millida-pack-launch.json", false, "вложенную копию никто не проверял; правило то же, что у overrides"),
             ("millida-settings.json", false, "в настройках сборки лежат JVM-флаги — это запуск чужого кода"),
             ("millida-content.json", false, "по адресам из этой записи «Починить» качает моды в mods/"),
@@ -960,7 +960,7 @@ mod tests {
         let _ = std::fs::remove_dir_all(&base);
     }
 
-    /// slug -> verdict. The slug arrives from a `millida://` link, which any web
+    /// slug -> verdict. The slug arrives from a `turtleclient://` link, which any web
     /// page can fire, and lands in an API path and a temp file name.
     #[test]
     fn slug_is_a_catalogue_address_and_nothing_else() {

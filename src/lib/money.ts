@@ -226,9 +226,9 @@ export function moneyShortfall(e: unknown): MoneyShortfall | null {
 
 export function shortfallText(s: MoneyShortfall): string {
   if (s.displayCurrency && s.missingMinor !== null && s.missingMinor > 0) {
-    return t('Не хватает {sum} на балансе Millida — пополни и повтори', { sum: formatMoney(s.missingMinor, s.displayCurrency) })
+    return t('Не хватает {sum} на балансе TurtleClient — пополни и повтори', { sum: formatMoney(s.missingMinor, s.displayCurrency) })
   }
-  return t('Не хватает средств на балансе Millida — пополни и повтори')
+  return t('Не хватает средств на балансе TurtleClient — пополни и повтори')
 }
 
 const SITE_PREFIX: Partial<Record<Locale, string>> = { ru: '', en: '/en', 'pt-BR': '/pt-br', es: '/es', de: '/de', tr: '/tr', pl: '/pl' }

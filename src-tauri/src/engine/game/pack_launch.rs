@@ -1,7 +1,7 @@
 // Launch of a catalog modpack by its own description millida-pack-launch.json (main class, library list, JVM flags).
-// The description is read only for a modpack the core installed from the Millida catalog (registry in catalog_pack.rs). For foreign archives
+// The description is read only for a modpack the core installed from the TurtleClient catalog (registry in catalog_pack.rs). For foreign archives
 // and imports it is ignored. Paths in it must be inside the modpack folder, JVM flags go through a filter of forbidden ones.
-// The paid modpack key is taken from the Millida API at every launch (a copy is cached on disk for a week in case the server is down).
+// The paid modpack key is taken from the TurtleClient API at every launch (a copy is cached on disk for a week in case the server is down).
 use crate::engine::*;
 use serde_json::{json, Value};
 use std::path::{Path, PathBuf};
@@ -473,7 +473,7 @@ pub fn lwjgl_library_path_arg(dirs: &[PathBuf]) -> Option<String> {
 /// draft packs they check. The service ignores a stale token instead of
 /// refusing, so the public list never breaks on it.
 pub async fn catalog_packs() -> Result<Value, String> {
-    // Request for the modpack list to the Millida API. The Millida account token (not Microsoft) is attached if the user is logged in.
+    // Request for the modpack list to the TurtleClient API. The TurtleClient account token (not Microsoft) is attached if the user is logged in.
     millida_api("/catalog/packs".into(), "GET".into(), None, millida_token()).await
 }
 
@@ -510,7 +510,7 @@ pub async fn redeem_pack_key(slug: &str, code: &str) -> Result<Value, String> {
 /// line, so revoking access on our side takes effect the next time the player
 /// presses «Играть».
 pub async fn pack_launch_token(slug: &str) -> Result<Vec<String>, String> {
-    // Asks the Millida API for the launch key of a paid modpack with the Millida account token. The key goes into the game arguments. A copy is written to disk only as a spare (see below).
+    // Asks the TurtleClient API for the launch key of a paid modpack with the TurtleClient account token. The key goes into the game arguments. A copy is written to disk only as a spare (see below).
     let res = match millida_api_auth(format!("/catalog/packs/{}/launch-token", slug), "POST".into(), None).await {
         Ok(v) => v,
         // Сбой сервера или сети — не отказ в доступе. 11.10.2026 база API десять
@@ -519,7 +519,7 @@ pub async fn pack_launch_token(slug: &str) -> Result<Vec<String>, String> {
         Err(e) if transient_failure(&e) => return cached_launch_token(slug, now_secs()).ok_or(e),
         Err(e) => {
             return Err(match e.as_str() {
-                "unauthorized" => "Войди в аккаунт Millida — эта сборка запускается по доступу".to_string(),
+                "unauthorized" => "Войди в аккаунт TurtleClient — эта сборка запускается по доступу".to_string(),
                 other if other.contains("403") => "У этого аккаунта нет доступа к сборке".to_string(),
                 other => other.to_string(),
             })
@@ -583,7 +583,7 @@ fn token_cache_path(slug: &str) -> Option<PathBuf> {
     ok.then(|| data_dir().join("pack-launch").join(format!("{}.json", slug)))
 }
 
-// Launch key cache on the PC for a week: used when the Millida server is down. Stored in the launcher data folder.
+// Launch key cache on the PC for a week: used when the TurtleClient server is down. Stored in the launcher data folder.
 fn remember_launch_token(slug: &str, args: &[String], now: u64) {
     let Some(path) = token_cache_path(slug) else { return };
     if let Some(dir) = path.parent() {
@@ -696,7 +696,7 @@ pub async fn pack_launch_gate(slug: &str) -> Result<(), String> {
         let view = tokio::time::timeout(wait, millida_api(format!("/catalog/packs/{}", slug), "GET".into(), None, None)).await;
         return match view {
             Ok(Ok(v)) if v["accessRequired"].as_bool() == Some(true) => Err(format!(
-                "{}Войди в аккаунт Millida — эта сборка открывается по подписке",
+                "{}Войди в аккаунт TurtleClient — эта сборка открывается по подписке",
                 PACK_ACCESS_PREFIX
             )),
             // The card answered and does not ask for a subscription: that is a "yes" worth keeping.
@@ -717,7 +717,7 @@ pub async fn pack_launch_gate(slug: &str) -> Result<(), String> {
     }
 }
 
-/// Where a catalogue build remembers whether our card opted it into the Millida mod.
+/// Where a catalogue build remembers whether our card opted it into the TurtleClient mod.
 pub const PACK_MILLIDA_MOD_KEY: &str = "catalogPackMillidaMod";
 
 /// Only a boolean from our card counts: an older API without the field says
@@ -978,7 +978,7 @@ mod tests {
             (0..400)
                 .map(|i| {
                     format!(
-                        "C:/Users/Player/AppData/Roaming/MillidaLauncher/profiles/Arcania 1.4.3/libraries/com/ijm/iku/60.2/framework-terrain-manager-{}.7.57.jar",
+                        "C:/Users/Player/AppData/Roaming/TurtleClientLauncher/profiles/Arcania 1.4.3/libraries/com/ijm/iku/60.2/framework-terrain-manager-{}.7.57.jar",
                         i
                     )
                 })

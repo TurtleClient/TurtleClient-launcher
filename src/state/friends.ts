@@ -1,4 +1,4 @@
-// Friends and private chats: all requests to the Millida API (/friends, /friends/chat/*), the core adds the token. Messages are stored on the server.
+// Friends and private chats: all requests to the TurtleClient API (/friends, /friends/chat/*), the core adds the token. Messages are stored on the server.
 import { create } from 'zustand'
 import { api, hasMillidaAccount } from '../lib/api'
 import { coalesce } from '../lib/coalesce'
@@ -25,7 +25,7 @@ export interface Friend {
   serverName?: string
   build?: string
   /// Ник, под которым друга видно в самой игре. Приходит только когда он не
-  /// совпадает с ником Millida — на лицензии Microsoft это другое имя.
+  /// совпадает с ником TurtleClient — на лицензии Microsoft это другое имя.
   gameNick?: string | null
   lastSeen?: number | null
   unread?: number
@@ -267,7 +267,7 @@ export async function openChat(uid: string, nick: string, profileMode?: boolean)
 }
 
 /**
- * Переписка по ссылке millida://chat/<uid>. Ник в ссылке мог подставить кто
+ * Переписка по ссылке turtleclient://chat/<uid>. Ник в ссылке мог подставить кто
  * угодно, поэтому шапку подписываем только ником с сервера: из списка друзей, а
  * для не-друга — из его профиля (аудит 24.09.2026, CORE-12).
  */

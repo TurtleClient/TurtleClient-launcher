@@ -17,7 +17,7 @@ import { useT } from '../i18n'
  * Уходит пиксельным растворением: клетки гаснут волной от центра, на фронте
  * вспыхивают зелёным (как переход Arcania Lab).
  *
- * Первый запуск аккаунта Millida — подарок новичку (26.09.2026): половина
+ * Первый запуск аккаунта TurtleClient — подарок новичку (26.09.2026): половина
  * фрагментов нимба, остаток докупается в магазине. Заставка держится дольше и
  * показывает вещь карточкой с полосой фрагментов.
  */
@@ -150,9 +150,9 @@ export function Welcome() {
       ) : null}
       <div className="welcome-body" aria-live="polite">
         {first && phase === 'in' ? <Burst n={30} spread={320} seed={9} /> : null}
-        <img className="welcome-logo" src="/millida-logo.svg" alt="" />
+        <img className="welcome-logo" src="/turtleclient-icon.svg" alt="" />
         <span className="welcome-hi">{first ? t('Добро пожаловать') : t('С возвращением,')}</span>
-        <b className="welcome-nick">{first ? t('в Millida') : nick || t('игрок')}</b>
+        <b className="welcome-nick">{first ? t('в TurtleClient') : nick || t('игрок')}</b>
         {gift ? (
           <div className="welcome-gift sh-card is-show" {...rarityProps(gift.item.rarity)}>
             <RarityFx />

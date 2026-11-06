@@ -20,7 +20,7 @@ import { t, tx, useT } from '../../i18n'
 
 /*
  * «Добавить моды» как в Prism Launcher (владелец 07.10.2026: «прям один в один»):
- * слева источник — первым наш каталог Millida (названия и описания по-русски,
+ * слева источник — первым наш каталог TurtleClient (названия и описания по-русски,
  * файлы с нашего зеркала), за ним Modrinth и CurseForge, посередине поиск и выдача, справа
  * описание выбранного, версия и «Выбрать для загрузки». Выбранное копится в
  * очереди; «Проверить и подтвердить» показывает список вместе с зависимостями,
@@ -442,7 +442,7 @@ export function ModDownloader({
             {(['millida', 'modrinth', 'curseforge'] as Source[]).map((s) => (
               <button key={s} type="button" className={'mdl-src-btn' + (source === s ? ' on' : '')} onClick={() => (setSource(s), setCur(null))}>
                 {s === 'millida' ? (
-                  <img src="/millida-logo.svg" alt="" />
+                  <img src="/turtleclient-icon.svg" alt="" />
                 ) : s === 'modrinth' ? (
                   <img src="https://modrinth.com/favicon.ico" alt="" />
                 ) : (
@@ -613,7 +613,7 @@ export function ModDownloader({
                     <span className="mdl-ic">{x.icon ? <img src={x.icon} alt="" /> : <PxIcon name="box" size={20} />}</span>
                     <span className="mdl-txt">
                       <b>{x.title}</b>
-                      <span>{[x.ver.file || x.ver.name, x.source === 'millida' ? t('Каталог Millida') : x.source === 'modrinth' ? 'Modrinth' : 'CurseForge', TYPE_RU[x.ver.type] || x.ver.type].join(' · ')}</span>
+                      <span>{[x.ver.file || x.ver.name, x.source === 'millida' ? t('Каталог TurtleClient') : x.source === 'modrinth' ? 'Modrinth' : 'CurseForge', TYPE_RU[x.ver.type] || x.ver.type].join(' · ')}</span>
                     </span>
                   </li>
                 ))}

@@ -1,6 +1,6 @@
 // Launch of a "native" game from the catalog: not Minecraft, but a partner's own program, one file per system.
-// It runs only for a modpack the core installed from the Millida catalog (registry in catalog_pack.rs), and only a file
-// in the root of that modpack folder. The game gets the nickname, uuid and the Millida session token (not Microsoft).
+// It runs only for a modpack the core installed from the TurtleClient catalog (registry in catalog_pack.rs), and only a file
+// in the root of that modpack folder. The game gets the nickname, uuid and the TurtleClient session token (not Microsoft).
 use super::launch::{
     crash_tail, read_log_file, session_uuid, spawn_log_reader, wait_log_readers, was_stopped, watch_session, LAUNCH_CAPTURE,
     LAUNCH_CHECK_ALIVE, LOG_DRAIN_WAIT,
@@ -26,7 +26,7 @@ const PLACEHOLDER_TOKEN: &str = "${auth_access_token}";
 const PLACEHOLDERS: [&str; 3] = [PLACEHOLDER_NICK, PLACEHOLDER_UUID, PLACEHOLDER_TOKEN];
 const NATIVE_CRASH_ACTIONS: [&str; 3] = ["open-url", "open-folder", "share-log"];
 
-const NEEDS_MILLIDA: &str = "Эта игра запускается только с аккаунтом Millida: войди в Millida и нажми «Играть» ещё раз";
+const NEEDS_MILLIDA: &str = "Эта игра запускается только с аккаунтом TurtleClient: войди в TurtleClient и нажми «Играть» ещё раз";
 const BROKEN_MANIFEST: &str =
     "Описание запуска этой игры повреждено — удали сборку и установи её из каталога заново";
 
@@ -275,7 +275,7 @@ pub(crate) async fn launch_native(
     check_cancel()?;
     let start = std::time::Instant::now();
     let mut child = {
-        // Starts the partner program from the modpack folder. The launcher does not check a hash or signature of this file. Trust comes from the entry in the Millida catalog.
+        // Starts the partner program from the modpack folder. The launcher does not check a hash or signature of this file. Trust comes from the entry in the TurtleClient catalog.
         let mut cmd = Command::new(&spec.executable);
         quiet(&mut cmd);
         apply_gpu_pref(&mut cmd, &spec.executable, gpu);
@@ -501,7 +501,7 @@ mod tests {
         assert_eq!(
             substitute_args(&args, "Steve", "0123abcd", "tok"),
             vec!["--username", "Steve", "--uuid", "0123abcd", "--accessToken", "tok"],
-            "контракт партнёра обязан получить ник, uuid и токен сессии Millida"
+            "контракт партнёра обязан получить ник, uuid и токен сессии TurtleClient"
         );
         let cases: [(&str, &str, &str, &str); 3] = [
             ("--who=${auth_player_name}!", "${auth_uuid}", "--who=${auth_uuid}!", "значение не подставляется второй раз"),

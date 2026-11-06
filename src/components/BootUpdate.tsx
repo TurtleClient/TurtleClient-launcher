@@ -24,9 +24,9 @@ export function BootUpdate() {
   return (
     <div className="boot-upd">
       <div className="boot-upd-card">
-        <img src="/millida-logo.svg" alt="" width={44} height={44} />
+        <img src="/turtleclient-icon.svg" alt="" width={44} height={44} />
         <div className="boot-upd-title">{TITLES[phase]}</div>
-        <div className="boot-upd-sub">{version ? t('Версия {version}', { version }) : 'Millida Launcher'}</div>
+        <div className="boot-upd-sub">{version ? t('Версия {version}', { version }) : 'TurtleClient Launcher'}</div>
         <div className="boot-upd-bar">
           <span
             className={'boot-upd-fill' + (phase === 'installing' || !pct ? ' pulse' : '')}

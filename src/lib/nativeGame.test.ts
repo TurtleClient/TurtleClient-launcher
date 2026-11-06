@@ -3,7 +3,7 @@ import { isNativeGame } from './nativeGame'
 
 describe('isNativeGame', () => {
   const cases: Array<[{ version?: string | null; loader?: string | null } | null, boolean, string]> = [
-    [{ version: 'native', loader: 'custom' }, true, 'the catalogue pair of a partner game must start on the Millida session, not as Minecraft'],
+    [{ version: 'native', loader: 'custom' }, true, 'the catalogue pair of a partner game must start on the TurtleClient session, not as Minecraft'],
     [{ version: '1.20.1', loader: 'forge' }, false, 'an ordinary build keeps its Minecraft launch'],
     [{ version: 'native', loader: 'forge' }, false, 'only the exact pair the catalogue gives counts, a stray version string does not'],
     [{ version: '1.20.1', loader: 'custom' }, false, 'custom on a Minecraft version is not a native game'],

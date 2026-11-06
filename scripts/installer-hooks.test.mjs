@@ -5,7 +5,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
 // Вход → вердикт. Закреплено обращением 24.08.2026: установщик падал с «Error
-// opening file for writing … millida-launcher.exe», а «Повтор» открывал тот же
+// opening file for writing … turtleclient-launcher.exe», а «Повтор» открывал тот же
 // занятый файл и падал снова. Хук обязан отдать файл установщику сам — и в
 // случае запущенного лаунчера, и в случае снятого атрибута «только чтение».
 const NSIS_DIR = join(process.env.LOCALAPPDATA ?? '', 'tauri', 'NSIS')

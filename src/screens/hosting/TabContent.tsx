@@ -53,7 +53,7 @@ const INSTALL_SOURCE = (): Record<string, string> => ({
   market: t('Маркет'),
   upload: t('Свой файл'),
   partner: t('Сборка партнёра'),
-  catalog: t('Каталог Millida'),
+  catalog: t('Каталог TurtleClient'),
 })
 
 const INSTALL_ST = (): Record<string, [string, string]> => ({

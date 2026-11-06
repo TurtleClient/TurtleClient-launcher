@@ -88,7 +88,7 @@ describe('chests opened but never shown', () => {
     expect(list[list.length - 1]!.id, 'the newest chest must survive the cap').toBe('x39')
   })
 
-  test('the record is per Millida account and is removed once shown', () => {
+  test('the record is per TurtleClient account and is removed once shown', () => {
     const store = memoryStore('u1')
     markUnseen(chest('a'), store)
     expect(readUnseen(store).map((c) => c.id), 'a marked chest must survive a restart').toEqual(['a'])

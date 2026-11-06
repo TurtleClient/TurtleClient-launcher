@@ -43,7 +43,7 @@ const ALLOWED: &[(&str, &str)] = &[
 /// signed): a fresh install then takes the list of versions, the installer and
 /// its checksum from GitHub alone, and our storage is only the mirror for the
 /// minutes after a release and for networks where GitHub does not answer.
-pub const GITHUB_MANIFEST_URL: &str = "https://github.com/millida/launcher/releases/latest/download/latest.json";
+pub const GITHUB_MANIFEST_URL: &str = "https://github.com/TurtleClient/turtleclient-launcher/releases/latest/download/latest.json";
 
 pub const MANIFEST_URLS: &[&str] = &[
     GITHUB_MANIFEST_URL,
@@ -193,11 +193,11 @@ mod tests {
             ("https://user:pass@launcher-storage.millida.net/a.exe", false),
             ("https://127.0.0.1/a.exe", false),
             ("https://[::1]/a.exe", false),
-            ("https://github.com/millida/launcher/releases/download/v2.0.203/a-setup.exe", true),
-            ("https://github.com/millida/launcher/releases/latest/download/latest.json", true),
+            ("https://github.com/TurtleClient/turtleclient-launcher/releases/download/v2.0.203/a-setup.exe", true),
+            ("https://github.com/TurtleClient/turtleclient-launcher/releases/latest/download/latest.json", true),
             ("https://github.com/someone/launcher/releases/latest/download/latest.json", false),
             ("https://github.com/someone/launcher/releases/download/v1/a-setup.exe", false),
-            ("https://github.com/millida/launcher/raw/main/a.exe", false),
+            ("https://github.com/TurtleClient/turtleclient-launcher/raw/main/a.exe", false),
             ("https://release-assets.githubusercontent.com/github-production-release-asset/1/x?sig=1", true),
             ("https://objects.githubusercontent.com/github-production-release-asset-2e65be/1/x", true),
             ("https://objects.githubusercontent.com/other/x.exe", false),
@@ -227,7 +227,7 @@ mod tests {
     #[test]
     fn parse_keeps_cdn_mirror_of_github_build() {
         let doc = format!(
-            r#"{{"version":"2.0.203","platforms":{{"{}":{{"url":"https://github.com/millida/launcher/releases/download/v2.0.203/a-setup.exe","mirror":"https://launcher-storage.millida.net/2.0.203/x/a-setup.exe","signature":"c2ln"}}}}}}"#,
+            r#"{{"version":"2.0.203","platforms":{{"{}":{{"url":"https://github.com/TurtleClient/turtleclient-launcher/releases/download/v2.0.203/a-setup.exe","mirror":"https://launcher-storage.millida.net/2.0.203/x/a-setup.exe","signature":"c2ln"}}}}}}"#,
             PLATFORM_KEY
         );
         let b = parse(&doc).expect("манифест с GitHub должен разбираться");

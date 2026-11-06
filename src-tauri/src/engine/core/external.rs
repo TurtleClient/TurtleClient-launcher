@@ -47,7 +47,7 @@ fn open_in_app(app: &AppHandle, url: &url::Url) -> Result<(), String> {
         return Ok(());
     }
     WebviewWindowBuilder::new(app, VIEW_LABEL, WebviewUrl::External(url.clone()))
-        .title(url.host_str().unwrap_or("Millida"))
+        .title(url.host_str().unwrap_or("TurtleClient"))
         .inner_size(1060.0, 780.0)
         .min_inner_size(420.0, 480.0)
         .center()
@@ -294,7 +294,7 @@ mod tests {
             ("file:///C:/Windows", false, "file: would expose the local filesystem"),
             ("data:text/html,<script>alert(1)</script>", false, "data: can carry inline HTML/JS"),
             ("http:///", false, "http with an empty host is not a real destination"),
-            ("millida://deeplink", false, "our own deep-link scheme must not be re-entered from a link"),
+            ("turtleclient://deeplink", false, "our own deep-link scheme must not be re-entered from a link"),
             ("https://millida.net/\r\nHeader: x", false, "CR/LF enable injection into whatever consumes the URL"),
             ("https://millida.net/\0evil", false, "NUL truncates the URL in C-string based platform APIs"),
             ("", false, "empty input is not a URL"),

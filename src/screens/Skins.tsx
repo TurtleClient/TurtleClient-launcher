@@ -438,7 +438,7 @@ interface CapeOption {
   /// Карточка каталога: плащ надевается по этому идентификатору, PNG на сервер
   /// не уходит — плащ выдаёт сервер, а не файл на диске.
   catalogId?: string
-  /// Плащ из каталога Millida, условие которого ещё не выполнено: карточка
+  /// Плащ из каталога TurtleClient, условие которого ещё не выполнено: карточка
   /// затемнена, надеть нельзя, но видно, что и сколько осталось сделать.
   locked?: boolean
   /// Текст условия получения («Наиграть 10 часов»).
@@ -590,7 +590,7 @@ const TEX_TTL = 300000
 
 const DEFAULT_SKIN = OFFICIAL_SKINS[0].url as string
 
-/// Текстуры Mojang запрашиваем только для лицензии. Офлайн- и Millida-аккаунт
+/// Текстуры Mojang запрашиваем только для лицензии. Офлайн- и TurtleClient-аккаунт
 /// ищутся по нику, а ник в Mojang принадлежит другому человеку: раньше игрок
 /// видел и применял чужой скин, считая его своим.
 async function loadAccountTexture(a: Account, millida: AccTexture | null): Promise<AccTexture> {
@@ -798,7 +798,7 @@ export function Skins({ on }: { on: boolean }) {
   const [rewards, setRewards] = useState<RewardItem[]>([])
   const [claiming, setClaiming] = useState('')
   const [activeWardrobe, setActiveWardrobe] = useState<string | null>(null)
-  // Каталог плащей Millida: и открытые, и закрытые — закрытые показываем
+  // Каталог плащей TurtleClient: и открытые, и закрытые — закрытые показываем
   // затемнёнными с условием, ради них и играют.
   const [capeCatalog, setCapeCatalog] = useState<CapeCatalogItem[]>([])
   const [mojangCapes, setMojangCapes] = useState<MojangCape[]>([])
@@ -1047,7 +1047,7 @@ export function Skins({ on }: { on: boolean }) {
     setWorn(next)
     setFitting((now) => now.filter((c) => !mine.some((m) => m.slot === c.slot)))
     applyCosmetics(next)
-      .then(() => showToast(t('Надето — видят игроки с Millida'), 'ok'))
+      .then(() => showToast(t('Надето — видят игроки с TurtleClient'), 'ok'))
       .catch((e) => {
         setWorn((now) => (now === next ? before : now))
         setFitting((now) => now.concat(tried.filter((c) => !now.some((x) => x.slot === c.slot))))
@@ -1247,7 +1247,7 @@ export function Skins({ on }: { on: boolean }) {
       await applyCosmetics(next)
       setWorn(next)
       setFitting((now) => now.filter((c) => !ready.some((r) => r.id === c.id)))
-      showToast(t('Надето — видят игроки с Millida'), 'ok')
+      showToast(t('Надето — видят игроки с TurtleClient'), 'ok')
     } catch (e) {
       showToast(apiErrorText(e, t('Не удалось надеть')), 'error')
     } finally {
@@ -1301,7 +1301,7 @@ export function Skins({ on }: { on: boolean }) {
       setWorn(next)
       // Своё надетое вытесняет примерку на том же месте.
       if (!already) setFitting((now) => now.filter((c) => c.slot !== item.slot))
-      showToast(already ? t('Снято') : t(t('Надето — видят игроки с Millida')))
+      showToast(already ? t('Снято') : t(t('Надето — видят игроки с TurtleClient')))
     } catch (e) {
       showToast(apiErrorText(e, t('Не удалось изменить косметику')), 'error')
     } finally {
@@ -1412,7 +1412,7 @@ export function Skins({ on }: { on: boolean }) {
   // Каталог аккаунта запрашивается один раз при открытии экрана, а вход к тому
   // моменту мог ещё не подхватиться: запрос тогда не уходил вовсе, и каталог
   // показывался пустым, хотя на сервере он есть. Перезапрашиваем, как только
-  // аккаунт Millida появился.
+  // аккаунт TurtleClient появился.
   const millidaSignedIn = accounts.some((a) => a.kind === 'millida')
   useEffect(() => {
     if (!millidaSignedIn) return
@@ -1450,7 +1450,7 @@ export function Skins({ on }: { on: boolean }) {
     }
   }
 
-  // Каталог плащей: без аккаунта Millida его некому персонализировать
+  // Каталог плащей: без аккаунта TurtleClient его некому персонализировать
   // (прогресс и «открыт/закрыт» считает сервер по текущему пользователю).
   useEffect(() => {
     if (!hasMillidaAccount()) return
@@ -1487,7 +1487,7 @@ export function Skins({ on }: { on: boolean }) {
   // Разовый переезд локальной библиотеки в аккаунт: сервер сам схлопывает
   // повторы по содержимому PNG, поэтому дублей каталог не наберёт.
   // Только скины: плащи в каталог аккаунта больше не загружаются — они выдаются
-  // каталогом Millida и лицензией Mojang.
+  // каталогом TurtleClient и лицензией Mojang.
   const syncedRef = useRef(false)
   useEffect(() => {
     if (syncedRef.current || !hasMillidaAccount()) return
@@ -1639,8 +1639,8 @@ export function Skins({ on }: { on: boolean }) {
       const accHashes = new Set(accCapes.map((c) => c.hash).filter(Boolean))
       const stored: CapeOption[] = wardrobe
         .filter((i) => i.kind === 'cape')
-        .map((i) => ({ id: 'w:' + i.id, name: i.name, url: i.url, sub: t('В каталоге Millida'), wardrobeId: i.id }))
-      // Плащ на аккаунт Millida ставит сервер по идентификатору карточки
+        .map((i) => ({ id: 'w:' + i.id, name: i.name, url: i.url, sub: t('В каталоге TurtleClient'), wardrobeId: i.id }))
+      // Плащ на аккаунт TurtleClient ставит сервер по идентификатору карточки
       // (catalogId), файл туда не уходит: список открытых плащей — серверный.
       const official: CapeOption[] = mojangCapes
         .filter((c) => !licensedHashes.has(textureHash(c.url)))
@@ -1662,9 +1662,9 @@ export function Skins({ on }: { on: boolean }) {
           onAccount: true,
         }))
       const design: CapeOption[] = [
-        { id: 'millida', catalogId: 'design:millida', name: 'Millida', url: MILLIDA_CAPE, sub: t('Плащ лаунчера') },
+        { id: 'millida', catalogId: 'design:millida', name: 'TurtleClient', url: MILLIDA_CAPE, sub: t('Плащ лаунчера') },
       ]
-      // Повторы между каталогом Millida, гардеробом аккаунта и списком Mojang
+      // Повторы между каталогом TurtleClient, гардеробом аккаунта и списком Mojang
       // схлопывает dedupeCapes: у него один набор правил на все источники.
       const catalog: CapeOption[] = capeCatalog
         .filter((c) => c.url)
@@ -1677,7 +1677,7 @@ export function Skins({ on }: { on: boolean }) {
             catalogId: c.id,
             name: c.name,
             url: c.url,
-            sub: locked ? c.requirement || t('Пока закрыт') : c.rarity ? t('Каталог Millida · {rarity}', { rarity: c.rarity }) : t('Каталог Millida'),
+            sub: locked ? c.requirement || t('Пока закрыт') : c.rarity ? t('Каталог TurtleClient · {rarity}', { rarity: c.rarity }) : t('Каталог TurtleClient'),
             locked,
             requirement: c.requirement,
             rarity: c.rarity,
@@ -1728,7 +1728,7 @@ export function Skins({ on }: { on: boolean }) {
     [accounts, textures, myCapes, msCapes, wardrobe, capeCatalog, rewards, mojangCapes, t],
   )
 
-  // Отпечатки текстур: один и тот же плащ приезжает из каталога Millida и из
+  // Отпечатки текстур: один и тот же плащ приезжает из каталога TurtleClient и из
   // гардероба аккаунта по разным адресам без хеша Mojang в них, и опознать его
   // можно только по самим байтам. Картинки уже читаются для превью, так что
   // повторного скачивания здесь нет.
@@ -2371,7 +2371,7 @@ export function Skins({ on }: { on: boolean }) {
   pickSkinRef.current = pickSkin
 
   // Загрузки своих плащей больше нет: плащ можно только получить — с лицензии
-  // Mojang или в каталоге Millida. Ранее загруженные плащи остаются в списке
+  // Mojang или в каталоге TurtleClient. Ранее загруженные плащи остаются в списке
   // (группа «Загружено ранее»), но новых добавить нельзя.
 
   /// Общий приём импортированной текстуры: кладём в локальную библиотеку, в
@@ -2737,8 +2737,8 @@ export function Skins({ on }: { on: boolean }) {
         trackFailure('skins', e, { step: 'license_cape' })
         showToast(t('Плащ лицензии не переключился: {error}', { error: tx(e) }), 'error')
       }
-      // Скин на лицензию уходит независимо от аккаунта Millida: раньше он был
-      // привязан к загрузке в каталог, и без входа в Millida на аккаунте
+      // Скин на лицензию уходит независимо от аккаунта TurtleClient: раньше он был
+      // привязан к загрузке в каталог, и без входа в TurtleClient на аккаунте
       // менялся только плащ — скин оставался прежним.
       if (acc && acc.kind === 'microsoft' && hasTauri()) {
         const ms = await ensureMsAuth(acc)
@@ -2759,8 +2759,8 @@ export function Skins({ on }: { on: boolean }) {
         const applied = await uploadTexture('skin', skin, slimArms, skinTitle()).catch((e) => {
           throw new Error(
             licensed
-              ? t('скин не сохранился в аккаунте Millida ({error}) — на лицензии он уже применён', { error: apiErrorText(e, t('Millida не приняла скин')) })
-              : t('скин не сохранился в аккаунте Millida ({error})', { error: apiErrorText(e, t('Millida не приняла скин')) }),
+              ? t('скин не сохранился в аккаунте TurtleClient ({error}) — на лицензии он уже применён', { error: apiErrorText(e, t('TurtleClient не приняла скин')) })
+              : t('скин не сохранился в аккаунте TurtleClient ({error})', { error: apiErrorText(e, t('TurtleClient не приняла скин')) }),
           )
         })
         if (!applied || !applied.skinUrl) throw new Error(t('сервер не сохранил скин'))
@@ -2773,7 +2773,7 @@ export function Skins({ on }: { on: boolean }) {
         // Плащ из каталога аккаунта надевается по id: повторная заливка того же
         // PNG заводит в каталоге вторую карточку той же текстуры.
         // Плащ на аккаунт ставится только по идентификатору: из каталога
-        // аккаунта или из каталога Millida. Заливка PNG плащом больше не
+        // аккаунта или из каталога TurtleClient. Заливка PNG плащом больше не
         // считается — иначе плащ выдавал себе кто угодно запросом мимо лаунчера.
         if (!currentCape) {
           if (capeTouched.current) await uploadTexture('cape', null)
@@ -2791,8 +2791,8 @@ export function Skins({ on }: { on: boolean }) {
         appliedRef.current = texture
         showToast(
           licensed
-            ? t('Скин применён — сохранён в каталоге Millida и на лицензии')
-            : t('Скин применён и сохранён в каталоге Millida'),
+            ? t('Скин применён — сохранён в каталоге TurtleClient и на лицензии')
+            : t('Скин применён и сохранён в каталоге TurtleClient'),
           undefined,
           undefined,
           undo,
@@ -3750,7 +3750,7 @@ export function Skins({ on }: { on: boolean }) {
             <div className="cape-info-art">
               <CapePreview url={capeInfo.url} h={120} />
             </div>
-            <div className="sub">{capeInfo.requirement || t('Плащ каталога Millida')}</div>
+            <div className="sub">{capeInfo.requirement || t('Плащ каталога TurtleClient')}</div>
             {capeInfo.progress !== undefined ? (
               <>
                 <span className="cape-prog" style={{ marginTop: '14px' }}>

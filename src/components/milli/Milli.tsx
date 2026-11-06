@@ -114,7 +114,7 @@ import {
 export type { MilliCue, MilliMode }
 
 /**
- * Милли — персонаж из логотипа Millida: ручки в белых варежках, ножки в кедах.
+ * Милли — персонаж из логотипа TurtleClient: ручки в белых варежках, ножки в кедах.
  *
  * Анимация (04.10.2026) — покадровая, как спрайт в Minecraft: CSS-ключи со
  * steps() на transform/opacity (styles/pixel/milli-mascot.css), позы и лица —

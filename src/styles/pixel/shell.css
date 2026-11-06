@@ -228,7 +228,7 @@
   box-shadow: inset 0 0 0 2px rgba(255, 156, 146, 0.75), inset 0 -5px 0 rgba(0, 0, 0, 0.32); --px-ol: rgba(255, 156, 146, 0.75); --px-ol-w: 2px; --px-ft: transparent; --px-fb: rgba(0, 0, 0, 0.32); --px-fb-w: 5px; --px-fl: transparent; --px-fr: transparent;
 }
 
-/* «Выйти из Millida» — под «Добавить аккаунт», тише и с красным значком. */
+/* «Выйти из TurtleClient» — под «Добавить аккаунт», тише и с красным значком. */
 .acc-logout-btn { margin-top: 6px; background: transparent; }
 .acc-logout-btn svg { color: var(--m-danger); }
 .acc-logout-btn:hover { border-color: var(--m-danger); }
@@ -242,7 +242,7 @@
 .acc-menu .acc-item-del { width: 34px; height: 34px; }
 .acc-menu .acc-add-btn { height: 44px; font-size: 14px; font-weight: 800; justify-content: center; }
 
-/* Всплывающие окна не заезжают под полосу заголовка «MILLIDA LAUNCHER»
+/* Всплывающие окна не заезжают под полосу заголовка «TURTLECLIENT LAUNCHER»
    (правка владельца 23.09.2026, 22:28): затемнение начинается под ней, окно
    не выше доступной высоты. */
 :root .modal-bg { top: 44px; }

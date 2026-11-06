@@ -439,7 +439,7 @@ fn count_mods(game: &Path) -> u32 {
         .unwrap_or(0)
 }
 
-/// Builds of Prism, MultiMC and Modrinth App that can move into Millida whole,
+/// Builds of Prism, MultiMC and Modrinth App that can move into TurtleClient whole,
 /// with what each one weighs: the disk scan plus folders the player pointed at.
 pub fn plan_moves() -> Vec<MoveCandidate> {
     let mut found: Vec<FoundInstance> = scan_imports().into_iter().filter(|f| f.movable).collect();
@@ -503,9 +503,9 @@ fn copy_game(game: &Path, dst: &Path, src_manifest: &Manifest, name: &str, kind:
     Ok(Staging { path: dst.to_path_buf(), keep: false })
 }
 
-/// Takes a copy of a Prism, MultiMC or Modrinth App build into Millida. The
+/// Takes a copy of a Prism, MultiMC or Modrinth App build into TurtleClient. The
 /// build in the other launcher is never renamed, changed or removed: it is
-/// the player's data in a program Millida does not own.
+/// the player's data in a program TurtleClient does not own.
 pub fn move_instance(path: String) -> Result<MoveOutcome, String> {
     let dir = PathBuf::from(&path);
     if !is_vouched(&dir) {
@@ -639,7 +639,7 @@ mod tests {
         }
     }
 
-    /// The launcher is what Millida may ask to quit; anything else that holds the build is the game.
+    /// The launcher is what TurtleClient may ask to quit; anything else that holds the build is the game.
     #[test]
     fn blocker_tells_launcher_from_game() {
         let cases = [
@@ -746,11 +746,11 @@ mod tests {
             let dst = root.join("millida/profiles/Sky");
             std::fs::create_dir_all(dst.parent().unwrap()).unwrap();
             let mut copied = copy_game(&game, &dst, &manifest_of(&game).unwrap(), "Sky", MoveSource::Prism).unwrap();
-            assert_eq!(manifest_of(&dst).unwrap(), manifest_of(&game).unwrap(), "keep={keep}: every file of the build is in Millida");
+            assert_eq!(manifest_of(&dst).unwrap(), manifest_of(&game).unwrap(), "keep={keep}: every file of the build is in TurtleClient");
             assert!(!sibling(&dst, "moving").exists(), "keep={keep}: no half-made copy is left beside the build");
             copied.keep = keep;
             drop(copied);
-            assert_eq!(dst.join("saves/w/level.dat").is_file(), keep, "keep={keep}: only a kept copy stays in Millida");
+            assert_eq!(dst.join("saves/w/level.dat").is_file(), keep, "keep={keep}: only a kept copy stays in TurtleClient");
             assert_eq!(manifest_of(&instance).unwrap(), before, "keep={keep}: the source instance must be exactly as before");
             assert_eq!(std::fs::read(game.join("saves/w/level.dat")).unwrap(), b"world", "keep={keep}: the source world must not change");
         }

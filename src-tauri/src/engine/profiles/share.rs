@@ -1,5 +1,5 @@
 // Sharing a modpack by code and link. Publishing sends api.millida.net only the file list from the Modrinth and CurseForge catalogs
-// (project, version, hash, size), with the Millida account token. Files, worlds and settings are not sent. The receiver downloads the mods from the catalogs by hash.
+// (project, version, hash, size), with the TurtleClient account token. Files, worlds and settings are not sent. The receiver downloads the mods from the catalogs by hash.
 //! Sharing a build by code or link, and the manifest both sharing and cloud
 //! sync are built on.
 //!
@@ -90,7 +90,7 @@ pub struct PackManifest {
     pub jars: Vec<PackJar>,
 }
 
-/// A hand-added mod no catalogue serves. It travels through Millida storage to
+/// A hand-added mod no catalogue serves. It travels through TurtleClient storage to
 /// the author's friends only, and is installed only when the receiving player
 /// approved exactly this file by its sha512.
 #[derive(Serialize, Deserialize, Clone, Default)]
@@ -210,7 +210,7 @@ pub fn build_manifest(profile: &str, with_overrides: bool) -> Result<(PackManife
         let Ok(rd) = std::fs::read_dir(pdir.join(sub)) else { continue };
         for entry in rd.flatten() {
             let name = entry.file_name().to_string_lossy().to_string();
-            // The Millida mod and the skin mod are put in by the launcher at launch, the
+            // The TurtleClient mod and the skin mod are put in by the launcher at launch, the
             // friend's launcher puts in its own: sent along they read as the author's unchecked jar.
             if !entry.path().is_file() || name.ends_with(".disabled") || launcher_placed(&name) {
                 continue;
@@ -285,7 +285,7 @@ pub async fn share_profile(profile: String, summary: Option<String>) -> Result<S
         .to_string();
     let body = serde_json::to_value(&manifest).map_err(|e| e.to_string())?;
     let size_bytes = serde_json::to_vec(&body).map(|v| v.len() as u64).unwrap_or(0);
-    // POST of the manifest to the Millida API with the Millida account token. Only the catalog file list, not the files.
+    // POST of the manifest to the TurtleClient API with the TurtleClient account token. Only the catalog file list, not the files.
     let res = millida_api_auth(PACKS_PATH.to_string(), "POST".into(), Some(body)).await?;
     let code = res["code"].as_str().filter(|c| code_ok(c)).ok_or("Сервер не выдал код сборки")?.to_string();
     Ok(SharedPack {
@@ -336,7 +336,7 @@ async fn upload_own_jar(jar: OwnJar) -> Result<PackJar, String> {
         "sha256": jar.sha256,
         "sha512": jar.sha512,
     });
-    // The author's own jar goes to Millida storage: only the author's friends can fetch it back.
+    // The author's own jar goes to TurtleClient storage: only the author's friends can fetch it back.
     let res = millida_api_auth(format!("{}/jars", PACKS_PATH), "POST".into(), Some(decl.clone())).await?;
     if res["status"].as_str() == Some("upload") {
         let url = res["url"].as_str().filter(|u| jar_url_allowed(u)).ok_or("Сервер выдал чужой адрес для загрузки")?;
@@ -390,7 +390,7 @@ pub async fn unshare_profile(code: String) -> Result<(), String> {
     if !code_ok(&code) {
         return Err("Некорректный код сборки".into());
     }
-    // The author takes their publication down from the Millida server.
+    // The author takes their publication down from the TurtleClient server.
     millida_api_auth(format!("{}/{}", PACKS_PATH, code), "DELETE".into(), None).await?;
     Ok(())
 }
@@ -403,7 +403,7 @@ async fn pack_detail(code: &str) -> Result<Value, String> {
         .map_err(|e| if e == "http 403" { CLOSED_PACK.to_string() } else { e })
 }
 
-const CLOSED_PACK: &str = "Автор открыл эту сборку только себе или друзьям — войди в аккаунт Millida, если ты его друг";
+const CLOSED_PACK: &str = "Автор открыл эту сборку только себе или друзьям — войди в аккаунт TurtleClient, если ты его друг";
 
 pub const PACK_VISIBILITIES: [&str; 3] = ["link", "friends", "private"];
 
@@ -1940,8 +1940,8 @@ mod tests {
         let cases: [(&str, bool, &str); 5] = [
             ("mods/CustomSkinLoader.jar", false, "the skin mod's exact name"),
             ("mods/customskinloader.JAR", false, "Windows and macOS treat this as the same file"),
-            ("mods/millida-mod-1.4.2.jar", false, "the Millida mod's name"),
-            ("mods/Millida-Mod-1.4.2.jar", false, "the same name in another case"),
+            ("mods/millida-mod-1.4.2.jar", false, "the TurtleClient mod's name"),
+            ("mods/TurtleClient-Mod-1.4.2.jar", false, "the same name in another case"),
             ("mods/sodium.jar", true, "an ordinary catalogue mod stays"),
         ];
         for (path, kept, why) in cases {
@@ -1974,7 +1974,7 @@ mod tests {
             ]
         });
         let (m, dropped) = parse_manifest_report(&raw).expect("манифест должен разобраться");
-        assert_eq!(m.jars.iter().map(|j| j.path.as_str()).collect::<Vec<_>>(), vec!["mods/strata.jar"], "the launcher brings its own Millida and skin mods");
+        assert_eq!(m.jars.iter().map(|j| j.path.as_str()).collect::<Vec<_>>(), vec!["mods/strata.jar"], "the launcher brings its own TurtleClient and skin mods");
         assert!(dropped.is_empty(), "nothing the player would miss: the launcher puts these in itself");
     }
 }

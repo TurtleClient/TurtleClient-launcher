@@ -525,7 +525,7 @@
 @keyframes td-in { from { opacity: 0; transform: translateY(14px) scale(0.96); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { .td-card { animation: none; } }
 
-/* Millida PLUS — золотая карточка первой в рубинах. */
+/* TurtleClient PLUS — золотая карточка первой в рубинах. */
 .pk.is-plus { background: color-mix(in srgb, var(--m-rarity-legendary) 34%, var(--m-surface-2)); --px-ol: var(--m-rarity-legendary); --px-ol-w: 3px; }
 .pk.is-plus .pk-plus-body { background: color-mix(in srgb, var(--m-rarity-legendary) 22%, #15120a); }
 .pk.is-plus .pk-plus-name { font-size: 24px; }
@@ -557,7 +557,7 @@
   .td-rail.is-live .td-card .sv-shot > img, .td-rail.is-live .td-card .sv-shot .sh-art, .td-rail.is-live .td-card .sv-card-pick::after { animation: none; }
 }
 
-/* ---------- Рубины: бандл Millida PLUS своей строкой, пакеты ровной сеткой ---------- */
+/* ---------- Рубины: бандл TurtleClient PLUS своей строкой, пакеты ровной сеткой ---------- */
 .pk-wrap { display: flex; flex-direction: column; gap: 14px; }
 .pk-grid { grid-template-columns: repeat(9, minmax(0, 1fr)) !important; }
 @container shop (max-width: 1180px) { .pk-grid { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; } }

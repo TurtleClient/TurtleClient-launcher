@@ -5,6 +5,7 @@
 // Network: GET of i18n.json once per session and language at most every CHECK_EVERY_MS, plus the table itself
 // only when its hash changed. A fix can change words but never a {placeholder}: such entries are dropped.
 import { REMOTE_UI_BASE, sha256Hex, verifySigned } from '../lib/remoteOrigin'
+import { BRAND } from '../lib/branding'
 import { placeholdersOf, type Table } from './core'
 
 export const I18N_TAG = 'millida-launcher-i18n/1'
@@ -73,7 +74,7 @@ const write = (key: string, value: string | null) => {
 }
 
 /// Only inside the app (a Vite build sets DEV or PROD): unit tests never reach the network.
-export const remoteI18nEnabled = (): boolean => !!(import.meta.env.DEV || import.meta.env.PROD) && read(OFF_KEY) !== '0'
+export const remoteI18nEnabled = (): boolean => BRAND.updates && !!(import.meta.env.DEV || import.meta.env.PROD) && read(OFF_KEY) !== '0'
 
 interface Stored {
   sha256: string

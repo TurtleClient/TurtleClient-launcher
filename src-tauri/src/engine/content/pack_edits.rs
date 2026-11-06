@@ -121,7 +121,7 @@ pub fn set_pack_auto_update(profile: &str, on: bool) -> Result<PackAutoUpdate, S
         return Err("Сборка не найдена — открой список сборок заново".into());
     }
     if !catalog_build(&profile_settings(profile)) {
-        return Err("Эта сборка поставлена не из каталога Millida — обновлять её неоткуда".into());
+        return Err("Эта сборка поставлена не из каталога TurtleClient — обновлять её неоткуда".into());
     }
     let mut patch = serde_json::Map::new();
     patch.insert(PACK_AUTO_UPDATE_KEY.into(), serde_json::Value::Bool(on));

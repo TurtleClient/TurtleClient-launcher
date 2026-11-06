@@ -18,15 +18,15 @@ const acc = (kind: string) => ({ id: 'a1', nick: 'Steve', kind })
 describe('launchAuthKind', () => {
   const cases: Array<{ name: string; account: ReturnType<typeof acc> | null; millida: boolean; expect: string; why: string }> = [
     {
-      name: 'offline account while signed into Millida',
+      name: 'offline account while signed into TurtleClient',
       account: acc('offline'),
       millida: true,
       expect: 'offline',
       why: 'without a known profile name the session could rename the player, so the chosen offline nick stays plain offline',
     },
-    { name: 'offline account without Millida', account: acc('offline'), millida: false, expect: 'offline', why: 'nothing else to use' },
+    { name: 'offline account without TurtleClient', account: acc('offline'), millida: false, expect: 'offline', why: 'nothing else to use' },
     { name: 'millida account', account: acc('millida'), millida: true, expect: 'millida', why: 'our Yggdrasil session is what the account is for' },
-    { name: 'telegram account', account: acc('tg'), millida: true, expect: 'millida', why: 'tg is a Millida login, not a separate nick' },
+    { name: 'telegram account', account: acc('tg'), millida: true, expect: 'millida', why: 'tg is a TurtleClient login, not a separate nick' },
     {
       name: 'millida account without a session',
       account: acc('millida'),
@@ -36,11 +36,11 @@ describe('launchAuthKind', () => {
     },
     { name: 'microsoft account', account: acc('microsoft'), millida: true, expect: 'microsoft', why: 'the licence wins over our session' },
     {
-      name: 'leftover ely.by row while signed into Millida',
+      name: 'leftover ely.by row while signed into TurtleClient',
       account: acc('elyby'),
       millida: true,
       expect: 'offline',
-      why: 'Ely.by sign-in is removed; a row that slipped past the load migration must still keep its own nick instead of taking the Millida profile name',
+      why: 'Ely.by sign-in is removed; a row that slipped past the load migration must still keep its own nick instead of taking the TurtleClient profile name',
     },
     { name: 'no account at all', account: null, millida: true, expect: 'millida', why: 'nothing chose a nick, so the session may name one' },
   ]
@@ -51,15 +51,15 @@ describe('launchAuthKind', () => {
     })
 })
 
-describe('launchAuthKind for an offline account next to a Millida login', () => {
+describe('launchAuthKind for an offline account next to a TurtleClient login', () => {
   const cases: Array<{ name: string; nick: string; millida: boolean; profile: string; expect: string; why: string }> = [
     {
-      name: 'nick equals the Millida profile name',
+      name: 'nick equals the TurtleClient profile name',
       nick: 'Steve',
       millida: true,
       profile: 'Steve',
       expect: 'millida',
-      why: 'servers with Millida sign-in only admit a player with our session; the name and the offline UUID stay the same, so nothing changes for offline servers',
+      why: 'servers with TurtleClient sign-in only admit a player with our session; the name and the offline UUID stay the same, so nothing changes for offline servers',
     },
     {
       name: 'another nick',
@@ -86,7 +86,7 @@ describe('launchAuthKind for an offline account next to a Millida login', () => 
       why: 'without the profile name there is no proof the session keeps the nick',
     },
     {
-      name: 'no Millida login',
+      name: 'no TurtleClient login',
       nick: 'Steve',
       millida: false,
       profile: 'Steve',
@@ -100,7 +100,7 @@ describe('launchAuthKind for an offline account next to a Millida login', () => 
       expect(launchAuthKind({ id: 'a1', nick: c.nick, kind: 'offline' }, c.millida, false, c.profile), c.why).toBe(c.expect as never)
     })
 
-  test('a licence never takes the Millida session because of a matching nick', () => {
+  test('a licence never takes the TurtleClient session because of a matching nick', () => {
     expect(launchAuthKind({ id: 'a1', nick: 'Steve', kind: 'microsoft' }, true, false, 'Steve'), 'the Mojang session is what licensed servers check').toBe('microsoft')
   })
 })
@@ -119,7 +119,7 @@ describe('pinnedOfflineNick', () => {
     })
 })
 
-describe('launchAuthKind on a Millida-only server', () => {
+describe('launchAuthKind on a TurtleClient-only server', () => {
   const cases: Array<{ name: string; account: ReturnType<typeof acc> | null; millida: boolean; expect: string; why: string }> = [
     {
       name: 'microsoft account',
@@ -137,7 +137,7 @@ describe('launchAuthKind on a Millida-only server', () => {
     },
     { name: 'millida account', account: acc('millida'), millida: true, expect: 'millida', why: 'already the right session' },
     {
-      name: 'microsoft account without a Millida session',
+      name: 'microsoft account without a TurtleClient session',
       account: acc('microsoft'),
       millida: false,
       expect: 'offline',
@@ -151,7 +151,7 @@ describe('launchAuthKind on a Millida-only server', () => {
     })
 })
 
-describe('single Millida row', () => {
+describe('single TurtleClient row', () => {
   const reset = (list: unknown[], active = '') => {
     store.set('m-accounts', JSON.stringify(list))
     store.set('m-active', active)
@@ -162,13 +162,13 @@ describe('single Millida row', () => {
     reset([{ id: 'a1', nick: 'durov', kind: 'millida', balance: 5000 }], 'a1')
     const acc = useAccounts.getState().add({ nick: 'steve', kind: 'millida' })
     const list = useAccounts.getState().list
-    expect(list.length, 'the launcher holds one Millida session, so a second row would show it twice').toBe(1)
+    expect(list.length, 'the launcher holds one TurtleClient session, so a second row would show it twice').toBe(1)
     expect(list[0].nick, 'the row names whoever is signed in now').toBe('steve')
     expect(list[0].balance, "the previous user's balance must not follow the new login").toBeUndefined()
     expect(acc.id, 'the row keeps its id so the active account stays addressable').toBe('a1')
   })
 
-  test('another user in the same Millida row is another owner of the cached look', () => {
+  test('another user in the same TurtleClient row is another owner of the cached look', () => {
     reset([{ id: 'a1', nick: 'durov', kind: 'millida' }], 'a1')
     const before = lookOwner()
     useAccounts.getState().add({ nick: 'steve', kind: 'millida' })
@@ -179,10 +179,10 @@ describe('single Millida row', () => {
   test('a tg row is the same slot as a millida row', () => {
     reset([{ id: 'a1', nick: 'durov', kind: 'tg' }], 'a1')
     useAccounts.getState().add({ nick: 'durov', kind: 'millida' })
-    expect(useAccounts.getState().list.length, 'tg is the old name of the same Millida login').toBe(1)
+    expect(useAccounts.getState().list.length, 'tg is the old name of the same TurtleClient login').toBe(1)
   })
 
-  test('a Microsoft row survives a Millida sign-in', () => {
+  test('a Microsoft row survives a TurtleClient sign-in', () => {
     reset([{ id: 'm1', nick: 'qwseMC', kind: 'microsoft' }], 'm1')
     useAccounts.getState().add({ nick: 'durov', kind: 'millida' })
     const kinds = useAccounts.getState().list.map((a) => a.kind)
@@ -231,7 +231,7 @@ describe('retired Ely.by rows', () => {
       active: 'a1',
       want: ['m1:microsoft:Steve', 'a1:millida:durov'],
       active2: 'a1',
-      why: 'the migration must not rewrite live licence or Millida rows',
+      why: 'the migration must not rewrite live licence or TurtleClient rows',
     },
   ]
   for (const c of cases)
@@ -257,7 +257,7 @@ describe('guest rows from earlier versions', () => {
     store.set('m-active', 'g1')
     const { loadState } = await import('./accounts')
     const state = loadState()
-    expect(state.list.map((a) => a.kind), 'guest mode is gone: without a Millida sign-in nobody gets into the launcher').toEqual(['offline'])
+    expect(state.list.map((a) => a.kind), 'guest mode is gone: without a TurtleClient sign-in nobody gets into the launcher').toEqual(['offline'])
     expect(JSON.parse(store.get('m-accounts') || '[]').length, 'the migration is written back so it runs once').toBe(1)
   })
 })

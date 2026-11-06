@@ -1,4 +1,4 @@
-// What happens after login: loading the profile, wallet, friends, modpacks. Requests go to the Millida API through api(), the core adds the token.
+// What happens after login: loading the profile, wallet, friends, modpacks. Requests go to the TurtleClient API through api(), the core adds the token.
 import { api, hasMillidaAccount } from './api'
 import { MILLIDA_USER_KEY, useAccounts } from '../state/accounts'
 import { syncAuth } from '../state/auth'
@@ -66,7 +66,7 @@ export function enterApp(again = false) {
   void loadMoney()
 }
 
-/** Забыть то, что вебвью знает о сессии Millida (профиль, кошелёк, приватность), и спросить ядро заново. */
+/** Забыть то, что вебвью знает о сессии TurtleClient (профиль, кошелёк, приватность), и спросить ядро заново. */
 function forgetSessionView() {
   MILLIDA_PROFILE = null
   localStorage.removeItem(MILLIDA_USER_KEY)
@@ -110,7 +110,7 @@ export type LoginReason = 'button' | 'start-no-session' | 'start-no-account' | '
 export function showLogin(reason: LoginReason = 'button') {
   if (reason !== 'button') track('error', { where: 'session_lost', code: reason }, { ok: false })
   // Ядро уже стёрло токены: флаг входа, профиль и кошелёк в вебвью тоже должны это знать, иначе
-  // вход игровым аккаунтом поднял бы оболочку с мёртвой сессией Millida.
+  // вход игровым аккаунтом поднял бы оболочку с мёртвой сессией TurtleClient.
   if (reason === 'expired') {
     forgetSessionView()
     void refreshSessionState()
@@ -119,7 +119,7 @@ export function showLogin(reason: LoginReason = 'button') {
   syncAuth()
 }
 
-/** Выйти по просьбе игрока: токены в ядре и аккаунт Millida/TG из списка. Игровые аккаунты остаются. */
+/** Выйти по просьбе игрока: токены в ядре и аккаунт TurtleClient/TG из списка. Игровые аккаунты остаются. */
 export function signOut() {
   dropMillidaSession()
   const acc = useAccounts.getState()

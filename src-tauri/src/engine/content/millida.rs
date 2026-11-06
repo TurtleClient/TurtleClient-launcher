@@ -1,13 +1,13 @@
-// Install from the Millida catalog (millida.net/mods, textures, modpacks) when the user asks.
-// The file address comes from api.millida.net. It is checked for https and a Millida host, then the hash is checked.
+// Install from the TurtleClient catalog (millida.net/mods, textures, modpacks) when the user asks.
+// The file address comes from api.millida.net. It is checked for https and a TurtleClient host, then the hash is checked.
 use crate::engine::*;
 use serde_json::Value;
 use tauri::AppHandle;
 
-/// Установка из каталога Millida (millida.net/mods, /texture-packs, /modpacks…).
+/// Установка из каталога TurtleClient (millida.net/mods, /texture-packs, /modpacks…).
 ///
 /// Вебвью называет только материал и файл — адрес файла ядро спрашивает у
-/// нашего API само. Иначе любая страница, открывшая лаунчер ссылкой millida://,
+/// нашего API само. Иначе любая страница, открывшая лаунчер ссылкой turtleclient://,
 /// могла бы подсунуть ему свой файл под видом мода из каталога.
 #[derive(serde::Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -108,7 +108,7 @@ pub(crate) fn check_file_url(url: &str) -> Result<(), String> {
         return Err("Ссылка на файл ведёт в локальную сеть".into());
     }
     if matches!(host.as_str(), "modrinth.com" | "www.modrinth.com" | "curseforge.com" | "www.curseforge.com") {
-        return Err("Этого файла нет на зеркале Millida — только страница автора".into());
+        return Err("Этого файла нет на зеркале TurtleClient — только страница автора".into());
     }
     Ok(())
 }
@@ -177,7 +177,7 @@ async fn install_content_job(app: &AppHandle, job: &Job, req: &CatalogInstallReq
     if !load_profiles().iter().any(|p| p.name == req.profile) {
         return Err("Сборка не найдена".into());
     }
-    job.emit(app, 10.0, "Спрашиваем файл у Millida…");
+    job.emit(app, 10.0, "Спрашиваем файл у TurtleClient…");
     let r = resolve(req).await?;
     let fname = safe_file_name(&r.name)?;
     let lower = fname.to_ascii_lowercase();
@@ -222,7 +222,7 @@ async fn install_content_job(app: &AppHandle, job: &Job, req: &CatalogInstallReq
 }
 
 /// Запись в манифест сборки: по ней строка каталога говорит «Установлено», а
-/// экспорт сборки знает, откуда файл. Id проекта — slug каталога Millida с
+/// экспорт сборки знает, откуда файл. Id проекта — slug каталога TurtleClient с
 /// префиксом, чтобы не спутать его с id Modrinth.
 fn upsert(req: &CatalogInstallReq, r: &Resolved, kind: &str, file_name: &str) {
     manifest_upsert(&req.profile, ContentEntry {
@@ -243,7 +243,7 @@ fn upsert(req: &CatalogInstallReq, r: &Resolved, kind: &str, file_name: &str) {
 }
 
 async fn install_pack_job(app: &AppHandle, job: &Job, req: &CatalogInstallReq) -> Result<CatalogInstall, String> {
-    job.emit(app, 5.0, "Спрашиваем сборку у Millida…");
+    job.emit(app, 5.0, "Спрашиваем сборку у TurtleClient…");
     let r = resolve(req).await?;
     let fname = safe_file_name(&r.name)?;
     let lower = fname.to_ascii_lowercase();

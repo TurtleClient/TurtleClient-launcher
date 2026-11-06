@@ -8,9 +8,9 @@ import { t, tx } from '../i18n'
 /// «Too Many Requests») не говорит ни что случилось, ни что делать дальше.
 const STATUS_TEXT: Record<number, string> = {
   get 400() { return t('Запрос не принят — проверь введённые данные') },
-  get 401() { return t('Сессия Millida закончилась — войди в аккаунт заново') },
+  get 401() { return t('Сессия TurtleClient закончилась — войди в аккаунт заново') },
   get 402() { return t('Не хватает средств на балансе — пополни счёт и повтори') },
-  get 403() { return t('Millida отказала в этом действии') },
+  get 403() { return t('TurtleClient отказала в этом действии') },
   get 404() { return t('Не найдено — возможно, это уже удалено') },
   get 405() { return t('Действие недоступно — обнови лаунчер и повтори') },
   get 408() { return t('Сервер не ответил вовремя — повтори попытку') },
@@ -20,10 +20,10 @@ const STATUS_TEXT: Record<number, string> = {
   get 415() { return t('Такой формат файла не поддерживается') },
   get 422() { return t('Данные заполнены неверно — проверь поля') },
   get 423() { return t('Действие временно заблокировано — повтори позже') },
-  get 500() { return t('Сбой на стороне Millida — повтори через минуту') },
-  get 502() { return t('Millida временно недоступна — повтори через минуту') },
-  get 503() { return t('Millida перегружена или обновляется — повтори через минуту') },
-  get 504() { return t('Millida не успела ответить — повтори через минуту') },
+  get 500() { return t('Сбой на стороне TurtleClient — повтори через минуту') },
+  get 502() { return t('TurtleClient временно недоступна — повтори через минуту') },
+  get 503() { return t('TurtleClient перегружена или обновляется — повтори через минуту') },
+  get 504() { return t('TurtleClient не успела ответить — повтори через минуту') },
 }
 
 const rateLimitText = (): string => t('Слишком много попыток подряд — подожди немного и повтори')
@@ -80,8 +80,8 @@ export function apiErrorText(e: unknown, fallback: string): string {
   const short = moneyShortfall(e)
   if (short) return shortfallText(short)
 
-  if (OFFLINE.test(raw)) return t('Нет связи с Millida — проверь интернет и повтори')
-  if (TIMEOUT.test(raw)) return t('Millida не ответила вовремя — повтори попытку')
+  if (OFFLINE.test(raw)) return t('Нет связи с TurtleClient — проверь интернет и повтори')
+  if (TIMEOUT.test(raw)) return t('TurtleClient не ответила вовремя — повтори попытку')
   if (isCodeFault(e, raw)) return fallback
 
   const status = statusOf(raw)

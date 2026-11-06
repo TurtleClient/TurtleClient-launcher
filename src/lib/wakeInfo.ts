@@ -26,7 +26,7 @@ export function joinInfo(addr: string): Promise<JoinInfo | null> {
 
 export const wakesOnJoin = (info: JoinInfo | null): boolean => !!info && info.status === 'sleeping' && info.joinStartsServer
 
-/// A Millida hosting server that sleeps and wakes on join: the list shows
+/// A TurtleClient hosting server that sleeps and wakes on join: the list shows
 /// «Включить и зайти» instead of an «офлайн» it cannot act on. Asked only for
 /// servers the list already sees as offline.
 export function useWakeOnJoin(addr: string | null | undefined, offline: boolean): boolean {

@@ -67,7 +67,7 @@ export function PvpPage({ busy, onPlay, arena = true }: { busy: boolean; onPlay:
 
   return (
     <div className="ph-mode pp" data-section="pvp_page" data-kind="pvp" data-id={version}>
-      {/* Сверху — арена Millida SMP; ниже — PvP-клиент для любых серверов.
+      {/* Сверху — арена TurtleClient SMP; ниже — PvP-клиент для любых серверов.
           В разделе PvP арена — своя вкладка, здесь только сборка. */}
       {arena ? <PvpArena /> : null}
       <header className="ph-mode-hero">

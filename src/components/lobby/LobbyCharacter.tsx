@@ -303,7 +303,7 @@ export function LobbyCharacter({
   const stageRef = useRef<HTMLDivElement>(null)
   const viewerRef = useRef<SkinViewEngine | null>(null)
   const activeId = useAccounts((s) => s.active)
-  // Сессия Millida поднимается из хранилища уже после первого кадра, а лобби
+  // Сессия TurtleClient поднимается из хранилища уже после первого кадра, а лобби
   // монтируется сразу: без этой зависимости образ читался «без входа» и вещи
   // не появлялись до следующего захода на главную (владелец 23.09.2026:
   // «косметика полностью вся пропала»).

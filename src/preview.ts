@@ -3,7 +3,7 @@
 // увидеть экраны без Tauri-входа. Подробно — docs/LOCAL-DEV.md.
 //
 // http://127.0.0.1:5173/?preview=user — то же плюс демо-вход: лаунчер считает,
-// что человек вошёл в аккаунт Millida, и все экраны показывают залогиненный
+// что человек вошёл в аккаунт TurtleClient, и все экраны показывают залогиненный
 // вид. Ответы «моих» ручек лежат в src/lib/demo.ts, публичные данные при этом
 // остаются живыми. Всё под import.meta.env.DEV: в релизе ветки нет.
 if (import.meta.env.DEV && !('__TAURI_INTERNALS__' in window) && new URLSearchParams(location.search).has('preview')) {
@@ -64,7 +64,7 @@ if (import.meta.env.DEV && !('__TAURI_INTERNALS__' in window) && new URLSearchPa
     else document.addEventListener('DOMContentLoaded', mark, { once: true })
   }
 
-  // `?preview=onboarding&step=game` shows the game account step that follows a Millida sign-in.
+  // `?preview=onboarding&step=game` shows the game account step that follows a TurtleClient sign-in.
   if (firstRun && new URLSearchParams(location.search).get('step') === 'game')
     setTimeout(() => void import('./state/firstRun').then((m) => m.useFirstRun.setState({ open: true })), 600)
 

@@ -73,7 +73,7 @@ export function openHubTab(t: HubTab | HubSection) {
   setScreen('playhub')
 }
 
-/** PvP-арена Millida SMP в разделе PvP хаба: из лобби, топа и баннера (11.10.2026). */
+/** PvP-арена TurtleClient SMP в разделе PvP хаба: из лобби, топа и баннера (11.10.2026). */
 export function openPvpArena() {
   // PvP — свой раздел, как MCPVP у Dawn (владелец 12.10.2026), а не страница хаба.
   openPvp('play')

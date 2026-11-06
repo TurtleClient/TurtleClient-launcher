@@ -24,7 +24,7 @@ import { useT } from '../../i18n'
  * - несколько — выбор сервера (неподходящие — с причиной, выбрать нельзя).
  *
  * Пути установки — те же, что у сайта и панели хостинга:
- * - материал каталога Millida (`catalog`: раздел + адрес) — `GET
+ * - материал каталога TurtleClient (`catalog`: раздел + адрес) — `GET
  *   /hosting/servers/compatible` решает, какие серверы подходят, `POST
  *   /hosting/servers/:id/install-catalog` ставит (файл под ядро и версию
  *   подбирает бэкенд; как `hosting-catalog-install.tsx` сайта);
@@ -234,7 +234,7 @@ export function HostInstall({
     body = (
       <div className="hi-empty">
         <Icon id="i-server" />
-        <b>{t('Серверы привязаны к аккаунту Millida')}</b>
+        <b>{t('Серверы привязаны к аккаунту TurtleClient')}</b>
         <button className="btn md primary" data-track="login" onClick={() => showLogin()}>
           <Icon id="i-login" /> {t('Войти')}
         </button>

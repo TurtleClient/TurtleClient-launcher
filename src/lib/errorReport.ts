@@ -278,7 +278,7 @@ export const EXPECTED_ANYWHERE: Array<[RegExp, string]> = [
   [/Установка отменена|Запуск отменён/, 'the player cancelled'],
   [/уже идёт — дождись/, 'the same job is already running'],
   [/Сборка сейчас запущена — закрой игру|^Запущенной игры нет$/, 'the game is running, or already gone, when the player acted'],
-  [/^(unauthorized|http 401)$|нет токена Millida|вход по лицензии Microsoft устарел/, 'the session ended; the re-login flow takes it from here'],
+  [/^(unauthorized|http 401)$|нет токена TurtleClient|вход по лицензии Microsoft устарел/, 'the session ended; the re-login flow takes it from here'],
   [/^(pack-access|off-platform): /, 'a verdict the UI turns into its own window'],
   [
     /Сборка с таким именем уже есть|Папка с таким именем уже занята|Имя не может быть пустым|Название мира не может быть пустым|^пустое имя$|^пустой ник$/,

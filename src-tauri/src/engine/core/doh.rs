@@ -233,6 +233,10 @@ impl reqwest::dns::Resolve for FallbackDns {
     fn resolve(&self, name: reqwest::dns::Name) -> reqwest::dns::Resolving {
         let host = name.as_str().to_string();
         Box::pin(async move {
+            if crate::fork::upstream_service(&host) {
+                return Err(Box::new(std::io::Error::other("Upstream services are disabled in TurtleClient"))
+                    as Box<dyn std::error::Error + Send + Sync>);
+            }
             let ips = resolve_with(&host, system_lookup, doh_race, PATIENCE)
                 .await
                 .map_err(|e| Box::new(std::io::Error::other(e)) as Box<dyn std::error::Error + Send + Sync>)?;

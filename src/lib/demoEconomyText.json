@@ -727,21 +727,21 @@
   "tr": "Dört Koli",
   "pl": "Cztery paczki"
  },
- "Месяц с Millida": {
-  "en": "A Month with Millida",
-  "pt-BR": "Um Mês com a Millida",
-  "es": "Un mes con Millida",
-  "de": "Ein Monat mit Millida",
-  "tr": "Millida ile Bir Ay",
-  "pl": "Miesiąc z Millida"
+ "Месяц с TurtleClient": {
+  "en": "A Month with TurtleClient",
+  "pt-BR": "Um Mês com a TurtleClient",
+  "es": "Un mes con TurtleClient",
+  "de": "Ein Monat mit TurtleClient",
+  "tr": "TurtleClient ile Bir Ay",
+  "pl": "Miesiąc z TurtleClient"
  },
- "Год с Millida": {
-  "en": "A Year with Millida",
-  "pt-BR": "Um Ano com a Millida",
-  "es": "Un año con Millida",
-  "de": "Ein Jahr mit Millida",
-  "tr": "Millida ile Bir Yıl",
-  "pl": "Rok z Millida"
+ "Год с TurtleClient": {
+  "en": "A Year with TurtleClient",
+  "pt-BR": "Um Ano com a TurtleClient",
+  "es": "Un año con TurtleClient",
+  "de": "Ein Jahr mit TurtleClient",
+  "tr": "TurtleClient ile Bir Yıl",
+  "pl": "Rok z TurtleClient"
  },
  "Наиграй час в OneBlock": {
   "en": "Play one hour on OneBlock",

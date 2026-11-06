@@ -165,7 +165,7 @@ let amCaller = false
 /// Свой id в соц-графе: локальная учётка лаунчера — это запись о входе, а не
 /// идентификатор, поэтому его сообщает сервер при входе в голос.
 let myId = ''
-/// Party audio goes through the Millida voice relay in the core instead of the
+/// Party audio goes through the TurtleClient voice relay in the core instead of the
 /// WebRTC mesh: the same room the game joins, so the talk survives the launch.
 let relay = false
 let relayUnlisten: Array<() => void> = []
@@ -650,7 +650,7 @@ export function joinRoomVoice(roomId: string, title: string) {
 }
 
 /**
- * The party talks through the Millida voice relay, the room the game joins later. The WebRTC
+ * The party talks through the TurtleClient voice relay, the room the game joins later. The WebRTC
  * mesh stays as the fallback when the relay cannot be reached, and the reason is shown.
  */
 export async function joinPartyVoice(partyId: string, startMuted = false) {
@@ -664,7 +664,7 @@ export async function joinPartyVoice(partyId: string, startMuted = false) {
   const reason = await joinRelayVoice(partyId, startMuted)
   if (reason === null) return
   trackFailure('call', new Error(reason), { step: 'party_relay' })
-  showToast(t('Голос через сервер Millida недоступен: {reason}. Включаю запасной режим', { reason: tx(reason) }), 'error')
+  showToast(t('Голос через сервер TurtleClient недоступен: {reason}. Включаю запасной режим', { reason: tx(reason) }), 'error')
   return joinVoice(partyId, t('Пати'), '/party')
 }
 

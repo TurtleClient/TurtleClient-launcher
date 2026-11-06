@@ -1,4 +1,4 @@
-// Inviting friends: requests to the Millida API (invite status, rewards). The core adds the token.
+// Inviting friends: requests to the TurtleClient API (invite status, rewards). The core adds the token.
 import { api } from './api'
 import { pluralForm as plural, t } from '../i18n'
 

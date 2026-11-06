@@ -33,13 +33,13 @@ export async function sendRequest(opts: Record<string, string>, clear: () => voi
   clear()
 }
 
-/// Заявка тому, кого нашёл поиск Millida, идёт по id; по набранному нику — если
+/// Заявка тому, кого нашёл поиск TurtleClient, идёт по id; по набранному нику — если
 /// поиск такого не вернул (сервер сам скажет, что ника нет).
 export const requestFor = (nick: string, found: FoundUser | null): Record<string, string> =>
   found?.userId ? { targetId: found.userId } : { nickname: found?.nickname || nick }
 
 /**
- * Поиск по нику Millida за полем «Ник друга». Спрашивает сервер, только когда
+ * Поиск по нику TurtleClient за полем «Ник друга». Спрашивает сервер, только когда
  * набранное может стать заявкой; пока человек печатает — ждёт паузу.
  */
 export function useNickLookup(nick: string): FoundUser[] {
@@ -69,7 +69,7 @@ export const exactOf = (nick: string, list: FoundUser[]): FoundUser | null =>
 
 /**
  * «Добавить «ник»»: первая строка поиска, когда в списке такого нет. Ниже —
- * до трёх похожих ников из Millida: набранное могло быть с опечаткой.
+ * до трёх похожих ников из TurtleClient: набранное могло быть с опечаткой.
  */
 export function AddRows({
   nick,

@@ -62,7 +62,7 @@ export function licenseLabel(lic: LicenseInfo | string | null | undefined): Lice
     if (!tail || /^(custom|unknown|other)$/i.test(tail)) return { text: t('Своя лицензия автора'), open: false }
     return { text: tail, open: false }
   }
-  // CurseForge и каталог Millida присылают имя строкой: «MIT License», «Custom».
+  // CurseForge и каталог TurtleClient присылают имя строкой: «MIT License», «Custom».
   if (/^custom$/i.test(id)) return { text: t('Своя лицензия автора'), open: false }
   return { text: name || id.replace(/-/g, ' '), open: OPEN.test(id) }
 }

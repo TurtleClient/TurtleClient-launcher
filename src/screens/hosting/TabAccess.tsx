@@ -120,7 +120,7 @@ export function TabAccess({ serverId }: { serverId: string }) {
         <div className="host-ask">
           <div className="input sm" style={{ flex: 1 }}>
             <input
-              placeholder={t('Почта аккаунта Millida')}
+              placeholder={t('Почта аккаунта TurtleClient')}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && void addShare()}

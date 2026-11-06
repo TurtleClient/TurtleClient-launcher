@@ -1,5 +1,5 @@
-// Live connection to the Millida server (wss://api.millida.net/v2/realtime, Centrifugo) for friends, statuses, calls and chats.
-// Opens only after Millida account login. The API gives the socket token on request at /realtime/token. Channels: friends, presence, calls,
+// Live connection to the TurtleClient server (wss://api.millida.net/v2/realtime, Centrifugo) for friends, statuses, calls and chats.
+// Opens only after TurtleClient account login. The API gives the socket token on request at /realtime/token. Channels: friends, presence, calls,
 // inbox, hosting, account, party, rooms. The install id is sent only if statistics are on.
 // Клиент сокета (≈60 КБ) приходит отдельным чанком: окно открывается без него, сокет поднимается следом.
 import type { Centrifuge } from 'centrifuge'

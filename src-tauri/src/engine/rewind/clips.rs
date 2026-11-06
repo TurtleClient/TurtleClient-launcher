@@ -1,4 +1,4 @@
-// Saving a clip to the "Videos\Millida Clips" folder: written to a temporary .part file and renamed on success. Clip list and delete.
+// Saving a clip to the "Videos\TurtleClient Clips" folder: written to a temporary .part file and renamed on success. Clip list and delete.
 use serde::Serialize;
 use std::path::{Path, PathBuf};
 
@@ -6,7 +6,7 @@ use super::mp4;
 use super::ring::Clip;
 use crate::engine::core::safe_child;
 
-const FOLDER: &str = "Millida Clips";
+const FOLDER: &str = "TurtleClient Clips";
 const EXTENSION: &str = "mp4";
 const PARTIAL: &str = "part";
 const MAX_LISTED: usize = 300;
@@ -127,7 +127,7 @@ pub fn resolve(dir: &Path, name: &str) -> Result<PathBuf, String> {
 
 pub fn delete(dir: &Path, name: &str) -> Result<(), String> {
     let path = resolve(dir, name)?;
-    // The player deleted a clip: delete one mp4 from the Millida Clips folder.
+    // The player deleted a clip: delete one mp4 from the TurtleClient Clips folder.
     std::fs::remove_file(&path).map_err(|e| format!("Не удалось удалить клип: {}", e))
 }
 
