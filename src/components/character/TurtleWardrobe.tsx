@@ -21,8 +21,9 @@ export function TurtleWardrobe({ category,slots,ownedOnly=false }: {category:str
       const equipped=item.slot==='cape' ? !!state.snapshot?.cape && item.hash===state.snapshot.cape_revision : state.snapshot?.equipped[item.slot]===item.id
       const available=owned(item)
       const price=turtlePrice(item,getLocale()) || t('Turtle: shop item')
+      const status=equipped?t('Turtle: equipped — click to unequip'):available?t('Turtle: click to equip'):price
       return <ItemTile key={item.id} name={item.name} itemId={item.id} art={item.slot==='cape'?<img src={`${TURTLE_API}/api/cape/${encodeURIComponent(item.owner)}`} width={128} height={128} alt="" style={{objectFit:'contain',imageRendering:'pixelated'}} />:<ModelArt item={item} />}
-        on={equipped} status={equipped?t('Turtle: equipped — click to unequip'):available?t('Turtle: click to equip'):price} loading={state.busy===item.slot} locked={!equipped && !available}
+        on={equipped} status={<span className="ch-tile-note" title={status}>{status}</span>} loading={state.busy===item.slot} locked={!equipped && !available}
         onClick={()=>{if(!equipped && !available){setScreen('rubies');return}if(state.accountId && !state.busy)void wearTurtle(item.slot,equipped?null:item.id)}} />
     })}</ItemGrid>
     {catalog && !items.length && <p className="faint-note">{t('Turtle: no items yet.')}</p>}

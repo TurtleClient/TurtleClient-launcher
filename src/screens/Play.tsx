@@ -35,7 +35,6 @@ import { scheduleLaunchWarm } from '../lib/launchWarm'
 import { playButtonState } from '../lib/launchView'
 import { playHoursLabel, playTier } from '../lib/playTiers'
 import { isDayZero } from '../lib/retention'
-import { LobbyChips } from '../components/lobby/LobbyChips'
 import { PlayChest } from '../components/lobby/PlayChest'
 import { DailyPassModal } from '../components/daily/DailyPassModal'
 import { useDailyModalHost } from '../components/daily/DailyChest'
@@ -278,14 +277,8 @@ export function Play({ on }: { on: boolean }) {
           <HubTile kind="shop" />
           {TIERS_SECTION_PUBLIC ? <HubTile kind="pvp" /> : null}
           <HubTile kind="wardrobe" />
-          <HubTile kind="server" />
         </nav>
       </div>
-      {/* Кнопки пати стоят над «Играть» всегда: «Найти пати» на том же месте становится «Отменой». */}
-      <div className="lobby-who">
-        <LobbyChips on={on} />
-      </div>
-
       <div className={'lobby-side' + (dayZero ? ' day0' : '')}>
         {/* Downloads sit above the play card: in the window corner they covered
             the card on narrow screens. */}

@@ -76,9 +76,6 @@ function OwnCard({ s, onJoin, onStart }: { s: HostServer; onJoin: () => void; on
             <Icon id="i-play" /> {t('Запустить')}
           </button>
         )}
-        <button className="btn md secondary" data-sound="open" data-track="invite_friends" onClick={() => setScreen('friends')}>
-          <Icon id="i-users" /> {t('Позвать друзей')}
-        </button>
         <button className="btn md secondary" data-sound="open" data-track="server_manage" onClick={() => setScreen('hosting')}>
           <Icon id="i-server-cog" /> {t('Управлять')}
         </button>

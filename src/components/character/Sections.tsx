@@ -34,6 +34,7 @@ export function SectionBar({
           key={s.key}
           role="tab"
           aria-selected={s.key === active}
+          aria-label={s.name}
           className={'ch-slot' + (s.key === active ? ' on' : '')}
           data-track={'wardrobe_tab_' + s.key}
           onClick={() => onPick(s.key)}
