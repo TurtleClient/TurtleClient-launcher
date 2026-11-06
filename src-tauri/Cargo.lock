@@ -2751,61 +2751,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "turtleclient-launcher"
-version = "2.0.0"
-dependencies = [
- "aes-gcm",
- "base64 0.22.1",
- "chrono",
- "dirs 6.0.0",
- "discord-rich-presence",
- "encoding_rs",
- "flate2",
- "futures",
- "hickory-resolver",
- "hkdf",
- "image",
- "lewton",
- "libc",
- "md-5",
- "millida-voice",
- "minisign-verify",
- "objc2",
- "objc2-app-kit",
- "objc2-foundation",
- "objc2-service-management",
- "reqwest 0.12.28",
- "rfd",
- "semver",
- "serde",
- "serde_json",
- "sha1",
- "sha2",
- "sysinfo",
- "tauri",
- "tauri-build",
- "tauri-plugin-autostart",
- "tauri-plugin-clipboard-manager",
- "tauri-plugin-deep-link",
- "tauri-plugin-global-shortcut",
- "tauri-plugin-opener",
- "tauri-plugin-process",
- "tauri-plugin-single-instance",
- "tauri-plugin-updater",
- "tokio",
- "toml 0.9.12+spec-1.1.0",
- "url",
- "webview2-com",
- "windows 0.61.3",
- "windows-core 0.61.2",
- "windows-registry 0.5.3",
- "windows-sys 0.61.2",
- "zbus",
- "zip 2.4.2",
- "zstd",
-]
-
-[[package]]
 name = "millida-voice"
 version = "0.1.0"
 dependencies = [
@@ -5772,6 +5717,61 @@ name = "try-lock"
 version = "0.2.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e421abadd41a4225275504ea4d6566923418b7f05506fbc9c0fe86ba7396114b"
+
+[[package]]
+name = "turtleclient-launcher"
+version = "2.0.0"
+dependencies = [
+ "aes-gcm",
+ "base64 0.22.1",
+ "chrono",
+ "dirs 6.0.0",
+ "discord-rich-presence",
+ "encoding_rs",
+ "flate2",
+ "futures",
+ "hickory-resolver",
+ "hkdf",
+ "image",
+ "lewton",
+ "libc",
+ "md-5",
+ "millida-voice",
+ "minisign-verify",
+ "objc2",
+ "objc2-app-kit",
+ "objc2-foundation",
+ "objc2-service-management",
+ "reqwest 0.12.28",
+ "rfd",
+ "semver",
+ "serde",
+ "serde_json",
+ "sha1",
+ "sha2",
+ "sysinfo",
+ "tauri",
+ "tauri-build",
+ "tauri-plugin-autostart",
+ "tauri-plugin-clipboard-manager",
+ "tauri-plugin-deep-link",
+ "tauri-plugin-global-shortcut",
+ "tauri-plugin-opener",
+ "tauri-plugin-process",
+ "tauri-plugin-single-instance",
+ "tauri-plugin-updater",
+ "tokio",
+ "toml 0.9.12+spec-1.1.0",
+ "url",
+ "webview2-com",
+ "windows 0.61.3",
+ "windows-core 0.61.2",
+ "windows-registry 0.5.3",
+ "windows-sys 0.61.2",
+ "zbus",
+ "zip 2.4.2",
+ "zstd",
+]
 
 [[package]]
 name = "typeid"

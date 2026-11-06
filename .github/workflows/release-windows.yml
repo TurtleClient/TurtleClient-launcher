@@ -1,0 +1,70 @@
+name: TurtleClient Windows release
+on:
+  push:
+    branches: [main]
+    paths-ignore: ['docs/**', '**/*.md', 'services/**']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: turtleclient-windows-release
+  cancel-in-progress: false
+jobs:
+  release:
+    runs-on: windows-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.4
+      - name: Install Rust
+        run: rustup toolchain install stable --profile minimal
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            src-tauri/target
+          key: windows-release-${{ hashFiles('src-tauri/Cargo.lock') }}-${{ github.sha }}
+          restore-keys: windows-release-${{ hashFiles('src-tauri/Cargo.lock') }}-
+      - run: bun install --frozen-lockfile
+      - name: Verify updater and connection behavior
+        run: bun scripts/test.mjs updater.test updatePolicy.test remoteUi.test friendsConnection.test turtle-release.test
+      - name: Set monotonically increasing release version
+        id: version
+        run: bun scripts/turtle-release.mjs prepare
+      - name: Build signed installer in a draft release
+        uses: tauri-apps/tauri-action@84b9d35b5fc46c1e45415bdb6144030364f7ebc5 # v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ''
+        with:
+          tagName: v__VERSION__
+          releaseName: TurtleClient Launcher __VERSION__
+          releaseBody: |
+            Automatischer Windows-x64-Build von TurtleClient Launcher.
+            Den Setup-Installer einmal installieren; zukünftige Versionen werden beim Start signiert aktualisiert.
+            Quellstand: ${{ github.sha }}
+          releaseDraft: true
+          prerelease: false
+          includeUpdaterJson: true
+          updaterJsonPreferNsis: true
+          tauriScript: bun run tauri
+          args: --ci --bundles nsis --config src-tauri/tauri.release.conf.json -- --locked
+      - name: Validate and publish the complete update atomically
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_VERSION: ${{ steps.version.outputs.version }}
+          GH_REPO: TurtleClient/turtleclient-launcher
+        run: |
+          gh release download "v$env:RELEASE_VERSION" --pattern latest.json --dir updater-manifest
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          bun scripts/turtle-release.mjs manifest updater-manifest/latest.json
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          gh release upload "v$env:RELEASE_VERSION" updater-manifest/latest.json --clobber
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          gh release edit "v$env:RELEASE_VERSION" --draft=false --latest

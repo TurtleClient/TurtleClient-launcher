@@ -19,7 +19,7 @@ use super::paths::open_path;
 // tauri.conf.json, so the fallback is not a hole through which a compromised CDN
 // could run an arbitrary installer.
 // Fallback address of the version list. It returns json with the version, the file link and the signature. The main path goes through the Tauri updater plugin.
-const FALLBACK_ENDPOINTS: &[&str] = &["https://launcher-storage.millida.net/latest.json"];
+const FALLBACK_ENDPOINTS: &[&str] = &["https://github.com/TurtleClient/turtleclient-launcher/releases/latest/download/latest.json"];
 
 // Testing channel. The player opts in from settings and then sees a release
 // before everyone else, so a heavy change lands on a few hundred machines
@@ -970,18 +970,18 @@ mod tests {
     fn testing_channel_only_swaps_the_manifest_name() {
         let cases: [(&str, Option<&str>); 6] = [
             (
-                "https://launcher-storage.millida.net/v2/latest.json",
-                Some("https://launcher-storage.millida.net/v2/beta.json"),
+                "https://github.com/TurtleClient/turtleclient-launcher/releases/latest/download/v2/latest.json",
+                Some("https://github.com/TurtleClient/turtleclient-launcher/releases/latest/download/v2/beta.json"),
             ),
             (
-                "https://launcher-storage.millida.net/v2/gh/latest.json?v=2.0.203",
-                Some("https://launcher-storage.millida.net/v2/gh/beta.json?v=2.0.203"),
+                "https://github.com/TurtleClient/turtleclient-launcher/releases/latest/download/v2/gh/latest.json?v=2.0.203",
+                Some("https://github.com/TurtleClient/turtleclient-launcher/releases/latest/download/v2/gh/beta.json?v=2.0.203"),
             ),
             (
-                "https://launcher-storage.millida.net/latest.json",
-                Some("https://launcher-storage.millida.net/beta.json"),
+                "https://github.com/TurtleClient/turtleclient-launcher/releases/latest/download/latest.json",
+                Some("https://github.com/TurtleClient/turtleclient-launcher/releases/latest/download/beta.json"),
             ),
-            ("https://launcher-storage.millida.net/v2/install.json", None),
+            ("https://github.com/TurtleClient/turtleclient-launcher/releases/latest/download/v2/install.json", None),
             ("https://evil.example/latest.json.txt", None),
             ("latest.json", None),
         ];
@@ -1001,14 +1001,14 @@ mod tests {
     /// на части людей» превратилось бы в «стучимся всеми».
     #[test]
     fn testing_channel_asks_beta_before_its_own_stable_neighbour() {
-        let configured = vec!["https://launcher-storage.millida.net/v2/latest.json".to_string()];
+        let configured = vec!["https://github.com/TurtleClient/turtleclient-launcher/releases/latest/download/v2/latest.json".to_string()];
 
         let off = channel_order(&configured, false);
         assert_eq!(
             off,
             vec![
-                "https://launcher-storage.millida.net/v2/latest.json".to_string(),
-                "https://launcher-storage.millida.net/latest.json".to_string(),
+                "https://github.com/TurtleClient/turtleclient-launcher/releases/latest/download/v2/latest.json".to_string(),
+                "https://github.com/TurtleClient/turtleclient-launcher/releases/latest/download/latest.json".to_string(),
             ],
             "без галки бета не спрашивается вовсе"
         );
@@ -1017,10 +1017,10 @@ mod tests {
         assert_eq!(
             on,
             vec![
-                "https://launcher-storage.millida.net/v2/beta.json".to_string(),
-                "https://launcher-storage.millida.net/v2/latest.json".to_string(),
-                "https://launcher-storage.millida.net/beta.json".to_string(),
-                "https://launcher-storage.millida.net/latest.json".to_string(),
+                "https://github.com/TurtleClient/turtleclient-launcher/releases/latest/download/v2/beta.json".to_string(),
+                "https://github.com/TurtleClient/turtleclient-launcher/releases/latest/download/v2/latest.json".to_string(),
+                "https://github.com/TurtleClient/turtleclient-launcher/releases/latest/download/beta.json".to_string(),
+                "https://github.com/TurtleClient/turtleclient-launcher/releases/latest/download/latest.json".to_string(),
             ],
             "с галкой каждая бета идёт перед своим стабильным соседом"
         );

@@ -4,5 +4,5 @@ export const BRAND = {
   repository: 'https://github.com/TurtleClient/turtleclient-launcher',
   upstream: 'https://github.com/millida/launcher',
   services: false,
-  updates: false,
+  updates: true,
 } as const

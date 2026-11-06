@@ -7,7 +7,8 @@ This is an independent fork and is not affiliated with or endorsed by Millida, M
 
 Initial TurtleClient branding: app identity, window title, installer metadata, logos, icons and UI text.
 The launcher opens the existing Microsoft/offline game-account flow without requiring a Millida account.
-Millida online services and automatic updates are disabled. Development sign-in temporarily uses the
+Millida online services are disabled. Signed Windows launcher updates come from this repository's
+GitHub Releases and are checked on startup. Development sign-in temporarily uses the
 **installed Horizon Launcher as an external authentication backend**, through its public CLI and
 read-once session handoff. The interface identifies this as sign-in via Horizon. The helper is not
 bundled, and Horizon's OAuth application ID is not copied into TurtleClient.
@@ -37,7 +38,8 @@ bun run tauri dev
 ```
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) and [BUILDING.md](BUILDING.md) for prerequisites.
-Upstream CI release/publishing workflows are disabled for this fork until its release infrastructure is configured.
+Upstream publishing workflows remain disabled. TurtleClient's own Windows workflow builds and
+signs a release after changes to `main`; see [automatic updates](docs/automatic-updates.md).
 
 ## License and attribution
 

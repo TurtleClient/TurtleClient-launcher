@@ -55,7 +55,7 @@ export interface RemoteUiModule {
 }
 
 export function remoteUiEnabled(now = Date.now()): boolean {
-  if (!BRAND.updates) return false
+  if (!BRAND.updates || !REMOTE_UI_BASE) return false
   try {
     if (localStorage.getItem(OFF_KEY) === '1') return false
     const off = Number(localStorage.getItem(SITE_OFF_KEY) || 0)
