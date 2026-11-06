@@ -1,181 +1,13 @@
-// Microsoft login by device code: the launcher shows a code, you type it at microsoft.com/link. The launcher never sees the password.
-// The core keeps the Microsoft token (msDevice*/msSession* commands). The UI gets only the nickname and uuid.
-import { create } from 'zustand'
+// Startup account renewal. Interactive device-code sign-in lives in its own lazy chunk.
 import { hasTauri } from '../ipc/tauri'
-import { msDevicePoll, msDeviceStart, msSessionCommit, msSessionRefresh, msSessionValidate, openUrl } from '../ipc/commands'
+import { msSessionRefresh, msSessionValidate } from '../ipc/commands'
 import { getAccount, hasLicenseSession, msTokenFresh, useAccounts } from './accounts'
 import type { Account } from './accounts'
-import { showToast } from './ui'
-import { enterApp } from '../lib/session'
 import { refreshSessionState } from '../lib/secure'
-import { copyText } from '../lib/clipboard'
-import { copyLink } from '../lib/links'
-import { apiErrorText } from '../lib/apiError'
-import { track, trackFailure } from '../lib/telemetry'
-import { t } from '../i18n'
-import { CORE_NO_CONNECTION } from '../lib/coreErrors'
-
-interface MsLoginState {
-  busy: boolean
-  userCode: string
-  verifyUrl: string
-  hint: string
-  set: (patch: Partial<MsLoginState>) => void
-}
-
-const MS_VERIFY_URL = 'https://www.microsoft.com/link'
-const MAX_POLL_NET_FAILS = 6
-
-export const useMsLogin = create<MsLoginState>((set) => ({
-  busy: false,
-  userCode: '',
-  verifyUrl: '',
-  hint: '',
-  set: (patch) => set(patch as MsLoginState),
-}))
-
-let pollTimer: ReturnType<typeof setTimeout> | null = null
-let flowSeq = 0
-
-function reset(hint?: string) {
-  flowSeq++
-  if (pollTimer) clearTimeout(pollTimer)
-  pollTimer = null
-  useMsLogin.getState().set({ busy: false, userCode: '', verifyUrl: '', hint: hint || '' })
-}
-
-export function cancelMsLogin() {
-  reset()
-}
-
-export function openMsVerifyPage() {
-  const url = useMsLogin.getState().verifyUrl || MS_VERIFY_URL
-  if (hasTauri()) openUrl(url)
-  else window.open(url, '_blank')
-}
-
-export function copyMsVerifyLink() {
-  void copyLink(useMsLogin.getState().verifyUrl || MS_VERIFY_URL)
-}
-
-export async function copyMsCode() {
-  const code = useMsLogin.getState().userCode
-  if (!code) {
-    showToast(t('Код ещё не пришёл — подожди пару секунд'))
-    return
-  }
-  showToast((await copyText(code)) ? t('Код скопирован: {code}', { code }) : t('Скопируй код вручную: {code}', { code }))
-}
-
-const maskNick = (e: unknown, nick: string) => (nick ? String(e).split(nick).join('<nick>') : String(e))
-
-// Microsoft refuses a device code it already redeemed or dropped; only a fresh code can finish the sign-in.
-const SPENT_DEVICE_CODE = /AADSTS70000\b/
 
 export async function startMsLogin(afterSpentCode = false) {
-  const s = useMsLogin.getState()
-  if (s.busy) {
-    openMsVerifyPage()
-    return
-  }
-  if (!hasTauri()) {
-    showToast(t('Вход по лицензии доступен только в приложении лаунчера'), 'error')
-    return
-  }
-  s.set({ busy: true, hint: t('Запрашиваем код у Microsoft…') })
-  const flow = ++flowSeq
-  let init
-  try {
-    try {
-      init = await msDeviceStart()
-    } catch (e) {
-      if (!String(e).startsWith(CORE_NO_CONNECTION)) throw e
-      await new Promise((r) => setTimeout(r, 1500))
-      init = await msDeviceStart()
-    }
-  } catch (e) {
-    if (flow !== flowSeq) return
-    trackFailure('login', e, { provider: 'microsoft', step: 'start' })
-    reset(apiErrorText(e, t('Microsoft не ответила — повтори попытку')))
-    showToast('Microsoft: ' + apiErrorText(e, t('нет ответа')), 'error')
-    return
-  }
-  if (flow !== flowSeq) return
-  const url = init.verification_uri || MS_VERIFY_URL
-  useMsLogin.getState().set({
-    userCode: init.user_code,
-    verifyUrl: url,
-    hint: afterSpentCode
-      ? t('Microsoft не приняла прошлый код — введи новый код на странице Microsoft.')
-      : t('Введи код на странице Microsoft и подтверди вход.'),
-  })
-  openMsVerifyPage()
-  void copyText(init.user_code).then((copied) => {
-    if (!copied || useMsLogin.getState().userCode !== init.user_code) return
-    useMsLogin.getState().set({ hint: t('Код скопирован — вставь его на странице Microsoft и подтверди вход.') })
-  })
-
-  const intervalMs = Math.max(2, init.interval || 5) * 1000
-  const deadline = Date.now() + 15 * 60 * 1000
-  let netFails = 0
-
-  const poll = async () => {
-    if (flow !== flowSeq) return
-    if (Date.now() > deadline) {
-      reset(t('Время вышло — начни вход заново.'))
-      return
-    }
-    let r
-    try {
-      r = await msDevicePoll(init.device_code)
-      netFails = 0
-    } catch (e) {
-      if (flow !== flowSeq) return
-      // Обрыв соединения посреди ожидания не должен убивать вход: код устройства жив 15 минут.
-      if (String(e).startsWith(CORE_NO_CONNECTION) && ++netFails <= MAX_POLL_NET_FAILS) {
-        trackFailure('login', e, { provider: 'microsoft', step: 'poll_retry', attempt: netFails })
-        pollTimer = setTimeout(() => void poll(), intervalMs)
-        return
-      }
-      trackFailure('login', e, { provider: 'microsoft', step: 'poll', after_spent: afterSpentCode })
-      if (SPENT_DEVICE_CODE.test(String(e)) && !afterSpentCode) {
-        reset()
-        void startMsLogin(true)
-        return
-      }
-      const message = apiErrorText(e, t('Microsoft не ответила — повтори попытку'))
-      reset(message)
-      showToast('Microsoft: ' + message, 'error')
-      return
-    }
-    if (flow !== flowSeq) return
-    if (r.status === 'pending') {
-      pollTimer = setTimeout(() => void poll(), intervalMs)
-      return
-    }
-    const acc = useAccounts.getState().add({
-      nick: r.nick,
-      kind: 'microsoft',
-      uuid: r.uuid,
-      xuid: r.xuid,
-      exp: expiresAt(r.expires_in),
-    })
-    try {
-      await msSessionCommit(init.device_code, acc.id)
-    } catch (e) {
-      useAccounts.getState().remove(acc.id)
-      trackFailure('login', maskNick(e, r.nick), { provider: 'microsoft', step: 'commit' })
-      reset(String(e))
-      showToast('Microsoft: ' + e, 'error')
-      return
-    }
-    await refreshSessionState()
-    reset()
-    enterApp()
-    track('account_link', { kind: 'microsoft' })
-    showToast(t('Лицензия подключена: {nick}', { nick: r.nick }))
-  }
-  pollTimer = setTimeout(() => void poll(), intervalMs)
+  const flow = await import('./msLoginFlow')
+  return flow.startMsLogin(afterSpentCode)
 }
 
 // Identifies a live licensed session. The token behind it stays in the core.
@@ -185,7 +17,7 @@ export interface MsAuth {
   xuid: string
 }
 
-const expiresAt = (seconds?: number) => Date.now() + Math.max(60, seconds || 86400) * 1000
+export const expiresAt = (seconds?: number) => Date.now() + Math.max(60, seconds || 86400) * 1000
 
 function patchAccount(id: string, patch: Partial<Account>) {
   const st = useAccounts.getState()

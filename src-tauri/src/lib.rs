@@ -49,6 +49,7 @@ pub fn exiting() -> bool {
 
 pub(crate) fn mark_exiting() {
     EXITING.store(true, std::sync::atomic::Ordering::SeqCst);
+    engine::cancel_horizon_signins();
 }
 
 fn on_run_event(app: &tauri::AppHandle, event: &tauri::RunEvent) {
@@ -466,6 +467,7 @@ pub fn run() {
             commands::profiles::import_dropped_pack,
             commands::accounts::ms_device_start,
             commands::accounts::ms_device_poll,
+            commands::accounts::ms_device_cancel,
             commands::accounts::ms_session_commit,
             commands::accounts::ms_session_refresh,
             commands::accounts::ms_session_validate,

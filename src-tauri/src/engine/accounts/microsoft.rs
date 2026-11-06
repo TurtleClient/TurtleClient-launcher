@@ -16,6 +16,7 @@ pub(crate) fn ms_client_id() -> &'static str {
 }
 
 pub async fn ms_device_start() -> Result<Value, String> {
+    if super::horizon::enabled() { return super::horizon::start().await; }
     let client_id = ms_client_id();
     if client_id.is_empty() {
         return Err("Microsoft sign-in is not configured for TurtleClient".into());
@@ -81,6 +82,7 @@ where
 
 /// One polling step: {status:"pending"} or {status:"ok",nick,uuid,token}.
 pub async fn ms_device_poll(device_code: String) -> Result<Value, String> {
+    if device_code.starts_with("horizon:") { return super::horizon::poll(&device_code); }
     device_login(&device_code, redeem_device_code, |token| async move { xbox_chain(&token).await }).await
 }
 

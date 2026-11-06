@@ -77,12 +77,7 @@ export function apiErrorText(e: unknown, fallback: string): string {
   const held = offPlatformReason(e)
   if (held) return held
   if (!raw) return fallback
-  if (raw === 'minecraft_app_registration_required') {
-    return t('Minecraft rejected this launcher’s app registration (HTTP 403). The launcher developer must request Minecraft API access: https://aka.ms/mce-reviewappid')
-  }
-  if (raw === 'minecraft_login_forbidden') {
-    return t('Minecraft Services refused the login (HTTP 403). Microsoft sign-in succeeded, but Minecraft access was denied.')
-  }
+  if (/^(horizon_auth_|minecraft_)/.test(raw)) return fallback
   const short = moneyShortfall(e)
   if (short) return shortfallText(short)
 

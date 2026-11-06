@@ -7,10 +7,15 @@ This is an independent fork and is not affiliated with or endorsed by Millida, M
 
 Initial TurtleClient branding: app identity, window title, installer metadata, logos, icons and UI text.
 The launcher opens the existing Microsoft/offline game-account flow without requiring a Millida account.
-Millida online services and automatic updates are disabled. Microsoft sign-in uses TurtleClient's own
-public Entra application ID `effe2670-984b-4dc6-89d9-73e11c733c40`. Fork builds can override it at
-build time with `TURTLECLIENT_MS_CLIENT_ID`; no upstream ID is used. The app registration must
-allow personal Microsoft accounts and public client/device-code flows.
+Millida online services and automatic updates are disabled. Development sign-in temporarily uses the
+**installed Horizon Launcher as an external authentication backend**, through its public CLI and
+read-once session handoff. The interface identifies this as sign-in via Horizon. The helper is not
+bundled, and Horizon's OAuth application ID is not copied into TurtleClient.
+
+Set the runtime environment variable `TURTLECLIENT_AUTH_PROVIDER=microsoft` to use TurtleClient's
+own public Entra application ID `effe2670-984b-4dc6-89d9-73e11c733c40` directly. Fork builds can
+override that ID at build time with `TURTLECLIENT_MS_CLIENT_ID`. Direct sign-in requires a correctly
+configured registration and Minecraft API approval.
 See [Microsoft/Minecraft sign-in](docs/microsoft-login.md) for the separate Minecraft API approval step
 and the meaning of HTTP 403 after Microsoft sign-in.
 The native TurtleClient (Rust) launch integration is a separate next step; this baseline still launches Java Minecraft.

@@ -16,3 +16,7 @@ Upstream publishing workflows are archived under `.github/upstream-workflows/`.
 Before a binary release: finish reviewing/replacing remaining upstream design artwork and service
 screens, configure TurtleClient's own Microsoft application and signed update pipeline, and implement
 native TurtleClient launch support. The current baseline is a Java Minecraft launcher fork.
+
+Development authentication now delegates to the installed Horizon Launcher's public account/session
+CLI. Horizon is an external MIT-licensed program, not bundled code. TurtleClient's own Microsoft
+application ID remains available through `TURTLECLIENT_AUTH_PROVIDER=microsoft`.

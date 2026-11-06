@@ -7,7 +7,7 @@ import { useGameNick } from '../state/gameNick'
 import { hasMillidaAccount } from '../lib/api'
 import { useAccountAdd, type AccountAddKind } from '../state/accountAdd'
 import { cancelWebLogin, copyUserCode, copyVerifyLink, startWebLogin, useLogin } from '../state/login'
-import { cancelMsLogin, copyMsCode, copyMsVerifyLink, openMsVerifyPage, startMsLogin, useMsLogin } from '../state/msLogin'
+import { cancelMsLogin, copyMsCode, copyMsVerifyLink, openMsVerifyPage, startMsLogin, useMsLogin } from '../state/msLoginFlow'
 import { enterApp } from '../lib/session'
 import { backdropClose } from '../lib/dismiss'
 import { useT, type Vars } from '../i18n'
@@ -118,6 +118,9 @@ export function KindPanel({ kind, onBack, onDone, onSafety }: { kind: Kind; onBa
         <div style={{ marginTop: '16px' }}>
           {busy && code ? (
             <>
+              {ms.provider === 'horizon' && !millida ? (
+                <p className="faint-note">{t('Temporary sign-in via Horizon. Confirm this code on Microsoft’s page.')}</p>
+              ) : null}
               <button
                 className="acc-code"
                 aria-label={t('Скопировать код')}

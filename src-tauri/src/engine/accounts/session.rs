@@ -107,6 +107,11 @@ pub fn ms_login_commit(device_code: &str, account_id: &str) -> Result<(), String
     commit_login(device_code, account_id, "вход Microsoft не найден — начни заново")
 }
 
+pub fn ms_login_cancel(device_code: &str) {
+    take(device_code);
+    super::horizon::ms_device_cancel(device_code);
+}
+
 fn commit_login(device_code: &str, account_id: &str, missing: &str) -> Result<(), String> {
     let id = self::account_id(account_id)?;
     let p = take(device_code).ok_or(missing)?;
@@ -114,7 +119,9 @@ fn commit_login(device_code: &str, account_id: &str, missing: &str) -> Result<()
     if !p.refresh.is_empty() {
         pairs.push((ms_refresh_key(id), p.refresh));
     }
-    crate::secrets::set_many(pairs)
+    crate::secrets::set_many(pairs)?;
+    super::horizon::ms_device_cancel(device_code);
+    Ok(())
 }
 
 /// Only a revoked or expired refresh token warrants wiping the session; a network failure, a busy
@@ -148,6 +155,21 @@ pub async fn ms_session_refresh(account_id: &str) -> Result<Value, String> {
     let Some(rt) = crate::secrets::get(&ms_refresh_key(id)).filter(|t| !t.is_empty()) else {
         return Ok(serde_json::json!({ "status": "none" }));
     };
+    if rt.starts_with("horizon:") {
+        return match super::horizon::refresh(rt).await {
+            Ok(mut j) => {
+                let token = j["token"].as_str().filter(|t| !t.is_empty()).ok_or("horizon_auth_failed")?.to_string();
+                crate::secrets::set_many(vec![(mc_token_key(id), token)])?;
+                if let Some(object) = j.as_object_mut() { object.remove("token"); object.remove("refresh_token"); }
+                Ok(j)
+            }
+            Err(e) if e == "horizon_auth_relogin" => {
+                ms_forget(id)?;
+                Ok(serde_json::json!({"status":"relogin"}))
+            }
+            Err(e) => Err(e),
+        };
+    }
     let (ms_token, next) = match ms_refresh_token(&rt).await {
         Ok(pair) => pair,
         Err(e) if needs_relogin(&e) => {

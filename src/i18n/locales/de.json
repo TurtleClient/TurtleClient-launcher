@@ -6478,5 +6478,9 @@
   "{n} очков достижений": "{n} Erfolgspunkte",
   "хранилище входа сейчас занято другой программой (антивирус?) — повтори через несколько секунд": "der Anmeldespeicher wird gerade von einem anderen Programm benutzt (Antivirus?) — versuche es in ein paar Sekunden erneut",
   "Minecraft rejected this launcher’s app registration (HTTP 403). The launcher developer must request Minecraft API access: https://aka.ms/mce-reviewappid": "Minecraft hat die App-Registrierung dieses Launchers abgelehnt (HTTP 403). Der Launcher-Entwickler muss den Minecraft-API-Zugriff beantragen: https://aka.ms/mce-reviewappid",
-  "Minecraft Services refused the login (HTTP 403). Microsoft sign-in succeeded, but Minecraft access was denied.": "Minecraft Services hat die Anmeldung abgelehnt (HTTP 403). Die Microsoft-Anmeldung war erfolgreich, der Minecraft-Zugriff wurde jedoch verweigert."
+  "Minecraft Services refused the login (HTTP 403). Microsoft sign-in succeeded, but Minecraft access was denied.": "Minecraft Services hat die Anmeldung abgelehnt (HTTP 403). Die Microsoft-Anmeldung war erfolgreich, der Minecraft-Zugriff wurde jedoch verweigert.",
+  "Temporary sign-in requires the Horizon Launcher. Please install Horizon first.": "Für die vorübergehende Anmeldung wird der Horizon-Launcher benötigt. Bitte installiere zuerst Horizon.",
+  "Sign-in through Horizon failed or was cancelled. Please try again.": "Die Anmeldung über Horizon ist fehlgeschlagen oder wurde abgebrochen. Bitte versuche es erneut.",
+  "Your Horizon session needs a new sign-in. Please sign in again.": "Deine Horizon-Sitzung benötigt eine neue Anmeldung. Bitte melde dich erneut an.",
+  "Temporary sign-in via Horizon. Confirm this code on Microsoft’s page.": "Vorübergehende Anmeldung über Horizon. Bestätige diesen Code auf der Microsoft-Seite."
 }

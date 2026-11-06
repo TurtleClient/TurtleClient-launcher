@@ -48,6 +48,9 @@ pub async fn ms_device_poll(device_code: String) -> Result<serde_json::Value, St
     engine::ms_login_poll(device_code).await
 }
 
+#[tauri::command]
+pub fn ms_device_cancel(device_code: String) { engine::ms_login_cancel(&device_code); }
+
 /// Binds the finished Microsoft login to the account row the frontend created.
 #[tauri::command(async)]
 pub fn ms_session_commit(device_code: String, account_id: String) -> Result<(), String> {

@@ -175,6 +175,7 @@ permissions = [
   "allow-import-dropped-pack",
   "allow-ms-device-start",
   "allow-ms-device-poll",
+  "allow-ms-device-cancel",
   "allow-ms-session-commit",
   "allow-ms-session-refresh",
   "allow-ms-session-validate",

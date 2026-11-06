@@ -20,6 +20,8 @@ const calls = { refresh: 0, validate: 0 }
 let refreshImpl: () => Promise<unknown> = async () => ({ status: 'none' })
 let validateImpl: () => Promise<unknown> = async () => ({ status: 'expired' })
 let starts = 0
+let startProvider: 'horizon' | 'microsoft' = 'microsoft'
+const cancelledCodes: string[] = []
 let pollImpl: (code: string) => Promise<unknown> = async () => ({ status: 'pending' })
 
 mock.module('../ipc/tauri', () => ({ hasTauri: () => true, tauri: () => null }))
@@ -33,9 +35,10 @@ mock.module('../lib/telemetry', () => ({ track() {}, trackFailure: (_: string, _
   },
 }))
 mock.module('../ipc/commands', () => ({
+  msDeviceCancel: async (code: string) => { cancelledCodes.push(code) },
   msDeviceStart: async () => {
     starts += 1
-    return { device_code: 'dc' + starts, user_code: 'U' + starts, interval: 0 }
+    return { device_code: 'dc' + starts, user_code: 'U' + starts, interval: 0, provider: startProvider }
   },
   msDevicePoll: (code: string) => pollImpl(code),
   msSessionCommit: async () => {},
@@ -59,7 +62,8 @@ mock.module('../lib/secure', () => ({
   refreshSessionState: async () => {},
 }))
 
-const { cancelMsLogin, ensureMsAuth, startMsLogin, useMsLogin } = await import('./msLogin')
+const { ensureMsAuth } = await import('./msLogin')
+const { cancelMsLogin, startMsLogin, useMsLogin } = await import('./msLoginFlow')
 const { useAccounts } = await import('./accounts')
 
 const HOUR = 3600_000
@@ -77,6 +81,26 @@ function seed(exp: number | undefined, opts: { token?: boolean } = {}) {
 }
 
 const accNow = () => useAccounts.getState().list[0]
+
+test('Horizon remains identified after copying the code and cancellation reaches its backend', async () => {
+  cancelMsLogin()
+  startProvider = 'horizon'
+  pollImpl = async () => ({ status: 'pending' })
+  try {
+    await startMsLogin()
+    await Promise.resolve()
+    const code = 'dc' + starts
+    expect(useMsLogin.getState().provider).toBe('horizon')
+    expect(useMsLogin.getState().busy).toBe(true)
+    cancelMsLogin()
+    await Promise.resolve()
+    expect(cancelledCodes).toContain(code)
+    expect(useMsLogin.getState().busy).toBe(false)
+  } finally {
+    startProvider = 'microsoft'
+    cancelMsLogin()
+  }
+})
 
 describe('ensureMsAuth', () => {
   beforeEach(() => {
@@ -200,6 +224,8 @@ describe('вход по коду устройства', () => {
   beforeEach(() => {
     cancelMsLogin()
     starts = 0
+    startProvider = 'microsoft'
+    cancelledCodes.length = 0
     failures.length = 0
   })
 

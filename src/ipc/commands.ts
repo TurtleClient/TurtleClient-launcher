@@ -168,6 +168,7 @@ export interface DeviceStart {
   user_code: string
   verification_uri?: string
   interval?: number
+  provider?: 'horizon' | 'microsoft'
 }
 
 export interface DevicePoll {
@@ -967,6 +968,8 @@ export const modpackVersions = (slug: string) => invoke<ModpackVersion[]>('modpa
 export const msDevicePoll = (deviceCode: string) => invoke<DevicePoll>('ms_device_poll', { deviceCode })
 
 export const msDeviceStart = () => invoke<DeviceStart>('ms_device_start')
+
+export const msDeviceCancel = (deviceCode: string) => invoke<void>('ms_device_cancel', { deviceCode })
 
 export const mcTextures = (query: string) => invoke<McTextures>('mc_textures', { query })
 

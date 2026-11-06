@@ -6478,5 +6478,9 @@
   "{n} очков достижений": "{n} achievement points",
   "хранилище входа сейчас занято другой программой (антивирус?) — повтори через несколько секунд": "the sign-in storage is busy with another program right now (antivirus?) — try again in a few seconds",
   "Minecraft rejected this launcher’s app registration (HTTP 403). The launcher developer must request Minecraft API access: https://aka.ms/mce-reviewappid": "Minecraft rejected this launcher’s app registration (HTTP 403). The launcher developer must request Minecraft API access: https://aka.ms/mce-reviewappid",
-  "Minecraft Services refused the login (HTTP 403). Microsoft sign-in succeeded, but Minecraft access was denied.": "Minecraft Services refused the login (HTTP 403). Microsoft sign-in succeeded, but Minecraft access was denied."
+  "Minecraft Services refused the login (HTTP 403). Microsoft sign-in succeeded, but Minecraft access was denied.": "Minecraft Services refused the login (HTTP 403). Microsoft sign-in succeeded, but Minecraft access was denied.",
+  "Temporary sign-in requires the Horizon Launcher. Please install Horizon first.": "Temporary sign-in requires the Horizon Launcher. Please install Horizon first.",
+  "Sign-in through Horizon failed or was cancelled. Please try again.": "Sign-in through Horizon failed or was cancelled. Please try again.",
+  "Your Horizon session needs a new sign-in. Please sign in again.": "Your Horizon session needs a new sign-in. Please sign in again.",
+  "Temporary sign-in via Horizon. Confirm this code on Microsoft’s page.": "Temporary sign-in via Horizon. Confirm this code on Microsoft’s page."
 }

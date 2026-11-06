@@ -1,5 +1,33 @@
 # Microsoft and Minecraft sign-in
 
+## Temporary development backend: Horizon
+
+The current default delegates sign-in to the **installed Horizon Launcher**:
+
+1. TurtleClient starts `horizon-launcher --json account sign-in` and shows its public Microsoft code.
+2. The UI identifies the provider as Horizon; the Microsoft consent page belongs to Horizon.
+3. After sign-in, `account session UUID` returns a fresh, read-once session file.
+4. TurtleClient consumes and deletes that file and stores the Minecraft token in its existing encrypted vault.
+5. Renewal calls Horizon again. Microsoft refresh tokens remain owned by Horizon and never enter the webview.
+
+The bridge uses a launcher store under TurtleClient's data folder, `horizon-auth/launcher`, and a
+session handoff folder at `horizon-auth/game/sessions`. It does not read Horizon's secrets files.
+Cancelling the sign-in stops its child process; exiting the launcher stops pending sign-ins too.
+The child runs without a console window or self-updates.
+
+On Windows the helper is discovered beside the TurtleClient executable or at
+`%LOCALAPPDATA%/Programs/Horizon Launcher/horizon-launcher.exe`. Override this with the runtime
+variable `TURTLECLIENT_HORIZON_LAUNCHER` if needed. Other platforms can use the explicit path.
+
+Set `TURTLECLIENT_AUTH_PROVIDER=microsoft` to select the direct flow described below;
+unset it or set it to `horizon` to use this temporary backend. Export variables into the launcher
+process; `.env.example` is documentation, not an automatically loaded Cargo environment file.
+
+This uses Horizon's implemented authentication and session interface. It does not copy its OAuth
+client ID, grant TurtleClient's app Minecraft API approval, or bypass Minecraft account ownership.
+
+## Direct TurtleClient Microsoft application
+
 TurtleClient Launcher uses its own public Microsoft application:
 
 - Name: TurtleClient Launcher
