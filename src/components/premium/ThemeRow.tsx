@@ -1,16 +1,13 @@
-import { Icon } from '../Icon'
 import { useT } from '../../i18n'
 import { PlusMark } from './PlusMark'
-import { allowed, applyPremiumAccent, chooseTheme, PREMIUM_ACCENTS, usePremiumTheme, type PremiumTheme } from '../../lib/premiumTheme'
+import { applyPremiumAccent, chooseTheme, PREMIUM_ACCENTS, usePremiumTheme, type PremiumTheme } from '../../lib/premiumTheme'
 
 /**
- * Настройки → Вид → «Тема лаунчера»: Стандартная · PLUS · Diamond (владелец
- * 06.10.2026). Закрытый вариант — с замком; клик открывает окно покупки.
+ * Settings → Appearance: Standard, PLUS and Diamond are freely selectable.
  */
 export function ThemeRow() {
   const t = useT()
   const theme = usePremiumTheme((s) => s.theme)
-  const tier = usePremiumTheme((s) => s.tier)
   const opts: { id: PremiumTheme; label: string }[] = [
     { id: 'off', label: t('Стандартная') },
     { id: 'plus', label: 'PLUS' },
@@ -19,24 +16,18 @@ export function ThemeRow() {
   return (
     <div className="pt-row" role="radiogroup" aria-label={t('Тема лаунчера')}>
       {opts.map((o) => {
-        const locked = !allowed(o.id, tier)
         return (
           <button
             key={o.id}
             role="radio"
             aria-checked={theme === o.id}
             aria-label={o.label}
-            className={'pt-opt' + (theme === o.id ? ' on' : '') + (locked ? ' is-locked' : '')}
+            className={'pt-opt' + (theme === o.id ? ' on' : '')}
             data-track={'ptheme_' + o.id}
-            onClick={() =>
-              locked
-                ? usePremiumTheme.getState().requestPlus(o.id === 'diamond' ? 'DIAMOND' : 'PLUS')
-                : chooseTheme(o.id)
-            }
+            onClick={() => chooseTheme(o.id)}
           >
             {o.id === 'off' ? <i className="pt-std" /> : <PlusMark tier={o.id === 'diamond' ? 'DIAMOND' : 'PLUS'} height={o.id === 'diamond' ? 14 : 18} />}
             {o.id === 'off' ? o.label : null}
-            {locked ? <Icon id="i-lock" /> : null}
           </button>
         )
       })}
@@ -44,13 +35,11 @@ export function ThemeRow() {
   )
 }
 
-/** Золото и алмаз в палитре «Цвет кнопок» — только у подписчика. */
+/** The matching gold and diamond accent colors are also available to everyone. */
 export function PremiumSwatches({ current, onPick }: { current: string; onPick: (id: string) => void }) {
-  const tier = usePremiumTheme((s) => s.tier)
-  if (!tier) return null
   return (
     <>
-      {PREMIUM_ACCENTS.filter((a) => tier === 'DIAMOND' || a.tier === 'PLUS').map((a) => (
+      {PREMIUM_ACCENTS.map((a) => (
         <button
           key={a.id}
           role="radio"

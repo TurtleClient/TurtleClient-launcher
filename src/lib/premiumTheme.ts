@@ -12,20 +12,19 @@ import { t } from '../i18n'
  * Тема лаунчера (владелец 06.10.2026): «Стандартная» · «PLUS» · «Diamond».
  * Премиум-тема — тот же лаунчер, спокойно: золотой (или синий) акцент, тонкие
  * золотые линии, знак PLUS у ника и очень мягкий неподвижный свет сверху. Без
- * частиц и анимированных сцен. Доступна, пока идёт подписка; Diamond — только
- * у Diamond.
+ * частиц и анимированных сцен. All designs and their accent colors are free.
  *
  * Тема = акцент (`--m-accent*`, lib/accent) + `data-ptheme` на <html>
  * (styles/pixel/premium-theme.css). `data-sub` — сама подписка: магазин
  * подписчика с тем же мягким светом даже в стандартной теме.
  *
  * После оплаты тема включается сама один раз (прежний акцент запоминается;
- * «Стандартная» его возвращает). Подписка кончилась — возврат к прежнему.
+ * «Стандартная» его возвращает). Chosen designs persist independently of subscription state.
  */
 
 export type PremiumTheme = 'off' | 'plus' | 'diamond'
 
-/** Лишний цвет в палитре «Цвет кнопок» — только у подписчика. */
+/** Additional launcher accent colors, freely available to every player. */
 export const PREMIUM_ACCENTS: { id: string; name: string; c: string; h: string; s: string; tier: PlusTier }[] = [
   { id: 'premium-plus', get name() { return t('Золото PLUS') }, c: '#F5BD2C', h: '#FFD45C', s: 'rgba(245,189,44,.15)', tier: 'PLUS' },
   { id: 'premium-diamond', get name() { return t('Алмаз Diamond') }, c: '#4FB8FF', h: '#7CCBFF', s: 'rgba(79,184,255,.15)', tier: 'DIAMOND' },
@@ -44,9 +43,9 @@ const AUTO_KEY: PrefKey = 'm-ptheme-auto'
 const CHOICE_KEY: PrefKey = 'm-ptheme-user'
 export const PLUS_BOUGHT_EVENT = 'm-plus-bought'
 
-/** Можно ли включить тему при этом тарифе. */
-export const allowed = (t: PremiumTheme, tier: ShopTier): boolean =>
-  t === 'off' || (tier === 'DIAMOND' ? true : tier === 'PLUS' ? t === 'plus' : false)
+/** Launcher designs are available to everyone, independently of subscriptions. */
+export const allowed = (t: PremiumTheme, _tier: ShopTier): boolean =>
+  t === 'off' || t === 'plus' || t === 'diamond'
 
 const read = (k: PrefKey, d = ''): string => {
   try {
@@ -290,10 +289,9 @@ export function initPremiumTheme() {
     ended = true
     paintSub(null)
     usePremiumTheme.setState({ tier: null, known: true })
-    let changed = true
-    if (s.theme !== 'off') s.setTheme('off')
-    else if (isPremiumAccent(was.accent)) restoreAccent()
-    else changed = false
+    // Subscription expiry must not reset a freely available launcher design.
+    const changed = !allowed(s.theme, null)
+    if (changed) s.setTheme('off')
     undo = changed ? was : null
     writePref(AUTO_KEY, '')
   }
