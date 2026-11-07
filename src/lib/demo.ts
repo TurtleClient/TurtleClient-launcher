@@ -652,7 +652,7 @@ function demoTask(kind: 'telegram' | 'discord') {
     linked: st.linked,
     ...(kind === 'telegram'
       ? { botUrl: 'https://t.me/MillidaServiceBot?start=demo', channelUrl: 'https://t.me/millida' }
-      : { inviteUrl: 'https://discord.gg/ec8xAhDSH7' }),
+      : { inviteUrl: 'https://discord.gg/3hc8xZGaTG' }),
   })
   const claim = async () => {
     await new Promise((r) => setTimeout(r, 1400))

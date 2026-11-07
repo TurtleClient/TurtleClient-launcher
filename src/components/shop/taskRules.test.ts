@@ -16,7 +16,7 @@ const dc = (over: Partial<DiscordReward>): DiscordReward => ({
   amount: 300,
   claimed: false,
   linked: true,
-  inviteUrl: 'https://discord.gg/ec8xAhDSH7',
+  inviteUrl: 'https://discord.gg/3hc8xZGaTG',
   ...over,
 })
 const none: TaskOpened = { link: false, join: false }
@@ -93,7 +93,7 @@ describe('telegramLink', () => {
 
 describe('discordInvite', () => {
   const cases: [unknown, string | null, string][] = [
-    ['https://discord.gg/ec8xAhDSH7', 'https://discord.gg/ec8xAhDSH7', 'invite opens'],
+    ['https://discord.gg/3hc8xZGaTG', 'https://discord.gg/3hc8xZGaTG', 'invite opens'],
     ['https://discord.com/invite/x', 'https://discord.com/invite/x', 'long invite opens'],
     ['http://discord.gg/x', null, 'plain http is refused'],
     ['https://discord.gg.evil.com/x', null, 'look-alike host is refused'],
