@@ -163,6 +163,7 @@ export function Play({ on }: { on: boolean }) {
     picked && (picked.kind !== 'build' || profiles.some((p) => p.name === picked.name)) ? picked : null
   const nativeSelected = !chosen
   const native = useTurtleRuntime(on && nativeSelected)
+  const nativeUpdating=nativeSelected && ['checking','downloading','installing'].includes(native.clientUpdate?.phase || '')
   const mode: LobbyMode | null =
     chosen ?? (dayZero ? (anarchyPromo ? anarchyMode() : { kind: 'version', version: '1.21.11' }) : null)
   useFirstHourChest(on, playStats.total_seconds)
@@ -354,7 +355,7 @@ export function Play({ on }: { on: boolean }) {
             </button>
           ) : (
             <button
-              className={'btn lg primary' + (btn.kind === 'installing' ? ' loading' : '')}
+              className={'btn lg primary' + (btn.kind === 'installing' || nativeUpdating ? ' loading' : '')}
               id="playBtn"
               data-track="play"
               data-src="lobby_play"
@@ -383,11 +384,11 @@ export function Play({ on }: { on: boolean }) {
                 void playMode(mode, profiles)
               }}
             >
-              <span className="fill" style={btn.kind === 'installing' ? { width: btn.pct + '%' } : undefined}></span>
+              <span className="fill" style={nativeUpdating ? {width:Math.min(100,100*(native.clientUpdate?.downloaded || 0)/Math.max(1,native.clientUpdate?.total || 0))+'%'} : btn.kind === 'installing' ? { width: btn.pct + '%' } : undefined}></span>
               <span className="lbl">
-                {btn.kind === 'installing' ? null : <Icon id="i-play" />}
+                {btn.kind === 'installing' || nativeUpdating ? null : <Icon id="i-play" />}
                 <span id="playLbl">
-                  {nativeSelected && (native.busy || native.running) ? (native.busy ? clientUpdateLabel(native.clientUpdate) : t('Turtle: client running')) : btn.kind === 'installing' ? (
+                  {nativeUpdating ? <><span className="play-stage">{clientUpdateLabel(native.clientUpdate)}</span><span className="play-pct"><span className="spin" aria-hidden="true" />{t('TurtleClient')}</span></> : nativeSelected && (native.busy || native.running) ? (native.busy ? clientUpdateLabel(native.clientUpdate) : t('Turtle: client running')) : btn.kind === 'installing' ? (
                     <>
                       <span className="play-stage">{tx(btn.stage)}</span>
                       <span className="play-pct">

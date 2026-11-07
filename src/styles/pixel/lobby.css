@@ -606,8 +606,7 @@
   :root .lobby-row .lobby-promo, :root .lobby-row .lobby-promo.on { transform: none; transition: none; }
 }
 
-/* Ник над персонажем убран (владелец 24.09.2026, 13:23: с украшениями
-   смотрится плохо). Узел остаётся невидимым — по нему встаёт облачко эмоции. */
+/* The lobby shares the wardrobe's player name and equipped name tag effect. */
 .lobby .mc-nametag { visibility: visible; }
 
 /* «Рекомендуем»: справа по центру, между верхними кнопками и «Играть». */
