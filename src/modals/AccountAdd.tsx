@@ -1,45 +1,22 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Icon } from '../components/Icon'
 import { PxIcon } from '../components/PxIcon'
-import { closeModal, showToast, useUi } from '../state/ui'
-import { isOfflineNick, pinnedOfflineNick, useAccounts } from '../state/accounts'
-import { useGameNick } from '../state/gameNick'
-import { hasMillidaAccount } from '../lib/api'
+import { closeModal, useUi } from '../state/ui'
+import { useAccounts } from '../state/accounts'
 import { useAccountAdd, type AccountAddKind } from '../state/accountAdd'
-import { cancelWebLogin, copyUserCode, copyVerifyLink, startWebLogin, useLogin } from '../state/login'
 import { cancelMsLogin, copyMsCode, copyMsVerifyLink, openMsVerifyPage, startMsLogin, useMsLogin } from '../state/msLoginFlow'
-import { enterApp } from '../lib/session'
 import { backdropClose } from '../lib/dismiss'
-import { useT, type Vars } from '../i18n'
+import { useT } from '../i18n'
 import { SecurityInfo } from './SecurityInfo'
 import { AccountChoice } from '../components/AccountChoice'
 
 type Kind = AccountAddKind
 
-interface KindMeta {
-  id: Kind
-  icon: ReactNode
-  title: string
-  sub: string
-}
-
 const MC_ICON = <PxIcon name="mc-grass" size={24} />
 
-function kindMeta(kind: Kind, t: (key: string, vars?: Vars) => string): KindMeta {
-  if (kind === 'microsoft') return { id: kind, icon: MC_ICON, title: t('Лицензия Minecraft'), sub: t('Вход через Microsoft') }
-  if (kind === 'offline') return { id: kind, icon: <Icon id="i-mo-user" />, title: t('Офлайн-аккаунт'), sub: t('нет Realms и нет лицензионных серверов') }
-  return { id: kind, icon: <Icon id="i-mo-key" />, title: t('Аккаунт TurtleClient'), sub: t('Друзья, ник и баланс') }
-}
-
-export function KindPanel({ kind, onBack, onDone, onSafety }: { kind: Kind; onBack: () => void; onDone: () => void; onSafety: () => void }) {
+export function KindPanel({ kind: _kind, onBack, onDone, onSafety }: { kind: Kind; onBack: () => void; onDone: () => void; onSafety: () => void }) {
   const t = useT()
-  const login = useLogin()
   const ms = useMsLogin()
-  const profileNick = useGameNick((s) => s.name)
-  const pinned = pinnedOfflineNick(hasMillidaAccount(), profileNick)
-  const [typed, setTyped] = useState<string | null>(null)
-  const nick = typed ?? pinned
-  const carriesMillida = !!pinned && nick.trim() === pinned
   const count = useAccounts((s) => s.list.length)
   const startCount = useRef(count)
   const doneRef = useRef(false)
@@ -52,23 +29,9 @@ export function KindPanel({ kind, onBack, onDone, onSafety }: { kind: Kind; onBa
     doneCb.current()
   }, [count])
 
-  const createOffline = () => {
-    const v = nick.trim()
-    if (!isOfflineNick(v)) {
-      showToast(t('Ник: латиница, цифры и _, от 3 до 16 символов'), 'error')
-      return
-    }
-    useAccounts.getState().add({ nick: v, kind: 'offline' })
-    if (!useUi.getState().logged) enterApp()
-    onDone()
-    showToast(t('Аккаунт создан: {nick}', { nick: v }))
-  }
-
-  const meta = kindMeta(kind, t)
-  const millida = kind === 'millida'
-  const busy = millida ? login.webBusy : ms.busy
-  const code = millida ? login.userCode : ms.userCode
-  const hint = millida ? login.hintText : ms.hint
+  const busy = ms.busy
+  const code = ms.userCode
+  const hint = ms.hint
 
   return (
     <>
@@ -76,8 +39,7 @@ export function KindPanel({ kind, onBack, onDone, onSafety }: { kind: Kind; onBa
         className="btn sm ghost"
         style={{ alignSelf: 'flex-start', marginBottom: '12px' }}
         onClick={() => {
-          if (millida) cancelWebLogin()
-          if (kind === 'microsoft') cancelMsLogin()
+          cancelMsLogin()
           onBack()
         }}
       >
@@ -85,99 +47,74 @@ export function KindPanel({ kind, onBack, onDone, onSafety }: { kind: Kind; onBa
         {t('Назад')}
       </button>
       <div className="acc-opt" style={{ cursor: 'default' }}>
-        <span className="acc-opt-ic">{meta.icon}</span>
+        <span className="acc-opt-ic">{MC_ICON}</span>
         <span style={{ flex: 1, minWidth: 0 }}>
-          <b style={{ display: 'block', fontSize: '13.5px', fontWeight: 650 }}>{meta.title}</b>
-          <span style={{ fontSize: '12px', color: 'var(--m-fg-subtle)' }}>{meta.sub}</span>
+          <b style={{ display: 'block', fontSize: '13.5px', fontWeight: 650 }}>{t('Лицензия Minecraft')}</b>
+          <span style={{ fontSize: '12px', color: 'var(--m-fg-subtle)' }}>{t('Вход через Microsoft')}</span>
         </span>
       </div>
 
-      {kind === 'offline' ? (
-        <div style={{ marginTop: '16px' }}>
-          <div className="input" style={{ width: '100%' }}>
-            <input
-              placeholder={t('Ник в игре (латиница, 3–16)')}
-              maxLength={16}
-              autoFocus
-              autoCapitalize="none"
-              autoCorrect="off"
-              spellCheck={false}
-              value={nick}
-              onChange={(e) => setTyped(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') createOffline()
-              }}
-            />
-          </div>
-          {carriesMillida ? <p className="faint-note">{t('Ник аккаунта TurtleClient: пускает на серверы с входом TurtleClient')}</p> : null}
-          <button className="btn md primary" style={{ width: '100%', marginTop: '12px' }} onClick={createOffline}>
-            {t('Создать')}
-          </button>
-        </div>
-      ) : (
-        <div style={{ marginTop: '16px' }}>
-          {busy && code ? (
-            <>
-              {ms.provider === 'horizon' && !millida ? (
-                <p className="faint-note">{t('Temporary sign-in via Horizon. Confirm this code on Microsoft’s page.')}</p>
-              ) : null}
-              <button
-                className="acc-code"
-                aria-label={t('Скопировать код')}
-                onClick={() => void (millida ? copyUserCode() : copyMsCode())}
-              >
-                <span>{code}</span>
-                <Icon id="i-copy" />
-              </button>
-              <div style={{ display: 'flex', gap: '10px', marginTop: '12px' }}>
-                <button
-                  className="btn sm secondary"
-                  style={{ flex: 1 }}
-                  onClick={() => (millida ? void startWebLogin(true) : openMsVerifyPage())}
-                >
-                  {t('Открыть страницу')}
-                </button>
-                <button className="btn sm ghost" onClick={() => (millida ? copyVerifyLink() : copyMsVerifyLink())}>
-                  {t('Копировать ссылку')}
-                </button>
-                <button className="btn sm ghost" onClick={() => (millida ? cancelWebLogin() : cancelMsLogin())}>
-                  {t('Отмена')}
-                </button>
-              </div>
-            </>
-          ) : (
+      <div style={{ marginTop: '16px' }}>
+        {busy && code ? (
+          <>
+            {ms.provider === 'horizon' ? (
+              <p className="faint-note">{t('Temporary sign-in via Horizon. Confirm this code on Microsoft’s page.')}</p>
+            ) : null}
             <button
-              className="btn md primary"
-              style={{ width: '100%' }}
-              disabled={busy}
-              onClick={() => void (millida ? startWebLogin() : startMsLogin())}
+              className="acc-code"
+              aria-label={t('Скопировать код')}
+              onClick={() => void copyMsCode()}
             >
-              {millida ? <Icon id="i-mo-key" /> : <Icon id="i-mo-shield" />}
-              {busy ? t('Ждём подтверждения…') : millida ? t('Войти через TurtleClient') : t('Войти через Microsoft')}
+              <span>{code}</span>
+              <Icon id="i-copy" />
             </button>
-          )}
-          {kind === 'microsoft' ? (
-            <div className="faint-note" style={{ marginTop: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', flexWrap: 'wrap' }}>
-              <Icon id="i-shield" />
-              <span>{t('Полностью безопасно. Убедись сам:')}</span>
-              <a
-                href="https://millida.net/launcher/bezopasnost"
-                onClick={(e) => {
-                  e.preventDefault()
-                  onSafety()
-                }}
+            <div style={{ display: 'flex', gap: '10px', marginTop: '12px' }}>
+              <button
+                className="btn sm secondary"
+                style={{ flex: 1 }}
+                onClick={() => openMsVerifyPage()}
               >
-                {t('Как это работает?')}
-              </a>
+                {t('Открыть страницу')}
+              </button>
+              <button className="btn sm ghost" onClick={() => copyMsVerifyLink()}>
+                {t('Копировать ссылку')}
+              </button>
+              <button className="btn sm ghost" onClick={() => cancelMsLogin()}>
+                {t('Отмена')}
+              </button>
             </div>
-          ) : null}
-          {hint ? (
-            <p className="faint-note" style={{ marginTop: '12px', lineHeight: 1.5 }}>
-              {hint}
-            </p>
-          ) : null}
-        </div>
-      )}
+          </>
+        ) : (
+          <button
+            className="btn md primary"
+            style={{ width: '100%' }}
+            disabled={busy}
+            onClick={() => void startMsLogin()}
+          >
+            <Icon id="i-mo-shield" />
+            {busy ? t('Ждём подтверждения…') : t('Войти через Microsoft')}
+          </button>
+        )}
+
+          <div className="faint-note" style={{ marginTop: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', flexWrap: 'wrap' }}>
+            <Icon id="i-shield" />
+            <span>{t('Полностью безопасно. Убедись сам:')}</span>
+            <a
+              href="https://millida.net/launcher/bezopasnost"
+              onClick={(e) => {
+                e.preventDefault()
+                onSafety()
+              }}
+            >
+              {t('Как это работает?')}
+            </a>
+          </div>
+        {hint ? (
+          <p className="faint-note" style={{ marginTop: '12px', lineHeight: 1.5 }}>
+            {hint}
+          </p>
+        ) : null}
+      </div>
     </>
   )
 }
@@ -191,7 +128,7 @@ export function AccountAddModal() {
 
   useEffect(() => {
     if (modal.open) {
-      setKind(preset)
+      setKind('microsoft')
       return
     }
     setKind(null)

@@ -72,7 +72,7 @@ static BOUND: Mutex<Option<String>> = Mutex::new(None);
 static HOTKEY_PROBLEM: Mutex<Option<String>> = Mutex::new(None);
 
 pub fn supported() -> bool {
-    cfg!(windows)
+    false // Clip capture is disabled in TurtleClient Launcher.
 }
 
 pub fn settings() -> RewindSettings {
@@ -127,7 +127,7 @@ pub fn save_settings(app: &AppHandle, next: RewindSettings) -> Result<RewindStat
 fn bind_hotkey(app: &AppHandle) {
     use tauri_plugin_global_shortcut::{GlobalShortcutExt, ShortcutState};
     let current = settings::load();
-    let want = (current.enabled && !active().is_empty()).then(|| current.hotkey.clone());
+    let want = (supported() && current.enabled && !active().is_empty()).then(|| current.hotkey.clone());
     let mut bound = BOUND.lock().unwrap_or_else(|e| e.into_inner());
     if *bound == want {
         return;
@@ -240,7 +240,7 @@ fn start(_app: &AppHandle, _pid: u32, _profile: &str, _notices: Option<Notices>)
 #[cfg(windows)]
 fn start(app: &AppHandle, pid: u32, profile: &str, notices: Option<Notices>) -> Option<RewindSession> {
     let current = settings::load();
-    if !current.enabled {
+    if !supported() || !current.enabled {
         return None;
     }
     let cap = current.memory_cap(current.bitrate(2560, 1440));

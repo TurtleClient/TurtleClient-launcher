@@ -8,10 +8,8 @@ import {
   AVAILABLE_LOCALES,
   FALLBACK_LOCALE,
   LOCALES,
-  availableLocale,
   isAvailableLocale,
   isLocale,
-  localeFromSystem,
   localeInfo,
   marketOf,
   marketOffers,
@@ -85,15 +83,9 @@ interface I18nState {
   revision: number
 }
 
-function systemTags(): string[] {
-  if (typeof navigator === 'undefined') return []
-  const list = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language]
-  return list.filter(Boolean)
-}
-
 function initialLocale(): Locale {
   const stored = readPref(STORE_KEY, '')
-  return isAvailableLocale(stored) ? stored : availableLocale(localeFromSystem(systemTags()))
+  return isAvailableLocale(stored) ? stored : FALLBACK_LOCALE
 }
 
 export const useI18n = create<I18nState>(() => ({ locale: initialLocale(), revision: 0 }))
@@ -145,7 +137,7 @@ export function setLocale(code: Locale): Promise<void> {
 export const hasChosenLocale = (): boolean => isAvailableLocale(readPref(STORE_KEY, ''))
 
 /// The durable prefs file lands after the first render; a language picked in an
-/// earlier run has to win over the guess made from the system before it arrived.
+/// earlier run has to win over the English default before it arrived.
 export function syncLocaleFromPrefs() {
   const stored = readPref(STORE_KEY, '')
   if (isAvailableLocale(stored) && stored !== useI18n.getState().locale) useI18n.setState({ locale: stored })

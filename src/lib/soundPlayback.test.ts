@@ -56,11 +56,11 @@ const { playSound } = await import('./sound')
 // Звуки — только из Minecraft (приказ владельца 22.09.2026): пока файлы игры
 // не скачались, уведомление молчит. Раньше здесь синтезировался тон, и это
 // был единственный чужой звук в лаунчере.
-test('звуки игры не скачаны — лаунчер будит аудио, но ничего не синтезирует', async () => {
+test('launcher notifications never wake the audio device', async () => {
   playSound('notify')
   await Promise.resolve()
   await Promise.resolve()
-  expect(resumed).toBe(1)
+  expect(resumed).toBe(0)
   expect(started.map((s) => s.freq)).toEqual([])
 })
 

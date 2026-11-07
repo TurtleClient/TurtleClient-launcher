@@ -3,6 +3,7 @@ import { convertFileSrc, downloadUiSounds, uiSounds } from '../ipc/commands'
 import { hasTauri } from '../ipc/tauri'
 import { writePref } from './prefs'
 import { sharedAudio } from './audioHub'
+import { LAUNCHER_AUDIO_ENABLED } from './launcherFeatures'
 
 export type SoundEvent =
   | 'click'
@@ -162,6 +163,7 @@ export function soundAllowed(ev: SoundEvent, mode: SoundMode, gestureActive: boo
 }
 
 export function playSound(ev: SoundEvent) {
+  if (!LAUNCHER_AUDIO_ENABLED) return
   if (!soundAllowed(ev, soundMode(), gestureBusy())) return
   emit(ev)
 }
@@ -278,6 +280,7 @@ export const playNotifySound = () => playSound('notify')
 
 /** Звук-образец с высотой (сундук: каждый удар выше). Уважает режим звука. */
 export function playSample(ev: SoundEvent, rate = 1) {
+  if (!LAUNCHER_AUDIO_ENABLED) return
   if (soundMode() === 'off') return
   const vol = soundVolume()
   if (vol <= 0) return
@@ -353,6 +356,7 @@ function onDown(e: PointerEvent) {
 }
 
 export function initSounds() {
+  if (!LAUNCHER_AUDIO_ENABLED) return
   // The flag lives on window, not the module: dev HMR re-creates the module and listeners stack.
   const w = window as unknown as Record<string, boolean>
   if (w[INIT_FLAG]) return

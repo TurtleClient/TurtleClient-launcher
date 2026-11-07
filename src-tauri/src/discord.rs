@@ -28,8 +28,8 @@ use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
 // Public application id from the Discord Developer Portal. Discord needs it to show the name and pictures. It is not a secret.
 const DEFAULT_APP_ID: &str = "1568214525138968586";
 const RETRY_AFTER: Duration = Duration::from_secs(30);
-const SITE_URL: &str = "https://github.com/TurtleClient/turtleclient-launcher";
-const DISCORD_URL: &str = "https://github.com/TurtleClient/turtleclient-launcher/issues";
+const SITE_URL: &str = "https://github.com/TurtleClient/turtleclient-launcher/releases";
+const DISCORD_URL: &str = "https://discord.gg/3hc8xZGaTG";
 #[cfg(test)]
 const PROFILE_BASE: &str = "https://github.com/TurtleClient/";
 
@@ -363,7 +363,7 @@ fn apply(client: &mut Option<DiscordIpcClient>, since: &mut Option<i64>, p: &Pre
     } else {
         vec![
             activity::Button::new(download_label, SITE_URL),
-            activity::Button::new("Source and support", DISCORD_URL),
+            activity::Button::new("Support", DISCORD_URL),
         ]
     };
     let mut act = activity::Activity::new()

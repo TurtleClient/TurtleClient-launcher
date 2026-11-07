@@ -2,7 +2,7 @@ import { splitVariantCode, variantCode, variantTitles } from './variantNames'
 import { idbGet, idbSet } from './idbCache'
 import { api, hasMillidaAccount } from './api'
 import type { Quote } from './money'
-import { getAccount, lookOwner } from '../state/accounts'
+import { lookOwner } from '../state/accounts'
 import { forgetWorn, noteTexture, noteWorn } from './lookHint'
 import { getLocale } from '../i18n'
 
@@ -20,20 +20,13 @@ export interface GameProfile {
   nameConflict?: boolean
 }
 
-/// «Лицензия» без аккаунта Microsoft означает, что скин не берётся ниоткуда, и
-/// в игре остаётся Стив. Настройку могла записать прошлая версия или совет
-/// поддержки, поэтому выбор проверяется при каждом чтении, а не только при клике.
+// Ignore legacy offline/TurtleClient source preferences: Minecraft owns the skin.
 export function skinSource(): SkinSource {
-  const a = getAccount()
-  const licensed = !!a && a.kind === 'microsoft'
-  const stored = localStorage.getItem('m-skin-source')
-  if (stored === 'millida') return stored
-  if (stored === 'mojang') return licensed ? stored : 'millida'
-  return licensed ? 'mojang' : 'millida'
+  return 'mojang'
 }
 
-export function setSkinSource(v: SkinSource) {
-  localStorage.setItem('m-skin-source', v)
+export function setSkinSource(_v: SkinSource) {
+  localStorage.setItem('m-skin-source', 'mojang')
 }
 
 export function millidaSkinsActive(): boolean {

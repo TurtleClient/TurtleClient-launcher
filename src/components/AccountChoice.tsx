@@ -38,10 +38,6 @@ export function AccountChoice({ onPick, track }: { onPick: (kind: GameAccountKin
         <PxIcon name="mc-grass" size={24} />
         {t('Лицензия')}
       </button>
-      <button type="button" className="btn lg secondary acc-choice-offline" data-track={track + '_offline'} onClick={() => onPick('offline')}>
-        <b>{t('Офлайн')}</b>
-        <span>{t('нет Realms и нет лицензионных серверов')}</span>
-      </button>
       <LicenceBuyLink className="acc-choice-buy" track={track} />
     </div>
   )

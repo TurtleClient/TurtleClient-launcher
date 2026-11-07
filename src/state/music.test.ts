@@ -1,5 +1,8 @@
 import { expect, mock, test } from 'bun:test'
 
+// Retain coverage of the legacy player; TurtleClient disables it at runtime.
+mock.module('../lib/launcherFeatures', () => ({ LAUNCHER_AUDIO_ENABLED: true }))
+
 class FakeAudio {
   src = ''
   volume = 1

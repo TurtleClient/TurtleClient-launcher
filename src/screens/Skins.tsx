@@ -3335,16 +3335,6 @@ export function Skins({ on }: { on: boolean }) {
 
       {chipKey === 'mine' ? (
         <>
-          {hasMillidaAccount() ? null : (
-            <div className="ch-warn">
-              <Icon id="i-lock" />
-              <span>{t('Скины только на этом компьютере')}</span>
-              <button className="btn sm secondary" onClick={() => showLogin()}>
-                <Icon id="i-login" />
-                {t('Войти')}
-              </button>
-            </div>
-          )}
           {uploadOpen ? (
             <div className="ch-import">
               <div className="segs">
@@ -3619,7 +3609,7 @@ export function Skins({ on }: { on: boolean }) {
             rubies={rubies}
             busy={cosmeticBusy === 'fitting'}
             canWear={fitting.some((c) => !cosmeticLocked(c))}
-            needLogin={!hasMillidaAccount()}
+            needLogin={BRAND.services && !hasMillidaAccount()}
             onPick={(id) => {
               const item = fitting.find((c) => c.id === id)
               if (!item) return

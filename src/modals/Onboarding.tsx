@@ -1,16 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Icon } from '../components/Icon'
 import { hasTauri } from '../ipc/tauri'
-import { importInstance, importPackFile, scanImports, tlauncherNick } from '../ipc/commands'
+import { importInstance, importPackFile, scanImports } from '../ipc/commands'
 import type { FoundInstance } from '../ipc/commands'
 import { useProfiles } from '../state/profiles'
 import { showToast } from '../state/ui'
 import { INVITER_STEP, ONBOARDING_STEPS, finishOnboarding, onboardingBack, onboardingNext, useOnboarding } from '../state/onboarding'
 import { TOUR_STEPS } from '../state/tour'
-import { getAccount, isOfflineNick, useAccounts } from '../state/accounts'
+import { getAccount, useAccounts } from '../state/accounts'
 import { foundKey } from '../lib/imports'
-import { setSoundMode, soundMode } from '../lib/sound'
-import { musicAutostartOn, setMusicAutostart, useMusic } from '../state/music'
 import { track } from '../lib/telemetry'
 import { trackImportFailure } from '../lib/importTrack'
 import { MovePanel } from './MoveBuilds'
@@ -20,12 +18,13 @@ import { apiErrorText } from '../lib/apiError'
 import { Head } from '../components/Head'
 import { dropInviteCode, lookupInviter, onboardingInvite, peekInviteCode } from '../lib/referrals'
 import { INVITEE_GIFTS } from '../lib/inviteGifts'
-import { t, useT } from '../i18n'
+import { useT } from '../i18n'
 import { isPickCancelled } from '../lib/coreErrors'
 import { OnboardingSurvey } from '../components/OnboardingSurvey'
 import { PcStep } from '../components/GfxPresets'
 import { globalChoice, setGlobalChoice, type GfxChoice } from '../lib/gfxPresets'
 import { GRAPHICS_PRESETS_PUBLIC } from '../lib/graphicsRelease'
+import { ThemeRow } from '../components/premium/ThemeRow'
 
 function Welcome({ nick }: { nick: string }) {
   const t = useT()
@@ -162,14 +161,9 @@ function ImportStep() {
   const [busy, setBusy] = useState('')
   const [fileBusy, setFileBusy] = useState(false)
   const [movable, setMovable] = useState(0)
-  const [tlNick, setTlNick] = useState('')
   const [tlDone, setTlDone] = useState(false)
 
   useEffect(() => {
-    if (hasTauri())
-      tlauncherNick()
-        .then((n) => setTlNick(n && isOfflineNick(n) ? n : ''))
-        .catch((e) => console.warn('[onb-import] TLauncher nick', e))
     ;(hasTauri() ? scanImports() : Promise.resolve([] as FoundInstance[]))
       .then((all) => {
         const l = all.filter((it) => !it.movable)
@@ -211,7 +205,6 @@ function ImportStep() {
   const fromTl = () => {
     setTlDone(true)
     setPicked((p) => ({ ...p, ...Object.fromEntries(importable.map((it) => [foundKey(it), fromTlauncher(it)])) }))
-    if (tlNick) keepNick(tlNick)
     if (tlBuilds.length) void runImport(tlBuilds)
   }
 
@@ -282,7 +275,7 @@ function ImportStep() {
       </div>
       <div className="onb-inline">
         <div className="onb-inline-start">
-          {(tlNick || tlBuilds.length) && !tlDone ? (
+          {tlBuilds.length && !tlDone ? (
             <button className="btn sm secondary" data-track="onb_from_tlauncher" onClick={fromTl} disabled={!!busy}>
               <Icon id="i-download" /> {t('У меня был TLauncher')}
             </button>
@@ -308,17 +301,6 @@ function ImportStep() {
 
 const fromTlauncher = (it: FoundInstance) => /TLauncher|TL Legacy/.test(it.source)
 
-/// The TLauncher nick joins the accounts without taking over the one already in
-/// use: a TurtleClient sign-in keeps launching as itself.
-function keepNick(nick: string) {
-  const store = useAccounts.getState()
-  if (store.list.some((a) => a.kind === 'offline' && a.nick === nick)) return
-  const before = store.active
-  store.add({ nick, kind: 'offline' })
-  if (before) useAccounts.getState().setActive(before)
-  showToast(t('Ник из TLauncher сохранён: {nick}', { nick }))
-}
-
 /** Шаг «Какой у тебя компьютер?». */
 const GFX_STEP = GRAPHICS_PRESETS_PUBLIC ? 3 : -1
 const LOOK_STEP = GRAPHICS_PRESETS_PUBLIC ? 4 : 3
@@ -343,43 +325,8 @@ function commitGfx() {
 }
 
 function LookStep() {
-  const t = useT()
-  const [music, setMusic] = useState(musicAutostartOn)
-  const [sound, setSound] = useState(() => soundMode() !== 'off')
-
-  return (
-    <>
-      <h3>{t('Звук')}</h3>
-      <div className="set-row">
-        <span className="lab">
-          {t('Музыка')}
-        </span>
-        <span
-          className={'tgl' + (music ? ' on' : '')}
-          onClick={() => {
-            const next = !music
-            setMusic(next)
-            setMusicAutostart(next)
-            const player = useMusic.getState()
-            if (player.playing !== next && player.tracks.length) player.togglePlay()
-          }}
-        ></span>
-      </div>
-      <div className="set-row">
-        <span className="lab">
-          {t('Звуки')}
-        </span>
-        <span
-          className={'tgl' + (sound ? ' on' : '')}
-          onClick={() => {
-            const next = !sound
-            setSound(next)
-            setSoundMode(next ? 'all' : 'off')
-          }}
-        ></span>
-      </div>
-    </>
-  )
+  const t=useT()
+  return <><h3>{t('Тема лаунчера')}</h3><ThemeRow /></>
 }
 
 function ReadyStep() {

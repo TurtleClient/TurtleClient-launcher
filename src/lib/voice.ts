@@ -1,5 +1,6 @@
 import { micConstraint } from './audioDevices'
 import { t } from '../i18n'
+import { LAUNCHER_AUDIO_ENABLED } from './launcherFeatures'
 
 export const VOICE_MAX_MS = 120_000
 export const VOICE_PEAKS = 48
@@ -19,7 +20,7 @@ export interface VoiceRecorder {
 }
 
 export const canRecordVoice = (): boolean =>
-  typeof navigator !== 'undefined' && !!navigator.mediaDevices && !!navigator.mediaDevices.getUserMedia
+  LAUNCHER_AUDIO_ENABLED && typeof navigator !== 'undefined' && !!navigator.mediaDevices && !!navigator.mediaDevices.getUserMedia
 
 /**
  * The encoder always runs at 22050 Hz no matter what the constructor is told

@@ -1,3 +1,4 @@
+import { LAUNCHER_CALLS_ENABLED } from '../lib/launcherFeatures'
 // Voice call state in the UI: microphone, camera, screen share, participants. The microphone and camera open when you yourself
 // join a call or turn them on, and close when the call ends (stop/close). Signals go through lib/call/signal.ts, sound goes straight to the other people.
 import { create } from 'zustand'
@@ -393,7 +394,7 @@ async function finish(reason: 'end' | 'decline' | 'cancel' | 'busy' | 'failed') 
 }
 
 export function callSupported(): boolean {
-  return supportsCalls()
+  return LAUNCHER_CALLS_ENABLED && supportsCalls()
 }
 
 export async function callFriend(peerId: string, nick: string) {
@@ -654,6 +655,7 @@ export function joinRoomVoice(roomId: string, title: string) {
  * mesh stays as the fallback when the relay cannot be reached, and the reason is shown.
  */
 export async function joinPartyVoice(partyId: string, startMuted = false) {
+  if (!LAUNCHER_CALLS_ENABLED) return
   const cur = st()
   if (cur.status !== 'idle') {
     if (cur.mode === 'room' && cur.roomId === partyId) return

@@ -1,3 +1,4 @@
+import { LAUNCHER_AUDIO_ENABLED } from '../lib/launcherFeatures'
 import { create } from 'zustand'
 import { listenWindowVisibility } from '../ipc/events'
 import { showToast, useUi } from './ui'
@@ -224,6 +225,7 @@ function prefetchNext() {
 }
 
 function apply(fadeMs = 0) {
+  if (!LAUNCHER_AUDIO_ENABLED) return
   const s = useMusic.getState()
   const a = getAudio()
   const cur = s.tracks[s.index]
@@ -507,6 +509,7 @@ function pickStart(list: Track[]) {
 let inited = false
 
 export function initMusic() {
+  if (!LAUNCHER_AUDIO_ENABLED) return
   if (inited) return
   inited = true
 
@@ -596,6 +599,7 @@ function autostart() {
 }
 
 export function startMusicAfterLogin() {
+  if (!LAUNCHER_AUDIO_ENABLED) return
   if (!inited) initMusic()
   autostart()
 }

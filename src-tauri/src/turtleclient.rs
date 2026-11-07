@@ -177,12 +177,9 @@ pub async fn turtle_launch(account_id: Option<String>, nick: String) -> Result<(
     update::before_launch().await?;
     let config = settings();
     validate(&config)?;
-    let identity = if let Some(id) = account_id {
-        let (p, t) = profile(&id).await?;
-        Some(json!({"name":p["name"],"uuid":p["id"],"access_token":t,"user_type":"msa"}))
-    } else {
-        None
-    };
+    let id = account_id.ok_or("turtle_login_required")?;
+    let (p, t) = profile(&id).await?;
+    let identity = Some(json!({"name":p["name"],"uuid":p["id"],"access_token":t,"user_type":"msa"}));
     if nick.is_empty()
         || nick.len() > 16
         || !nick.bytes().all(|b| b.is_ascii_alphanumeric() || b == b'_')

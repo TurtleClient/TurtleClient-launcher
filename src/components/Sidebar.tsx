@@ -6,15 +6,8 @@ import { accKindLabel } from '../lib/format'
 import { getAccount, isMillidaKind, useAccounts } from '../state/accounts'
 import { useGameNick } from '../state/gameNick'
 import { unreadTotal, useFriends } from '../state/friends'
-import { radioOn, useMusic } from '../state/music'
 import { BugPx } from './BugPx'
 import { FEEDBACK_SHARDS, feedbackRewardReady } from './feedbackStatus'
-
-// Окно отзыва открывают редко: его код — отдельный чанк.
-const FeedbackModal = lazy(() => import('./Feedback').then((m) => ({ default: m.FeedbackModal })))
-import { playSound, setSoundMode, soundMode, soundVolume } from '../lib/sound'
-import { writePref } from '../lib/prefs'
-import { Slider } from './Slider'
 import { roomsUnreadTotal, useRooms } from '../state/rooms'
 import { openMessages } from '../state/chatScreen'
 import { PlayhubBar } from './hosts'
@@ -31,86 +24,14 @@ import { preloadScreen } from '../screens/registry'
 import { useDaily } from '../state/daily'
 import { useT } from '../i18n'
 
+// Окно отзыва открывают редко: его код — отдельный чанк.
+const FeedbackModal = lazy(() => import('./Feedback').then((m) => ({ default: m.FeedbackModal })))
+
 /* Навигация как в Brawl Stars: у каждого раздела ровно один вход (владелец
    23.09.2026: «всё дублируется»). В лобби вкладок нет — разделы живут на сцене,
    здесь только кошелёк, настройки и аккаунт в углу. На остальных экранах —
    шапка с «← Лобби» и ходом запуска. Имя компонента осталось Sidebar, чтобы не
    трогать раскладку App.tsx. */
-/** Две квадратные кнопки лобби: звуки интерфейса и музыка (по умолчанию играет). */
-/**
- * Быстрый звук под шестерёнкой (владелец 12.10.2026: «музыку и звуки — в
- * настройки, но чтобы школьник нашёл»). Кнопок звука и музыки в полосе больше
- * нет: всё живёт в «Настройки → Звук», а навёл на шестерёнку — выключил или
- * убавил, не заходя.
- */
-function QuickSound() {
-  const t = useT()
-  const music = useMusic((s) => radioOn(s))
-  const musicLevel = useMusic((s) => s.level)
-  const setMusicLevel = useMusic((s) => s.setVolume)
-  const toggleMusic = useMusic((s) => s.toggleRadio)
-  const [sfxLevel, setSfxLevel] = useState(soundVolume)
-  const [ui, setUi] = useState(() => soundMode() === 'all')
-  useEffect(() => {
-    const sync = () => {
-      setUi(soundMode() === 'all')
-      setSfxLevel(soundVolume())
-    }
-    window.addEventListener('focus', sync)
-    return () => window.removeEventListener('focus', sync)
-  }, [])
-  return (
-    <span className="lb-vol-pop lb-quick-pop" role="group" aria-label={t('Звук')}>
-      <span className="lb-vol-card lb-quick-card">
-        <span className="lb-quick-row">
-          <button
-            className={'lb-quick-tg' + (ui ? '' : ' off')}
-            aria-pressed={ui}
-            aria-label={ui ? t('Выключить звуки') : t('Включить звуки')}
-            data-track={ui ? 'sound_off' : 'sound_on'}
-            data-notip
-            data-nosound
-            onClick={() => {
-              const next = !ui
-              setSoundMode(next ? 'all' : 'notify')
-              setUi(next)
-              if (next) playSound('click')
-            }}
-          >
-            <Icon id={ui ? 'i-volume' : 'i-mute'} />
-          </button>
-          <Slider
-            value={sfxLevel}
-            min={0}
-            max={100}
-            width={130}
-            onChange={(v) => {
-              setSfxLevel(v)
-              writePref('m-sound-vol', String(v))
-              playSound('click')
-            }}
-          />
-          <b>{sfxLevel + '%'}</b>
-        </span>
-        <span className="lb-quick-row">
-          <button
-            className={'lb-quick-tg' + (music ? '' : ' off')}
-            aria-pressed={music}
-            aria-label={music ? t('Выключить музыку') : t('Включить музыку')}
-            data-track={music ? 'music_off' : 'music_on'}
-            data-notip
-            onClick={() => toggleMusic()}
-          >
-            <Icon id={music ? 'i-music' : 'i-music-off'} />
-          </button>
-          <Slider value={musicLevel} min={0} max={100} width={130} onChange={setMusicLevel} />
-          <b>{musicLevel + '%'}</b>
-        </span>
-      </span>
-    </span>
-  )
-}
-
 /** Вкладки хаба в верхней полосе: библиотека (во что играть) и ресурсы (каталог). */
 /** libLabel — «Мои сборки» в раскладке «Классика», где так же назван пункт панели. */
 export function HubTopTabs({ libLabel }: { libLabel?: string }) {
@@ -277,7 +198,6 @@ export function Sidebar({ onNav }: { onNav: (s: ScreenId) => void }) {
             >
               <Icon id="i-settings" />
             </button>
-            <QuickSound />
           </span>
         </div>
         <AccountMenu open={menuOpen} onClose={() => setMenuOpen(false)} chipRef={chipRef} />

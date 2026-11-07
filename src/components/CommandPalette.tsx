@@ -31,10 +31,9 @@ function screens(): PaletteItem[] {
 function settings(): PaletteItem[] {
   const list: Array<[SettingsTab, string, string]> = [
     ['look', t('Вид'), t('тема цвет фон язык анимация')],
-    ['sound', t('Звук'), t('музыка микрофон уведомления')],
     ['game', t('Игра'), t('память окно java')],
     ['files', t('Файлы'), t('папка кэш бэкапы')],
-    ['privacy', t('Аккаунт'), t('приватность статистика')],
+    ['privacy', t('Приватность'), t('приватность статистика')],
     ['about', t('Лаунчер'), t('версия обновление')],
   ]
   return list.map(([id, title, words]) => ({

@@ -30,9 +30,8 @@ const isHeadAvatar = (v?: string, from?: string): boolean =>
 
 export const isMillidaKind = (kind: string) => kind === 'millida' || kind === 'tg'
 
-/// A licence or an offline nick is what the first-run screen offers to play with,
-/// so such an account opens the launcher without a TurtleClient sign-in.
-export const isGameAccountKind = (kind: string) => kind === 'microsoft' || kind === 'offline'
+// A Microsoft Minecraft account opens the launcher without a separate TurtleClient login.
+export const isGameAccountKind = (kind: string) => kind === 'microsoft'
 
 function readAccounts(): Account[] {
   try {
@@ -106,7 +105,9 @@ export const dropGuests = (list: Account[]): Account[] => list.filter((a) => a.k
 export function loadState(): { list: Account[]; active: string } {
   const stored = readAccounts()
   const migrated = retireElyby(dropGuests(stored), readActive())
-  const state = collapseMillida(migrated.list, migrated.active)
+  const legacy = collapseMillida(migrated.list, migrated.active)
+  const list = legacy.list.filter((account) => account.kind === 'microsoft')
+  const state = { list, active: list.find((account) => account.id === legacy.active)?.id || list[0]?.id || '' }
   if (migrated.retired.length || state.list.length !== stored.length) {
     persist(state.list)
     localStorage.setItem('m-active', state.active)

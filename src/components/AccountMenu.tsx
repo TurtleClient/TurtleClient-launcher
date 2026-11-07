@@ -4,11 +4,11 @@ import type { RefObject } from 'react'
 import { Icon } from './Icon'
 import { Head } from './Head'
 import { accKindLabel } from '../lib/format'
-import { getMillidaAccount, hasLicenseSession, msTokenExpired, useAccounts } from '../state/accounts'
+import { hasLicenseSession, msTokenExpired, useAccounts } from '../state/accounts'
 import type { Account } from '../state/accounts'
 import { SECRETS_CHANGED_EVENT } from '../lib/secure'
 import { refreshMsAccounts, startMsLogin } from '../state/msLogin'
-import { openModal, setScreen, showToast } from '../state/ui'
+import { openModal, showToast } from '../state/ui'
 import { uiConfirm } from '../state/confirm'
 import { signOut } from '../lib/session'
 import { useT } from '../i18n'
@@ -130,9 +130,8 @@ export function AccountMenu({
                   // отдельной «Выйти из TurtleClient» больше нет).
                   if (await uiConfirm(t('Выйти из аккаунта «{nick}»?', { nick: a.nick }), { confirmLabel: t('Выйти') })) {
                     remove(a.id)
-                    // Без аккаунта TurtleClient лаунчер не работает (владелец 27.10.2026):
-                    // вышел из него — на экран входа, игровые аккаунты остаются в списке.
-                    if (!getMillidaAccount()) signOut()
+                    // Return to Microsoft sign-in after removing the last Minecraft account.
+                    if (!useAccounts.getState().list.some((account) => account.kind === 'microsoft')) signOut()
                   }
                 }}
               >
@@ -144,17 +143,6 @@ export function AccountMenu({
           <div className="acc-menu-empty">{t('Пока нет аккаунтов')}</div>
         )}
         <div className="acc-menu-sep"></div>
-        <button
-          className="acc-add-btn acc-plus-btn"
-          data-track="account_plus"
-          onClick={() => {
-            onClose()
-            setScreen('plus')
-          }}
-        >
-          <Icon id="i-crown" />
-          TurtleClient Plus
-        </button>
         <button
           id="accAddBtn"
           className="acc-add-btn"

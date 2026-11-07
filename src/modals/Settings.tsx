@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import { useLayout, type Layout } from '../state/layout'
 import type { ReactNode } from 'react'
 import { showToast, useUi } from '../state/ui'
 import type { SettingsTab } from '../state/ui'
@@ -15,7 +14,6 @@ import {
   listJavaRuntimes,
   openGameFolder,
   openUrl,
-  overlaySetCardMs,
   overlaySetEnabled,
   overlayState,
   convertFileSrc,
@@ -30,11 +28,10 @@ import { refreshProfiles, useProfiles } from '../state/profiles'
 import { openBuildSettings } from '../state/instance'
 import { useLobby } from '../state/lobbyMode'
 import type { JavaInfo, JavaRuntime, OverlayState } from '../ipc/commands'
-import { CARD_TTL_CHOICES, CARD_TTL_MS } from '../lib/overlayCards'
+import { CARD_TTL_MS } from '../lib/overlayCards'
 import { apiErrorText } from '../lib/apiError'
 import { Icon } from '../components/Icon'
 import { Block, Group, Query, Row, Segs, Toggle } from '../components/SetKit'
-import { CloudSync } from '../components/CloudSync'
 import { SharedStore } from '../components/SharedStore'
 import { BackupsFolderRow } from '../components/BackupsFolderRow'
 import { AmbienceRows } from '../components/lobby/AmbienceRows'
@@ -42,46 +39,22 @@ import { openMcNews } from '../components/McNews'
 import { A11yRows } from '../components/A11yRows'
 import { uiChoice, uiConfirm } from '../state/confirm'
 import { ColorPicker } from '../components/ColorPicker'
-import { AppIconPicker } from '../components/AppIconPicker'
 import { TurtleRuntimeSettings } from '../components/TurtleRuntimeSettings'
-import { AudioSettings } from '../components/AudioSettings'
-import { RewindClips } from '../components/RewindClips'
 import { GlobalPresetPicker } from '../components/GfxPresets'
 import { globalChoice, setGlobalChoice, type GfxChoice } from '../lib/gfxPresets'
 import { GRAPHICS_PRESETS_PUBLIC } from '../lib/graphicsRelease'
-import { MusicPlayer, RadioCredits } from '../components/radio'
 import { betaChannel, checkForUpdate, pendingUpdate } from '../lib/updater'
 import { useUpdate } from '../state/update'
 import { discordPresence } from '../lib/launch'
-import { radioOn, useMusic } from '../state/music'
-import { fetchSounds, playSound, setSoundMode, soundMode, soundVolume } from '../lib/sound'
-import type { SoundMode } from '../lib/sound'
-import { notifyLevel, setNotifyLevel } from '../state/notifyPrefs'
-import { setDesktopToasts } from '../lib/desktopToast'
-import { setStreakRemind, streakRemindOn } from '../lib/streakReminder'
 import { autostartOn, setAutostart } from '../lib/autostart'
-import type { NotifyKind, NotifyLevel } from '../state/notifyPrefs'
-import { Slider } from '../components/Slider'
 import { Select } from '../components/Select'
-import { type MarketFeature, marketOffers, t, useMarket, useT } from '../i18n'
+import { t, useT } from '../i18n'
 import { LangPicker } from '../components/LangPicker'
 import { writePref } from '../lib/prefs'
-import { musicAutostartOn, setMusicAutostart } from '../state/music'
-import { setTelemetryEnabled, telemetryEnabled, track, trackFailure } from '../lib/telemetry'
-import { getAccount, getMillidaAccount, useAccounts } from '../state/accounts'
-import { balanceText, openTopup, useMoney } from '../lib/useMoney'
-// Наличие аккаунта берём из стора, а не вызовом hasMillidaAccount(): вызов не
-// реактивен, и вкладка «Приватность», открытая до готовности хранилища сессий
-// (или до входа в аккаунт), навсегда застревала на «Нужен аккаунт TurtleClient».
-import { useHasMillida } from '../state/auth'
-import { setSkinSource, skinSource } from '../lib/gameProfile'
-import { millidaModEnabled, setMillidaModEnabled } from '../ipc/commands'
+import { setTelemetryEnabled, telemetryEnabled, trackFailure } from '../lib/telemetry'
 import { startTour } from '../state/tour'
 import { buildDiagnostics } from '../lib/diag'
 import { copyText } from '../lib/clipboard'
-import { loadPrivacy, usePrivacy } from '../lib/privacy'
-import type { PrivacyFlag, PrivacySettings } from '../lib/privacy'
-import { DUO_INVITE_OPTIONS, type DuoInvites } from '../lib/duoEmotes'
 import {
   hasTray,
   launchWindowMode,
@@ -92,8 +65,6 @@ import {
   trayCloseEnabled,
 } from '../lib/window'
 import type { LaunchWindowMode } from '../lib/window'
-import type { SkinSource } from '../lib/gameProfile'
-import { showLogin } from '../lib/session'
 import { PremiumSwatches, ThemeRow } from '../components/premium/ThemeRow'
 import { leavePremiumLook, markThemeChoice } from '../lib/premiumTheme'
 import { accentFromHex, computeAccent, paintAccent, saveAccent, withColorFade } from '../lib/accent'
@@ -104,17 +75,7 @@ import { useWallpaper } from '../state/wallpaper'
 import { TAB_MS_DEFAULT, useViewPrefs } from '../state/viewPrefs'
 import type { PerfMode } from '../state/viewPrefs'
 
-/* ============================================================
-   НАСТРОЙКИ — упрощены 23.09.2026 по правкам владельца:
-   «вместо тем — цвет кнопок», «не левая панель — сверху кнопки»,
-   «настройки попроще».
-
-   - Шесть вкладок сверху: Вид · Звук · Игра · Файлы · Аккаунт · Лаунчер.
-     Уведомления — в «Звуке», приватность — в «Аккаунте», трей — в «Лаунчере».
-   - Строка = название и управление. Пояснение — одна строка и только там,
-     где без него непонятно, или живое число (размер кэша, версия Java).
-   - Поиск по всем вкладкам сразу: строка сама решает, подходит ли она (Row → keys).
-   ============================================================ */
+// Settings search includes every remaining section.
 
 const accents = (): (Accent & { name: string })[] => [
   { id: 'green', name: t('Зелёный'), c: '#5EC64D', h: '#70D55F', s: 'rgba(94,198,77,.13)' },
@@ -169,22 +130,20 @@ function initialAccent(): string {
   return 'green'
 }
 
-type SecId = 'look' | 'graphics' | 'sound' | 'game' | 'clips' | 'files' | 'account' | 'about'
+type SecId = 'look' | 'graphics' | 'game' | 'files' | 'account' | 'about'
 
 const sections = (): { id: SecId; label: string }[] => [
   { id: 'look', label: t('Вид') },
   ...(GRAPHICS_PRESETS_PUBLIC ? [{ id: 'graphics' as const, label: t('Графика') }] : []),
-  { id: 'sound', label: t('Звук') },
   { id: 'game', label: t('Игра') },
-  { id: 'clips', label: t('Клипы') },
   { id: 'files', label: t('Файлы') },
-  { id: 'account', label: t('Аккаунт') },
+  { id: 'account', label: t('Приватность') },
   { id: 'about', label: t('Лаунчер') },
 ]
 
 /// Старые адреса вкладок (openSettings('notify') и сохранённый m-set-tab)
 /// ведут туда, куда переехало их содержимое.
-const MOVED: Record<string, SecId> = { window: 'game', notify: 'sound', privacy: 'account' }
+const MOVED: Record<string, SecId> = { window: 'game', notify: 'account', privacy: 'account', sound: 'look', clips: 'look' }
 
 function toSec(v: string | null | undefined): SecId | null {
   if (!v) return null
@@ -200,34 +159,8 @@ function initialSec(): SecId {
   }
 }
 
-/// Тумблеры приватности профиля. Те же поля правятся на millida.net —
-/// подписи держим близкими к сайту, чтобы человек узнавал настройку.
-const privacyRows = (): { key: PrivacyFlag; title: string; feature?: MarketFeature }[] => [
-  { key: 'showActivity', title: t('Игровая активность') },
-  { key: 'showServers', title: t('Серверы') },
-  { key: 'showPlaytime', title: t('Часы в игре') },
-  { key: 'showFriends', title: t('Список друзей') },
-  { key: 'showAchievements', title: t('Достижения') },
-  { key: 'showMarket', title: t('Маркет'), feature: 'market' },
-]
-
-const notifyRows = (): [NotifyKind, string][] => [
-  ['msg', t('Личные сообщения')],
-  ['room', t('Сообщения в группах')],
-  ['play', t('Друг зашёл в игру')],
-  ['online', t('Друг в сети')],
-  ['request', t('Заявки в друзья')],
-]
-
-const notifyLevels = (): [NotifyLevel, string][] => [
-  ['sound', t('Со звуком')],
-  ['silent', t('Без звука')],
-  ['off', t('Выкл')],
-]
-
 export function Settings({ on }: { on: boolean }) {
   const t = useT()
-  const market = useMarket()
   const [sec, setSecState] = useState<SecId>(initialSec)
   const [query, setQuery] = useState('')
   const memProfiles = useProfiles((s) => s.profiles)
@@ -245,7 +178,6 @@ export function Settings({ on }: { on: boolean }) {
     hotkey: 'Alt+M',
     cardMs: CARD_TTL_MS,
   })
-  const [modOn, setModOn] = useState(true)
   const showSnapshots = useMcVersionList((s) => s.show)
   const [cacheMb, setCacheMb] = useState<number | null>(null)
   const [clearing, setClearing] = useState(false)
@@ -256,19 +188,7 @@ export function Settings({ on }: { on: boolean }) {
   const [backAfterGame, setBackAfterGame] = useState(restoreOnGameExit)
   const [tray, setTray] = useState(hasTray)
   const [autostart, setAutostartOn] = useState(false)
-  const [streakRemind, setStreakRemindOn] = useState(streakRemindOn)
   const [discord, setDiscord] = useState(() => localStorage.getItem('m-discord') !== '0')
-  const [musicAuto, setMusicAuto] = useState(musicAutostartOn)
-  const [soundMd, setSoundMd] = useState<SoundMode>(soundMode)
-  const [soundVol, setSoundVol] = useState(soundVolume)
-  const [soundBusy, setSoundBusy] = useState(false)
-  const [notifyLv, setNotifyLv] = useState<Record<NotifyKind, NotifyLevel>>(() => ({
-    msg: notifyLevel('msg'),
-    play: notifyLevel('play'),
-    online: notifyLevel('online'),
-    request: notifyLevel('request'),
-    room: notifyLevel('room'),
-  }))
   const [ver, setVer] = useState('')
   const [diagBusy, setDiagBusy] = useState(false)
   const [diagText, setDiagText] = useState('')
@@ -282,16 +202,10 @@ export function Settings({ on }: { on: boolean }) {
   const [updBusy, setUpdBusy] = useState(false)
   const [beta, setBeta] = useState(betaChannel)
   const updStaged = useUpdate((s) => s.staged)
-  const [skins, setSkins] = useState<SkinSource>(skinSource)
   const charAnim = useViewPrefs((s) => s.charAnim)
   const bgAnim = useViewPrefs((s) => s.bgAnim)
   const tabMs = useViewPrefs((s) => s.tabMs)
   const perf = useViewPrefs((s) => s.perf)
-  const layout = useLayout((s) => s.layout)
-  useAccounts()
-  useMoney()
-  const acc = getAccount()
-  const millidaAcc = getMillidaAccount()
 
   useEffect(() => {
     if (!on || !hasTauri()) return
@@ -304,7 +218,6 @@ export function Settings({ on }: { on: boolean }) {
         .then((b) => setCacheMb(Math.round(b / 1024 / 1024)))
         .catch(() => setCacheMb(0))
     void overlayState().then(setOverlay).catch(() => {})
-    void millidaModEnabled().then(setModOn).catch(() => {})
     void listJavaRuntimes().then(setJavas).catch(() => {})
     void defaultJava().then(setJavaDef).catch(() => {})
     void javaMajors()
@@ -327,35 +240,6 @@ export function Settings({ on }: { on: boolean }) {
     } catch {}
     const c = document.querySelector('.content')
     if (c) c.scrollTop = 0
-  }
-
-  // Приватность серверная и общая с сайтом: при открытии раздела перечитываем
-  // её, чтобы увидеть значение, выставленное на millida.net с другого места.
-  const privacy = usePrivacy()
-  const hasMillida = useHasMillida()
-  useEffect(() => {
-    if (!on || !hasMillida) return
-    void loadPrivacy(true)
-  }, [on, hasMillida])
-
-  const pickDuoInvites = (value: DuoInvites) => {
-    if (value === privacy.settings.duoInvites || privacy.saving === 'duoInvites') return
-    privacy
-      .patch({ duoInvites: value })
-      .then(() => showToast(t('Эмоции вдвоём: {who}', { who: t(DUO_INVITE_OPTIONS.find(([v]) => v === value)?.[1] ?? '').toLowerCase() })))
-      .catch(() => showToast(t('Не удалось сохранить настройку приглашений'), 'error'))
-  }
-
-  const togglePrivacy = (key: PrivacyFlag) => {
-    const next = !privacy.settings[key]
-    const row = privacyRows().find((r) => r.key === key)
-    privacy
-      .patch({ [key]: next } as Partial<PrivacySettings>)
-      .then(() => {
-        const name = row ? row.title : t('Настройка')
-        showToast(next ? t('{name} — видно всем', { name }) : t('{name} — скрыто', { name }))
-      })
-      .catch(() => showToast(t('Не удалось сохранить настройку приватности'), 'error'))
   }
 
   const onlyApp = (what: string) => {
@@ -421,14 +305,6 @@ export function Settings({ on }: { on: boolean }) {
 
   const look = (
     <>
-      <Block keys="язык language интерфейс перевод">
-        <Group title={t('Язык')}>
-          <Row title={t('Язык интерфейса')} keys="язык language">
-            <LangPicker variant="field" />
-          </Row>
-        </Group>
-      </Block>
-
       <Block keys="цвет кнопок акцент цвет выделения палитра тема лаунчера plus diamond премиум">
         <Group title={t('Цвет кнопок')}>
           <div className="s2-swatches" id="accentSwatches" role="radiogroup" aria-label={t('Цвет кнопок')}>
@@ -536,13 +412,6 @@ export function Settings({ on }: { on: boolean }) {
         </Group>
       </Block>
 
-
-      <Block keys="иконка приложения значок ярлык док панель задач искра пламя аметист легенда золото алмаз">
-        <Group title={t('Иконка приложения')}>
-          <AppIconPicker />
-        </Group>
-      </Block>
-
       <A11yRows />
 
       <Block keys="анимация движение персонаж танцует фон переход между вкладками скорость плавность оптимизация качество слабый пк производительность лаги fps">
@@ -580,188 +449,6 @@ export function Settings({ on }: { on: boolean }) {
         </Group>
       </Block>
 
-      {/* В самом конце «Вида» (владелец 07.10.2026: «чтобы мало кто видел»). */}
-      <Block keys="старый вид старая версия новая версия раскладка меню боковая панель классика лобби интерфейс">
-        <Group title={t('Версия интерфейса')}>
-          <Row title={t('Вид лаунчера')} hint={t('Старый — разделы в панели слева')} keys="старый вид новая версия раскладка боковая панель классика лобби">
-            <Segs<Layout>
-              value={layout}
-              options={[
-                ['lobby', t('Новый')],
-                ['classic', t('Старый')],
-              ]}
-              onPick={(v) => useLayout.getState().set(v)}
-            />
-          </Row>
-        </Group>
-      </Block>
-    </>
-  )
-
-  const sound = (
-    <>
-      <Group title={t('Музыка')}>
-        <Row title={t('Музыка сейчас')} keys="музыка радио включить выключить">
-          <MusicNow />
-        </Row>
-        <Row title={t('Музыка при запуске')} keys="мелодия фоновая">
-          <Toggle
-            label={t('Музыка при запуске')}
-            on={musicAuto}
-            onChange={() => {
-              const next = !musicAuto
-              setMusicAuto(next)
-              setMusicAutostart(next)
-            }}
-          />
-        </Row>
-        <MusicPlayer />
-        <RadioCredits />
-      </Group>
-
-      <Group title={t('Звуки')}>
-        <Row title={t('Звуки Minecraft')} keys="звуки интерфейса клики тишина">
-          <Segs<SoundMode>
-            value={soundMd}
-            options={[
-              ['off', t('Выкл')],
-              ['notify', t('Уведомления')],
-              ['all', t('Все')],
-            ]}
-            onPick={(v) => {
-              setSoundMd(v)
-              setSoundMode(v)
-              if (v === 'notify') playSound('notify')
-              if (v === 'all') playSound('click')
-            }}
-          />
-        </Row>
-        {soundMd !== 'off' ? (
-          <Row title={t('Громкость звуков')} keys="громкость">
-            <div className="s2-slider">
-              <Slider
-                value={soundVol}
-                min={0}
-                max={100}
-                onChange={(v) => {
-                  setSoundVol(v)
-                  writePref('m-sound-vol', String(v))
-                  playSound(soundMd === 'all' ? 'click' : 'notify')
-                }}
-              />
-              <span className="s2-val">{soundVol + '%'}</span>
-              <button className="btn sm ghost" data-nosound aria-label={t('Проверить звук')} onClick={() => playSound('achievement')}>
-                <Icon id="i-play" />
-              </button>
-              <button
-                className="btn sm ghost"
-                disabled={soundBusy}
-                aria-label={t('Скачать звуки из игры заново')}
-                data-tip={t('Скачать звуки из игры заново')}
-                onClick={() => {
-                  setSoundBusy(true)
-                  fetchSounds()
-                    .then((n) =>
-                      showToast(n ? t('Звуков из игры: {n}', { n }) : t('Не удалось скачать звуки'), n ? 'ok' : 'error', false),
-                    )
-                    .catch((e) => {
-                      console.error('[settings] sounds', e)
-                      showToast(t('Звуки не скачались'), 'error', false)
-                    })
-                    .finally(() => setSoundBusy(false))
-                }}
-              >
-                {soundBusy ? <span className="spin"></span> : <Icon id="i-restart" />}
-              </button>
-            </div>
-          </Row>
-        ) : null}
-      </Group>
-
-      <Block keys="уведомления сообщения друг в сети заявки группы в игре со звуком без звука">
-        <Group title={t('Уведомления')}>
-          <div className="s2-matrix" role="table">
-            <div className="s2-mx-head" role="row">
-              <span></span>
-              {notifyLevels().map(([v, label]) => (
-                <span key={v} role="columnheader" className="s2-mx-col">
-                  {label}
-                </span>
-              ))}
-            </div>
-            {notifyRows().map(([kind, label]) => (
-              <div className="s2-mx-row" role="row" key={kind}>
-                <span className="s2-mx-lab">{label}</span>
-                {notifyLevels().map(([v, seg]) => (
-                  <span key={v} className="s2-mx-cell">
-                    <button
-                      role="radio"
-                      aria-checked={notifyLv[kind] === v}
-                      aria-label={label + ': ' + seg}
-                      data-nosound
-                      className={'s2-dot' + (notifyLv[kind] === v ? ' on' : '') + (v === 'off' ? ' off' : '')}
-                      onClick={() => {
-                        setNotifyLv((prev) => ({ ...prev, [kind]: v }))
-                        setNotifyLevel(kind, v)
-                        if (v === 'sound') playSound('notify')
-                      }}
-                    ></button>
-                  </span>
-                ))}
-              </div>
-            ))}
-          </div>
-        </Group>
-      </Block>
-      <Group>
-        <Row title={t('Карточки поверх всех окон')} hint={t('Даже когда лаунчер свёрнут')} keys="уведомления рабочий стол">
-          <Toggle
-            label={t('Карточки поверх всех окон')}
-            on={overlay.toasts}
-            onChange={() => {
-              const next = !overlay.toasts
-              setOverlay({ ...overlay, toasts: next })
-              setDesktopToasts(next).catch((err) => {
-                console.error('[settings] desktop toasts', err)
-                setOverlay({ ...overlay, toasts: !next })
-                showToast(t('Не получилось — попробуй ещё раз'), 'error', false)
-              })
-            }}
-          />
-        </Row>
-        <Row title={t('Напоминать о серии')} hint={t('Вечером, если сундук не забран')} keys="серия сундук бонус напоминание уведомления">
-          <Toggle
-            label={t('Напоминать о серии')}
-            on={streakRemind}
-            onChange={() => {
-              const next = !streakRemind
-              setStreakRemindOn(next)
-              setStreakRemind(next)
-            }}
-          />
-        </Row>
-        <Row title={t('Сколько висит карточка')} keys="время уведомления секунды">
-          <Segs<number>
-            value={overlay.cardMs}
-            options={CARD_TTL_CHOICES.map((ms) => [ms, t('{n} с', { n: ms / 1000 })] as [number, string])}
-            onPick={(ms) => {
-              const prev = overlay.cardMs
-              setOverlay({ ...overlay, cardMs: ms })
-              overlaySetCardMs(ms).catch((err) => {
-                console.error('[settings] card ttl', err)
-                setOverlay({ ...overlay, cardMs: prev })
-                showToast(t('Не сохранилось'), 'error', false)
-              })
-            }}
-          />
-        </Row>
-      </Group>
-
-      <Block keys="микрофон наушники динамики устройства звонок шумоподавление громкость голоса">
-        <Group title={t('Микрофон и наушники')}>
-          <AudioSettings />
-        </Group>
-      </Block>
     </>
   )
 
@@ -783,46 +470,6 @@ export function Settings({ on }: { on: boolean }) {
   const game = (
     <>
       <TurtleRuntimeSettings />
-      <Group title={t('Скин')}>
-        <Row title={t('Откуда брать скин')} keys="скины плащи лицензия millida mojang">
-          <Segs<SkinSource>
-            value={skins}
-            options={[
-              ['millida', 'TurtleClient'],
-              ['mojang', t('Лицензия')],
-            ]}
-            onPick={(v) => {
-              // Без лицензии Mojang скин брать неоткуда: в игре остаётся
-              // Стив, и по этому пути игрок уже приходил в поддержку.
-              if (v === 'mojang' && (!acc || acc.kind !== 'microsoft')) {
-                showToast(t('Скин из лицензии — только с аккаунтом Microsoft'), 'error')
-                return
-              }
-              setSkins(v)
-              setSkinSource(v)
-            }}
-          />
-        </Row>
-        <Row title={t('Мод TurtleClient')} hint={t('Скины, плащи и эмоции в игре')} keys="мод эмоции плащи">
-          <Toggle
-            id="setMillidaMod"
-            label={t('Мод TurtleClient')}
-            on={modOn}
-            onChange={() => {
-              const next = !modOn
-              setModOn(next)
-              setMillidaModEnabled(next)
-                .then(() => showToast(next ? t('Мод вернётся при следующем запуске сборки') : t('Мод убран из сборок')))
-                .catch((err) => {
-                  console.error('[settings] millida mod', err)
-                  setModOn(!next)
-                  showToast(t('Не получилось — попробуй ещё раз'), 'error')
-                })
-            }}
-          />
-        </Row>
-      </Group>
-
       <Group title={t('Во время игры')}>
         {/* Память — у каждой сборки своя: из настроек ведём в параметры выбранной сборки. */}
         <Row title={t('Память (RAM)')} hint={t('У каждой сборки своя')} keys="memory ram озу оперативная память выделить гигабайт java heap">
@@ -1045,77 +692,11 @@ export function Settings({ on }: { on: boolean }) {
         ))}
       </Group>
 
-      <Block keys="облако облачный профиль синхронизация сборки выгрузить забрать">
-        <Group title={t('Облако')}>
-          <CloudSync />
-        </Group>
-      </Block>
     </>
   )
 
   const account = (
     <>
-      {millidaAcc ? (
-        <Group>
-          <Row title={t('Баланс')} hint={balanceText() ?? '—'} keys="кошелёк деньги пополнить рубли">
-            <button
-              className="btn sm secondary"
-              onClick={() => {
-                track('store_open', { where: 'wallet_topup' })
-                openTopup()
-              }}
-            >
-              {t('Пополнить')}
-            </button>
-          </Row>
-        </Group>
-      ) : null}
-
-      <Group title={t('Видно в профиле на millida.net')}>
-        {!hasMillida ? (
-          <Row title={t('Нужен аккаунт TurtleClient')} keys="приватность профиль видно">
-            <button className="btn sm primary" onClick={() => showLogin()}>
-              <Icon id="i-login" /> {t('Войти')}
-            </button>
-          </Row>
-        ) : (
-          privacyRows().filter((r) => !r.feature || marketOffers(market, r.feature)).map((r) => (
-            <Row key={r.key} title={r.title} keys="приватность профиль видно скрыть">
-              {!privacy.loaded && privacy.loading ? (
-                <span className="skel" style={{ width: '42px', height: '24px' }}></span>
-              ) : (
-                <Toggle
-                  label={r.title}
-                  on={!!privacy.settings[r.key]}
-                  busy={privacy.saving === r.key}
-                  onChange={() => togglePrivacy(r.key)}
-                />
-              )}
-            </Row>
-          ))
-        )}
-        {privacy.error ? (
-          <Row title={t('Не загрузилось')} keys="приватность ошибка">
-            <span data-err={privacy.error} hidden></span>
-            <button className="btn sm secondary" onClick={() => void loadPrivacy(true)}>
-              <Icon id="i-restart" /> {t('Повторить')}
-            </button>
-          </Row>
-        ) : null}
-      </Group>
-
-      {hasMillida ? (
-        <Group title={t('Эмоции вдвоём')}>
-          <Row title={t('Кто может звать')} keys="эмоции вдвоём приглашение приватность друзья">
-            {!privacy.loaded && privacy.loading ? (
-              <span className="skel" style={{ width: '180px', height: '28px' }}></span>
-            ) : (
-              <Segs<DuoInvites> value={privacy.settings.duoInvites} options={DUO_INVITE_OPTIONS.map(([v, label]) => [v, t(label)] as [DuoInvites, string])} onPick={pickDuoInvites} />
-            )}
-          </Row>
-        </Group>
-      ) : null}
-
       <Group title={t('Снаружи')}>
         <Row title={t('Активность в Discord')} keys="дискорд статус rich presence приватность">
           <Toggle
@@ -1148,6 +729,14 @@ export function Settings({ on }: { on: boolean }) {
 
   const about = (
     <>
+      <Block keys="язык language интерфейс перевод">
+        <Group title={t('Язык')}>
+          <Row title={t('Язык интерфейса')} keys="язык language">
+            <LangPicker variant="field" />
+          </Row>
+        </Group>
+      </Block>
+
       <Block keys="версия обновление обновить проверить">
         <div className="s2-hero">
           <img src="/turtleclient-icon.svg" alt="" width={48} height={48} />
@@ -1303,7 +892,7 @@ export function Settings({ on }: { on: boolean }) {
     </>
   )
 
-  const views: Record<SecId, ReactNode> = { look, graphics, sound, game, clips: <RewindClips />, files, account, about }
+  const views: Record<SecId, ReactNode> = { look, graphics, game, files, account, about }
   const q = query.trim()
 
   return (
@@ -1374,12 +963,4 @@ export function Settings({ on }: { on: boolean }) {
       </div>
     </section>
   )
-}
-
-/** Музыка лобби вкл/выкл — переехала из лобби (правка владельца 23.09.2026). */
-function MusicNow() {
-  const t = useT()
-  const on = useMusic((s) => radioOn(s))
-  const toggle = useMusic((s) => s.toggleRadio)
-  return <Toggle label={t('Музыка сейчас')} on={on} onChange={() => toggle()} />
 }

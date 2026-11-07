@@ -46,7 +46,6 @@ import {
   AccountAddModal,
   BuildPicker,
   BuyModal,
-  CallPanel,
   CommandPalette,
   ConfirmModal,
   CrashModal,
@@ -73,7 +72,6 @@ import { Installs } from './components/Installs'
 import { PackDrop } from './components/PackDrop'
 import { initInstalls, useInstalls } from './state/installs'
 import { syncNativeTexts } from './lib/nativeTexts'
-import { initCalls } from './state/call'
 import { loadProfileSettings } from './ipc/commands'
 import { pushChatNotify } from './state/chatNotify'
 import { notifyAudible, notifyShown } from './state/notifyPrefs'
@@ -234,8 +232,7 @@ import { claimJoin, watchJoinClaims } from './lib/joinClaim'
 import { quickJoin } from './lib/joinServer'
 import { findProfile, refreshProfiles } from './state/profiles'
 import { gameCrashData } from './lib/crashEvent'
-import { initMusic, startMusicAfterLogin, stopMusicNow } from './state/music'
-import { initSounds, playSound } from './lib/sound'
+import { playSound } from './lib/sound'
 import { initUiTracking } from './lib/uiTrack'
 import { initWindowResume, windowReopened } from './lib/windowResume'
 import { initCli } from './lib/cli'
@@ -441,8 +438,6 @@ export function App() {
     void initAccent()
     void initDensity()
     initTray()
-    initMusic()
-    initSounds()
     initUiTracking(
       () => useUi.getState().screen,
       (cb) => useUi.subscribe((st, prev) => cb(st.screen, prev.screen)),
@@ -464,7 +459,6 @@ export function App() {
     // Сборки обновляются только при «Играть» (владелец 08.10.2026: фоновая докачка мешала) — initPackAutoUpdate не запускаем.
     const releaseRealtime = retainRealtime()
     const stopRelay = initRealtimeRelay()
-    initCalls()
     const stopPromo = watchPromo()
     const stopArcania2 = watchArcania2(warmArcaniaCover)
     const stopStreakReminder = initStreakReminder()
@@ -633,7 +627,6 @@ export function App() {
     let unlisten: UnlistenFn | null = null
     void listenTrayExit(() => {
       trackAppExit()
-      stopMusicNow()
       void flushPrefs()
       if (updateReady()) void installUpdateOnExit()
     }).then((u) => {
@@ -983,10 +976,6 @@ export function App() {
     }
   }, [])
 
-  useEffect(() => {
-    if (logged) startMusicAfterLogin()
-  }, [logged])
-
   // "Fixed in version X" for the player's own bug reports: asked once per start, a while after login so it does not compete with the boot.
   useEffect(() => {
     if (!logged) return
@@ -1184,7 +1173,6 @@ export function App() {
         <LiveLog />
         <ServerDetail />
         <ChatNotify />
-        <CallPanel />
         <RoomModals />
         {/* Mounted last: it asks on top of any other modal, and DOM order breaks
             ties between equal z-index values. */}

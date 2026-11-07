@@ -1,3 +1,5 @@
+import { LAUNCHER_AUDIO_ENABLED } from './launcherFeatures'
+
 export interface HubContext {
   readonly state: AudioContextState
   resume(): Promise<void>
@@ -91,7 +93,7 @@ export function createAudioHub<C extends HubContext>(
 }
 
 const browserContext = (): AudioContext | null => {
-  if (typeof window === 'undefined') return null
+  if (!LAUNCHER_AUDIO_ENABLED || typeof window === 'undefined') return null
   const Ctor =
     window.AudioContext || (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext
   return Ctor ? new Ctor() : null

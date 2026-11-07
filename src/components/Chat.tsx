@@ -31,6 +31,7 @@ import type { ChatAttachment, ChatMessage, FriendProfile } from '../state/friend
 import { offPlatformReason } from '../lib/offPlatform'
 import { copyText } from '../lib/clipboard'
 import { VoiceMessage } from './VoiceMessage'
+import { LAUNCHER_AUDIO_ENABLED } from '../lib/launcherFeatures'
 import { copyPictureTo, openImage, savePictureTo } from './ImageLightbox'
 import { MAX_CHAT_IMAGE_BYTES, uploadChatImage, uploadVoice } from '../lib/chatMedia'
 import { isOwnMediaUrl } from '../lib/ownMedia'
@@ -290,7 +291,7 @@ function MessageBody({ m, onJump }: { m: ChatMessage; onJump: (id: string) => vo
           <span><EltText text={replyLabel(m.replyTo)} /></span>
         </button>
       ) : null}
-      {att && att.kind === 'voice' ? <VoiceMessage att={att} me={m.me} /> : null}
+      {LAUNCHER_AUDIO_ENABLED && att && att.kind === 'voice' ? <VoiceMessage att={att} me={m.me} /> : null}
       {att && att.kind === 'image' ? (
         isOwnMediaUrl(att.url) ? (
           <img className="msg-img" src={att.url} alt="" loading="lazy" onClick={() => openImage(att.url)} />
@@ -747,11 +748,11 @@ function Composer() {
         >
           <Icon id={editing ? 'i-check' : 'i-send'} />
         </button>
-      ) : (
+      ) : canRecordVoice() ? (
         <button className="chat-send" title={t('Записать голосовое')} disabled={busy} data-track="voice_record" onClick={() => void startRecording()}>
           <Icon id="i-mic" />
         </button>
-      )}
+      ) : null}
     </div>
     </>
   )
